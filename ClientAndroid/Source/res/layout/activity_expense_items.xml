@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".ExpenseItemsActivity" >
+
+	<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+		 android:id="@+id/gridExpenseItems"
+		 android:layout_width="fill_parent"
+		 android:layout_height="0dp"
+		 android:layout_weight="1"
+		 android:numColumns="auto_fit"
+		 android:verticalSpacing="10dp"
+		 android:horizontalSpacing="10dp"
+		 android:columnWidth="100dp"
+		 android:stretchMode="columnWidth"
+		 android:gravity="center"
+	/>
+	
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dip"
+	    android:background="#FF555555"
+	    android:layout_margin="2dp"
+	/>
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:orientation="horizontal" 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	    
+    	<ImageButton
+    	    android:contentDescription="@string/new_expense_item"
+    	    android:src="@drawable/ic_document_new"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	    />
+    	
+    	<ImageButton
+    	    android:contentDescription="@string/get_shared_expense_item"
+    	    android:src="@drawable/ic_download"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	    /> 
+	        	
+    	<ImageButton
+    	    android:contentDescription="@string/expense_statistic"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:gravity="center_vertical"
+    	    android:src="@drawable/ic_chart"
+    	/>
+    	    	
+    	<ImageButton
+    	    android:contentDescription="@string/quit_application"
+    	    android:src="@drawable/ic_app_quit"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	    />    	    	
+    </LinearLayout>
+    
+</LinearLayout>
