@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="net.costcalculator.main.ExpenseItemsActivity"
+            android:name="net.costcalculator.activity.ExpenseItemsActivity"
             android:label="@string/title_activity_expense_items" >
         </activity>
     </application>
