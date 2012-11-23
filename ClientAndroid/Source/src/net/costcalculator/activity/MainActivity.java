@@ -8,7 +8,7 @@
 
 package net.costcalculator.activity;
 
-import net.costcalculator.main.R;
+import net.costcalculator.activity.R;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.app.Activity;
