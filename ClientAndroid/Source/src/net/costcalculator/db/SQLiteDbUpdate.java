@@ -11,11 +11,11 @@ package net.costcalculator.db;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Class is responsible for update of sqlite database
- * from the currently installed version to the latest version.
+ * Class is responsible for update of sqlite database from the currently
+ * installed version to the latest version.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class SQLiteDbUpdate
 {
@@ -28,6 +28,6 @@ public class SQLiteDbUpdate
     {
         // TODO Selet latest version 'to' class, add table with version info
     }
-    
+
     private SQLiteDatabase db_;
 }

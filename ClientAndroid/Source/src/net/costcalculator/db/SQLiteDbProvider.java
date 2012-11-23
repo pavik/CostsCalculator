@@ -16,32 +16,31 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * This class provides access to the database
- * to perform SQL queries.
+ * This class provides access to the database to perform SQL queries.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class SQLiteDbProvider extends SQLiteOpenHelper
 {
-    public static final int DATABASE_VERSION = 1; 
-    
+    public static final int DATABASE_VERSION = 1;
+
     public SQLiteDbProvider(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-    
-    public SQLiteDbProvider(Context context, String name, CursorFactory factory,
-            int version)
+
+    public SQLiteDbProvider(Context context, String name,
+            CursorFactory factory, int version)
     {
         super(context, name, factory, version);
     }
-    
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
         LOG.T("SQLiteDbProvider::onCreate");
-        
+
         SQLiteDbSetup s = new SQLiteDbSetup(db);
         s.setup();
     }
@@ -50,7 +49,7 @@ public class SQLiteDbProvider extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int verFrom, int verTo)
     {
         LOG.T("SQLiteDbProvider::onUpgrade");
-        
+
         SQLiteDbUpdate u = new SQLiteDbUpdate(db, verFrom, verTo);
         u.update();
     }

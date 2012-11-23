@@ -18,30 +18,34 @@ import android.view.Menu;
  * Expense items screen.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
-public class ExpenseItemsActivity extends Activity {
+public class ExpenseItemsActivity extends Activity
+{
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		LOG.T("ExpenseItemsActivity::onCreate");
-		
-		setContentView(R.layout.activity_expense_items);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        LOG.T("ExpenseItemsActivity::onCreate");
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-		LOG.T("ExpenseItemsActivity::onDestroy");
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_expense_items, menu);
-		return true;
-	}
+        setContentView(R.layout.activity_expense_items);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        LOG.T("ExpenseItemsActivity::onDestroy");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_expense_items, menu);
+        return true;
+    }
 
 }

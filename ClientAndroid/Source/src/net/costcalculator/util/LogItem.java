@@ -5,13 +5,14 @@
  * We intend this dedication to be an overt act of relinquishment in perpetuity 
  * of all present and future rights to this code under copyright law.
  */
+
 package net.costcalculator.util;
 
 /**
  * Class contains debug information.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class LogItem
 {

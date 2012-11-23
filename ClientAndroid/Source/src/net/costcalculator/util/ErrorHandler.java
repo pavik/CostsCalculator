@@ -5,6 +5,7 @@
  * We intend this dedication to be an overt act of relinquishment in perpetuity 
  * of all present and future rights to this code under copyright law.
  */
+
 package net.costcalculator.util;
 
 import android.content.Context;
@@ -13,7 +14,7 @@ import android.content.Context;
  * Class is responsible for error handling.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class ErrorHandler
 {
@@ -23,8 +24,8 @@ public class ErrorHandler
         StackTraceElement[] st = e.getStackTrace();
         for (int i = 0; i < st.length; ++i)
             LOG.E(st[i].getMethodName());
-        
-        //Intent intent = new Intent(c, ErrorHandlerActivity.class);
-        //c.startActivity(intent);
+
+        // Intent intent = new Intent(c, ErrorHandlerActivity.class);
+        // c.startActivity(intent);
     }
 }

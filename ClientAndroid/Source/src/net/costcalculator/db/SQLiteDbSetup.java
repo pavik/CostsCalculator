@@ -13,14 +13,13 @@ import net.costcalculator.util.LOG;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Class performs initial setup of sqlite database
- * of the latest version.
+ * Class performs initial setup of sqlite database of the latest version.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class SQLiteDbSetup
-{   
+{
     public SQLiteDbSetup(SQLiteDatabase db)
     {
         db_ = db;
@@ -29,18 +28,19 @@ public class SQLiteDbSetup
     public void setup()
     {
         LOG.T("SQLiteDbSetup::setup");
-        
+
         db_.beginTransaction();
         try
         {
             db_.execSQL(SQLiteQueries.TABLE_COST_ITEMS);
             db_.execSQL(SQLiteQueries.TRIG_COST_ITEMS_AFTER_UPDATE);
-            
+
             db_.execSQL(SQLiteQueries.TABLE_COST_ITEM_RECORDS);
-            
+
             db_.execSQL(SQLiteQueries.TABLE_VERSIONS);
-            db_.execSQL(SQLiteQueries.INSERT_VERSION, new Object[] {SQLiteDbProvider.DATABASE_VERSION});
-            
+            db_.execSQL(SQLiteQueries.INSERT_VERSION,
+                    new Object[] { SQLiteDbProvider.DATABASE_VERSION });
+
             db_.setTransactionSuccessful();
         }
         finally
@@ -48,6 +48,6 @@ public class SQLiteDbSetup
             db_.endTransaction();
         }
     }
-    
+
     private SQLiteDatabase db_;
 }

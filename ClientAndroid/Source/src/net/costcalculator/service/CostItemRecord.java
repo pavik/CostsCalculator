@@ -12,11 +12,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * This class represents business part of one record
- * in the database table 'cost_item_records'.
+ * This class represents business part of one record in the database table
+ * 'cost_item_records'.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class CostItemRecord
 {
@@ -30,40 +30,41 @@ public class CostItemRecord
         groupGuid_ = "";
         currency_ = "";
         tag_ = "";
-        comment_ = "";   
+        comment_ = "";
     }
-    
+
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("id_=").append(id_).append("; ");
         sb.append("guid_=").append(guid_).append("; ");
         sb.append("groupGuid=").append(groupGuid_).append("; ");
-        sb.append("creationTime=").append(creationTime_.toGMTString()).append("; ");
+        sb.append("creationTime=").append(creationTime_.toGMTString())
+                .append("; ");
         sb.append("sum=").append(sum_).append("; ");
         sb.append("currency=").append(currency_).append("; ");
         sb.append("tag=").append(tag_).append("; ");
         sb.append("comment=").append(comment_).append("; ");
         sb.append("version=").append(version_).append("; ");
-        
+
         return sb.toString();
     }
-    
+
     public void setId(long id)
     {
         this.id_ = id;
     }
-    
+
     public long getId()
     {
         return id_;
     }
-    
+
     public void setGuid(String guid)
     {
         this.guid_ = guid;
     }
-    
+
     public String getGuid()
     {
         return guid_;
@@ -128,7 +129,7 @@ public class CostItemRecord
     {
         return comment_;
     }
-    
+
     public void setVersion(int version)
     {
         this.version_ = version;
@@ -143,19 +144,19 @@ public class CostItemRecord
     {
         return guid_.length() > 0 && groupGuid_.length() > 0;
     }
-    
+
     public void incVersion()
     {
         version_ += 1;
     }
-    
-    private long id_;
+
+    private long   id_;
     private String guid_;
     private String groupGuid_;
-    private Date creationTime_;
+    private Date   creationTime_;
     private double sum_;
     private String currency_;
     private String tag_;
     private String comment_;
-    private int version_;
+    private int    version_;
 }

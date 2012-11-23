@@ -9,11 +9,11 @@
 package net.costcalculator.service;
 
 /**
- * This class represents business part of one record
- * in the database table 'cost_items'.
+ * This class represents business part of one record in the database table
+ * 'cost_items'.
  * 
  * @author Aliaksei Plashchanski
- *
+ * 
  */
 public class CostItem
 {
@@ -25,7 +25,7 @@ public class CostItem
         guid_ = "";
         creationTime_ = "";
     }
-    
+
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
@@ -34,20 +34,20 @@ public class CostItem
         sb.append("name_=").append(name_).append("; ");
         sb.append("creationTime=").append(creationTime_).append("; ");
         sb.append("version=").append(version_).append("; ");
-        
+
         return sb.toString();
     }
-    
+
     public boolean isValid()
     {
         return name_.length() > 0 && guid_.length() > 0;
     }
-    
+
     public void setName(String name)
     {
         name_ = name;
     }
-    
+
     public String getName()
     {
         return name_;
@@ -67,12 +67,12 @@ public class CostItem
     {
         return id_;
     }
-    
+
     public void setId(int id)
     {
         id_ = id;
     }
-    
+
     public void setCreationTime(String creationTime_)
     {
         this.creationTime_ = creationTime_;
@@ -96,6 +96,6 @@ public class CostItem
     private String name_;
     private String guid_;
     private String creationTime_;
-    private int id_;
-    private int version_;
+    private int    id_;
+    private int    version_;
 }
