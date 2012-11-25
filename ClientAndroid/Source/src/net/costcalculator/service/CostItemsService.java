@@ -22,14 +22,18 @@ import net.costcalculator.db.SQLiteDbProvider;
 import net.costcalculator.db.SQLiteQueries;
 
 /**
- * Provides interface to store/retrieve cost items from/to storage.
+ * Provides singleton instance to interface for storing/retrieving cost items
+ * from/to storage.
  * 
  * Usage: <code>
- * CostItemsService s = new CostItemsService(context);
- * s.some_request();
- * //... some other requests
- * s.release();
- * s = null;
+ * // initialization
+ * CostItemsService.createInstance(context);
+ * 
+ * // get instance
+ * CostItemsService.instance().some_request();
+ * 
+ * // release instance
+ * CostItemsService.releaseInstance();
  * </code>
  * 
  * @author Aliaksei Plashchanski
@@ -37,22 +41,6 @@ import net.costcalculator.db.SQLiteQueries;
  */
 public class CostItemsService
 {
-    public CostItemsService(Context context)
-    {
-        LOG.T("CostItemsService::CostItemsService");
-        dbprovider_ = new SQLiteDbProvider(context);
-    }
-
-    public void release()
-    {
-        LOG.T("CostItemsService::release");
-        if (dbprovider_ != null)
-        {
-            dbprovider_.close();
-            dbprovider_ = null;
-        }
-    }
-
     public CostItem createCostItem(String name) throws Exception
     {
         LOG.T("CostItemsService::createCostItem");
@@ -329,5 +317,45 @@ public class CostItemsService
         return item;
     }
 
-    private SQLiteDbProvider dbprovider_;
+    public static CostItemsService instance()
+    {
+        if (instance_ == null)
+            LOG.E("instance_ is null");
+
+        return instance_;
+    }
+
+    public static void createInstance(Context context)
+    {
+        if (instance_ != null)
+            releaseInstance();
+        instance_ = new CostItemsService(context);
+    }
+
+    public static void releaseInstance()
+    {
+        if (instance_ != null)
+            instance_.release();
+        instance_ = null;
+    }
+
+    private CostItemsService(Context context)
+    {
+        LOG.T("CostItemsService::CostItemsService");
+        dbprovider_ = new SQLiteDbProvider(context);
+    }
+
+    private void release()
+    {
+        LOG.T("CostItemsService::release");
+        if (dbprovider_ != null)
+        {
+            dbprovider_.close();
+            dbprovider_ = null;
+        }
+    }
+
+    private SQLiteDbProvider        dbprovider_;
+
+    private static CostItemsService instance_;
 }

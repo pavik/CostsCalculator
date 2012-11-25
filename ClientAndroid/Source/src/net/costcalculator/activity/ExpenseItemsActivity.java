@@ -9,10 +9,13 @@
 package net.costcalculator.activity;
 
 import net.costcalculator.activity.R;
+import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageButton;
 
 /**
  * Expense items screen.
@@ -20,9 +23,9 @@ import android.view.Menu;
  * @author Aliaksei Plashchanski
  * 
  */
-public class ExpenseItemsActivity extends Activity
+public class ExpenseItemsActivity extends Activity implements
+        View.OnClickListener
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -30,12 +33,32 @@ public class ExpenseItemsActivity extends Activity
         LOG.T("ExpenseItemsActivity::onCreate");
 
         setContentView(R.layout.activity_expense_items);
+        try
+        {
+            view_ = new ExpenseItemsView(this);
+
+            ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
+            newButton.setOnClickListener(view_);
+
+            ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
+            quitButton.setOnClickListener(this);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, this);
+        }
     }
 
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
+
+        if (view_ != null)
+        {
+            view_.release();
+            view_ = null;
+        }
 
         LOG.T("ExpenseItemsActivity::onDestroy");
     }
@@ -48,4 +71,16 @@ public class ExpenseItemsActivity extends Activity
         return true;
     }
 
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+        case R.id.quit_application:
+            finish();
+            break;
+        }
+    }
+
+    private ExpenseItemsView view_;
 }

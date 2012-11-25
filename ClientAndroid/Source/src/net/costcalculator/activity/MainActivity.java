@@ -9,6 +9,7 @@
 package net.costcalculator.activity;
 
 import net.costcalculator.activity.R;
+import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.app.Activity;
@@ -36,9 +37,8 @@ public class MainActivity extends Activity
         // initialize global resources
         LOG.INITIALIZE();
         LOG.T("MainActivity::onCreate");
-
-        // start main activity
-        startActivity(new Intent(this, ExpenseItemsActivity.class));
+        
+        CostItemsService.createInstance(getApplicationContext());
     }
 
     @Override
@@ -52,7 +52,11 @@ public class MainActivity extends Activity
         if (!firstRun)
             finish();
         else
+        {
             firstRun = false;
+            // start main activity
+            startActivity(new Intent(this, ExpenseItemsActivity.class));
+        }
     }
 
     @Override
@@ -62,6 +66,9 @@ public class MainActivity extends Activity
 
         // release global resources
         LOG.T("MainActivity::onDestroy");
+        
+        CostItemsService.releaseInstance();
+        
         LOG.RELEASE();
     }
 

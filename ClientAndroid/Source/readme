@@ -1,0 +1,7 @@
+Design rules.
+
+1. Error handling should be done in activities classes
+   using try/catch block, catch block should invoke ErrorHandler.handleException().
+   
+2. Activity's 'this' reference should never be used outside activity's class,
+   to prevent possible leak of memory. See http://android-developers.blogspot.com/2009/01/avoiding-memory-leaks.html.

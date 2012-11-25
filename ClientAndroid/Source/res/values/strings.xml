@@ -9,5 +9,9 @@
     <string name="expense_statistic">Expense statistic</string>
     <string name="quit_application">Quit application</string>
     <string name="app_loading">Loading&#8230;</string>
+    <string name="et_expense_item_name_hint">Type name here</string>
+    <color name="col_expense_item">#555555</color>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
