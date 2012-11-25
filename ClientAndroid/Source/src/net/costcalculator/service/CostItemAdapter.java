@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import net.costcalculator.activity.R;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +41,12 @@ import android.widget.TextView;
  */
 public class CostItemAdapter extends BaseAdapter
 {
-    public CostItemAdapter(Activity context)
+    public CostItemAdapter(Activity context) throws Exception
     {
         context_ = context;
         costItems_ = CostItemsService.instance().getAllCostItems();
+        if (costItems_.isEmpty())
+            setup_basic_items();
     }
 
     public void release()
@@ -125,7 +129,23 @@ public class CostItemAdapter extends BaseAdapter
 
         return cell;
     }
-
+    
+    private void setup_basic_items() throws NotFoundException, Exception
+    {
+        Resources r = context_.getResources();
+        addNewCostItem(r.getString(R.string.ci_food));
+        addNewCostItem(r.getString(R.string.ci_household));
+        addNewCostItem(r.getString(R.string.ci_clothes));
+        addNewCostItem(r.getString(R.string.ci_accommodation));
+        addNewCostItem(r.getString(R.string.ci_credit));
+        addNewCostItem(r.getString(R.string.ci_car));
+        addNewCostItem(r.getString(R.string.ci_health));
+        addNewCostItem(r.getString(R.string.ci_restaurant));
+        addNewCostItem(r.getString(R.string.ci_mobile));
+        addNewCostItem(r.getString(R.string.ci_entertainment));
+        addNewCostItem(r.getString(R.string.ci_other));
+    }
+    
     private ArrayList<CostItem>    costItems_;
     private Activity                context_;
 }
