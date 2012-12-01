@@ -5,8 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="7" />
+        android:minSdkVersion="7" android:targetSdkVersion="8"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="net.costcalculator.activity.ExpenseItemsActivity"
-            android:label="@string/title_activity_expense_items" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

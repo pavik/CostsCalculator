@@ -11,6 +11,7 @@ package net.costcalculator.activity;
 import net.costcalculator.activity.R;
 import net.costcalculator.service.CostItemAdapter;
 import net.costcalculator.util.ErrorHandler;
+import net.costcalculator.util.LOG;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -67,6 +68,7 @@ public class ExpenseItemsView implements OnItemClickListener,
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id)
     {
+        LOG.T("onItemClick");
         // Intent intent = new Intent(activity_, CostItemActivity.class);
         // intent.putExtra(CostItemActivity.COST_ITEM_ID, id);
         // activity_.startActivity(intent);

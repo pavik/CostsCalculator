@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/bg_grain_200x200"
+    android:background="@color/col_activity_background"
     android:orientation="horizontal"
     tools:context=".ExpenseItemsActivity" >
 
@@ -12,12 +12,13 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
         android:columnWidth="200dp"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:numColumns="auto_fit"
+        android:padding="2dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        android:verticalSpacing="5dp" />
 
     <View
         android:layout_width="1dip"
