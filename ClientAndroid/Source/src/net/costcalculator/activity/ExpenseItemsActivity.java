@@ -36,7 +36,7 @@ public class ExpenseItemsActivity extends Activity implements
         LOG.INITIALIZE();
         LOG.T("ExpenseItemsActivity::onCreate");
         CostItemsService.createInstance(getApplicationContext());
-        
+
         setContentView(R.layout.activity_expense_items);
         try
         {
@@ -64,7 +64,7 @@ public class ExpenseItemsActivity extends Activity implements
             view_.release();
             view_ = null;
         }
-        
+
         CostItemsService.releaseInstance();
         LOG.T("ExpenseItemsActivity::onDestroy");
         LOG.RELEASE();

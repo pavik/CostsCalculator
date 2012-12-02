@@ -14,7 +14,7 @@ package net.costcalculator.db;
  * @author Aliaksei Plashchanski
  * 
  */
-public class SQLiteQueries
+public class SQLiteDbQueries
 {
     // table 'cost_items'
     public static final String TABLE_COST_ITEMS             = "CREATE TABLE cost_items ("
@@ -40,13 +40,15 @@ public class SQLiteQueries
     // queries of 'cost_items'
     public static final String INSERT_COST_ITEM             = "INSERT INTO cost_items(ci_guid, ci_name) VALUES(?, ?)";
 
-    public static final String GET_COST_ITEM                = "SELECT * FROM cost_items WHERE ci_guid = ?";
+    public static final String GET_COST_ITEM_BY_GUID        = "SELECT * FROM cost_items WHERE ci_guid = ?";
 
     public static final String DEL_COST_ITEM                = "DELETE FROM cost_items WHERE ci_id = ?";
 
     public static final String INC_USE_COUNT                = "UPDATE cost_items SET ci_use_count = ci_use_count + 1 WHERE ci_id = ?";
 
     public static final String GET_ALL_COST_ITEMS           = "SELECT * FROM cost_items ORDER BY ci_use_count DESC";
+
+    public static final String GET_COST_ITEM_BY_ID          = "SELECT * FROM cost_items WHERE ci_id = ?";
 
     // ***************************************************************
 

@@ -32,13 +32,13 @@ public class SQLiteDbSetup
         db_.beginTransaction();
         try
         {
-            db_.execSQL(SQLiteQueries.TABLE_COST_ITEMS);
-            db_.execSQL(SQLiteQueries.TRIG_COST_ITEMS_AFTER_UPDATE);
+            db_.execSQL(SQLiteDbQueries.TABLE_COST_ITEMS);
+            db_.execSQL(SQLiteDbQueries.TRIG_COST_ITEMS_AFTER_UPDATE);
 
-            db_.execSQL(SQLiteQueries.TABLE_COST_ITEM_RECORDS);
+            db_.execSQL(SQLiteDbQueries.TABLE_COST_ITEM_RECORDS);
 
-            db_.execSQL(SQLiteQueries.TABLE_VERSIONS);
-            db_.execSQL(SQLiteQueries.INSERT_VERSION,
+            db_.execSQL(SQLiteDbQueries.TABLE_VERSIONS);
+            db_.execSQL(SQLiteDbQueries.INSERT_VERSION,
                     new Object[] { SQLiteDbProvider.DATABASE_VERSION });
 
             db_.setTransactionSuccessful();

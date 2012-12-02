@@ -15,6 +15,7 @@ import net.costcalculator.util.LOG;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -25,16 +26,20 @@ import android.widget.GridView;
 /**
  * View is responsible for displaying available cost categories
  * 
- * Usage: <code>
- * // create instance
- * ExpenseItemsView view = new ExpenseItemsView(activity);
+ * <pre>
+ * Usage:
+ * {
+ *     &#064;code
+ *     // create instance
+ *     ExpenseItemsView view = new ExpenseItemsView(activity);
  * 
- * // activity uses view
-  * 
- * // destroy view
- * view.release();
- * view = null;
- * </code>
+ *     // activity uses view
+ * 
+ *     // destroy view
+ *     view.release();
+ *     view = null;
+ * }
+ * </pre>
  * 
  * @author Aliaksei Plashchanski
  * 
@@ -44,6 +49,8 @@ public class ExpenseItemsView implements OnItemClickListener,
 {
     public ExpenseItemsView(Activity a) throws Exception
     {
+        LOG.T("ExpenseItemsView::ExpenseItemsView()");
+
         activity_ = a;
         gridView_ = (GridView) activity_.findViewById(R.id.gridExpenseItems);
         if (gridView_ == null)
@@ -57,6 +64,8 @@ public class ExpenseItemsView implements OnItemClickListener,
 
     public void release()
     {
+        LOG.T("ExpenseItemsView::release()");
+
         activity_ = null;
         gridView_ = null;
         alert_ = null;
@@ -66,12 +75,20 @@ public class ExpenseItemsView implements OnItemClickListener,
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id)
+    public void onItemClick(AdapterView<?> av, View v, int pos, long id)
     {
-        LOG.T("onItemClick");
-        // Intent intent = new Intent(activity_, CostItemActivity.class);
-        // intent.putExtra(CostItemActivity.COST_ITEM_ID, id);
-        // activity_.startActivity(intent);
+        try
+        {
+            adapter_.increaseUseCount(pos);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+
+        Intent intent = new Intent(activity_, PriceListActivity.class);
+        intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
+        activity_.startActivity(intent);
     }
 
     @Override
@@ -83,8 +100,7 @@ public class ExpenseItemsView implements OnItemClickListener,
             {
                 EditText edit = (EditText) alert_
                         .findViewById(R.id.et_expense_item_name);
-                adapter_.addNewCostItem(
-                        edit.getText().toString());
+                adapter_.addNewCostItem(edit.getText().toString().trim());
             }
             catch (Exception e)
             {
@@ -107,7 +123,8 @@ public class ExpenseItemsView implements OnItemClickListener,
     private void showNewExpenseItemView()
     {
         RelativeLayout newItemView = (RelativeLayout) activity_
-                .getLayoutInflater().inflate(R.layout.dialog_new_expense_item, null);
+                .getLayoutInflater().inflate(R.layout.dialog_new_expense_item,
+                        null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
         builder.setView(newItemView);
         builder.setMessage(R.string.new_expense_item).setCancelable(false)
@@ -118,8 +135,8 @@ public class ExpenseItemsView implements OnItemClickListener,
         alert_.show();
     }
 
-    private AlertDialog alert_;
-    private GridView    gridView_;
-    private Activity    activity_;
+    private AlertDialog     alert_;
+    private GridView        gridView_;
+    private Activity        activity_;
     private CostItemAdapter adapter_;
 }

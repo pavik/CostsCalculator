@@ -22,19 +22,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Class is singleton adapter between persistent storage and application logic.
+ * Class is adapter between persistent storage and application logic.
  * 
- * Usage: <code>
- * // create instance
- * CostItemAdapter adapter = new CostItemAdapter(context);
+ * <pre>
+ * Usage:
+ * {
+ *     &#064;code
+ *     // create instance
+ *     CostItemAdapter adapter = new CostItemAdapter(context);
  * 
- * // use adapter
- * adapter.some_method();
+ *     // use adapter
+ *     adapter.some_method();
  * 
- * // destroy adapter
- * adapter.release();
- * adapter = null;
- * </code>
+ *     // destroy adapter
+ *     adapter.release();
+ *     adapter = null;
+ * }
+ * </pre>
  * 
  * @author Aliaksei Plashchanski
  * 
@@ -60,6 +64,11 @@ public class CostItemAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
+    public void increaseUseCount(int pos) throws Exception
+    {
+        CostItemsService.instance().udpateCostItemUseCount(costItems_.get(pos));
+    }
+
     /*
      * @see android.widget.Adapter#getCount()
      */
@@ -81,15 +90,6 @@ public class CostItemAdapter extends BaseAdapter
     public CostItem getCostItem(int index)
     {
         return costItems_.get(index);
-    }
-
-    public CostItem findCostItemById(long id)
-    {
-        for (int i = 0; i < costItems_.size(); ++i)
-            if (costItems_.get(i).getId() == id)
-                return costItems_.get(i);
-
-        return null;
     }
 
     /*
@@ -129,7 +129,7 @@ public class CostItemAdapter extends BaseAdapter
 
         return cell;
     }
-    
+
     private void setup_basic_items() throws NotFoundException, Exception
     {
         Resources r = context_.getResources();
@@ -145,7 +145,7 @@ public class CostItemAdapter extends BaseAdapter
         addNewCostItem(r.getString(R.string.ci_entertainment));
         addNewCostItem(r.getString(R.string.ci_other));
     }
-    
-    private ArrayList<CostItem>    costItems_;
-    private Activity                context_;
+
+    private ArrayList<CostItem> costItems_;
+    private Activity            context_;
 }

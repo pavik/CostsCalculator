@@ -29,24 +29,34 @@ public final class R {
         public static final int radialbackground=0x7f02000a;
     }
     public static final class id {
-        public static final int cell_image=0x7f080006;
-        public static final int cell_text=0x7f080007;
-        public static final int et_expense_item_name=0x7f080005;
+        public static final int btn_save_price=0x7f08000c;
+        public static final int cell_image=0x7f08000f;
+        public static final int cell_text=0x7f080010;
+        public static final int et_comment=0x7f08000b;
+        public static final int et_currency=0x7f080007;
+        public static final int et_date=0x7f080009;
+        public static final int et_expense_item_name=0x7f08000e;
+        public static final int et_price=0x7f080006;
+        public static final int et_tag=0x7f08000a;
         public static final int expense_statistic=0x7f080003;
         public static final int get_shared_expense_item=0x7f080002;
         public static final int gridExpenseItems=0x7f080000;
-        public static final int menu_settings=0x7f080008;
+        public static final int lv_price_list=0x7f08000d;
+        public static final int menu_settings=0x7f080011;
         public static final int new_expense_item=0x7f080001;
         public static final int quit_application=0x7f080004;
+        public static final int tv_date=0x7f080008;
+        public static final int tv_price=0x7f080005;
     }
     public static final class layout {
         public static final int activity_expense_items=0x7f030000;
-        public static final int dialog_new_expense_item=0x7f030001;
-        public static final int grid_cell_expense_item=0x7f030002;
+        public static final int activity_price_list=0x7f030001;
+        public static final int dialog_new_expense_item=0x7f030002;
+        public static final int grid_cell_expense_item=0x7f030003;
     }
     public static final class menu {
         public static final int activity_expense_items=0x7f070000;
-        public static final int activity_main=0x7f070001;
+        public static final int activity_price_list=0x7f070001;
     }
     public static final class string {
         public static final int app_loading=0x7f040007;
@@ -63,14 +73,28 @@ public final class R {
         public static final int ci_mobile=0x7f040013;
         public static final int ci_other=0x7f040015;
         public static final int ci_restaurant=0x7f040012;
+        public static final int close=0x7f040022;
+        public static final int comment_hint=0x7f04001c;
+        public static final int comment_label=0x7f04001b;
         public static final int confirm=0x7f040009;
+        public static final int currency_hint=0x7f04001a;
+        public static final int date_label=0x7f040019;
         public static final int et_expense_item_name_hint=0x7f040008;
         public static final int expense_statistic=0x7f040005;
         public static final int get_shared_expense_item=0x7f040004;
+        public static final int history_label=0x7f040020;
         public static final int menu_settings=0x7f040001;
         public static final int new_expense_item=0x7f040003;
+        public static final int new_record_label=0x7f040021;
+        public static final int price_hint=0x7f040018;
+        public static final int price_label=0x7f040016;
+        public static final int price_warning=0x7f040023;
         public static final int quit_application=0x7f040006;
+        public static final int save_label=0x7f04001f;
+        public static final int tag_hint=0x7f04001e;
+        public static final int tag_label=0x7f04001d;
         public static final int title_activity_expense_items=0x7f040002;
+        public static final int title_activity_price_list=0x7f040017;
     }
     public static final class style {
         /** 

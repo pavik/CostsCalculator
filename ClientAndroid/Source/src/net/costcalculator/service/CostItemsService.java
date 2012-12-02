@@ -19,13 +19,15 @@ import android.database.sqlite.SQLiteDatabase;
 
 import net.costcalculator.util.LOG;
 import net.costcalculator.db.SQLiteDbProvider;
-import net.costcalculator.db.SQLiteQueries;
+import net.costcalculator.db.SQLiteDbQueries;
 
 /**
  * Provides singleton instance to interface for storing/retrieving cost items
  * from/to storage.
  * 
- * Usage: <code>
+ * <pre>
+ * Usage:
+ * {@code
  * // initialization
  * CostItemsService.createInstance(context);
  * 
@@ -34,7 +36,8 @@ import net.costcalculator.db.SQLiteQueries;
  * 
  * // release instance
  * CostItemsService.releaseInstance();
- * </code>
+ * }
+ * </pre>
  * 
  * @author Aliaksei Plashchanski
  * 
@@ -55,9 +58,9 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getWritableDatabase();
-            db.execSQL(SQLiteQueries.INSERT_COST_ITEM, new Object[] { guid,
+            db.execSQL(SQLiteDbQueries.INSERT_COST_ITEM, new Object[] { guid,
                     name });
-            row = db.rawQuery(SQLiteQueries.GET_COST_ITEM,
+            row = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_BY_GUID,
                     new String[] { guid });
             if (row.moveToFirst())
                 result = fromCursor(row);
@@ -89,9 +92,9 @@ public class CostItemsService
             if (rec.getId() > 0)
             {
                 int affected = db.update(
-                        SQLiteQueries.COST_ITEM_RECORDS,
+                        SQLiteDbQueries.COST_ITEM_RECORDS,
                         getContent(rec),
-                        SQLiteQueries.COST_ITEM_RECORDS_U,
+                        SQLiteDbQueries.COST_ITEM_RECORDS_U,
                         new String[] { Long.toString(rec.getId()),
                                 Integer.toString(rec.getVersion()) });
 
@@ -103,7 +106,7 @@ public class CostItemsService
             }
             else
             {
-                long id = db.insert(SQLiteQueries.COST_ITEM_RECORDS, null,
+                long id = db.insert(SQLiteDbQueries.COST_ITEM_RECORDS, null,
                         getContent(rec));
                 rec.setId(id);
             }
@@ -129,7 +132,7 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteQueries.GET_COST_ITEM_RECORD_BY_ID,
+            ds = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_RECORD_BY_ID,
                     new String[] { Long.toString(id) });
 
             if (ds.moveToFirst())
@@ -137,21 +140,21 @@ public class CostItemsService
                 cir = new CostItemRecord();
                 cir.setId(id);
                 cir.setGuid(ds.getString(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_GUID)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_GUID)));
                 cir.setGroupGuid(ds.getString(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_CI_GUID)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CI_GUID)));
                 cir.setSum(ds.getDouble(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_SUM)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_SUM)));
                 cir.setCurrency(ds.getString(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_CURRENCY)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY)));
                 cir.setComment(ds.getString(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_COMMENT)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_COMMENT)));
                 cir.setTag(ds.getString(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_TAG)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_TAG)));
                 cir.setVersion(ds.getInt(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_AUDIT_VERSION)));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_AUDIT_VERSION)));
                 cir.setCreationTime(new Date(ds.getLong(ds
-                        .getColumnIndex(SQLiteQueries.COL_CIR_DATETIME))));
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME))));
             }
             else
                 throw new Exception("failed to get cost item record by id = "
@@ -180,13 +183,13 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteQueries.COST_ITEM_RECORDS_IDS,
+            ds = db.rawQuery(SQLiteDbQueries.COST_ITEM_RECORDS_IDS,
                     new String[] { ci.getGuid() });
 
             if (ds.moveToFirst())
             {
                 ids = new ArrayList<Long>(ds.getCount());
-                final int col = ds.getColumnIndex(SQLiteQueries.COL_CIR_ID);
+                final int col = ds.getColumnIndex(SQLiteDbQueries.COL_CIR_ID);
                 do
                 {
                     ids.add(ds.getLong(col));
@@ -221,13 +224,14 @@ public class CostItemsService
     ContentValues getContent(CostItemRecord rec)
     {
         ContentValues cv = new ContentValues();
-        cv.put(SQLiteQueries.COL_CIR_GUID, rec.getGuid());
-        cv.put(SQLiteQueries.COL_CIR_CI_GUID, rec.getGroupGuid());
-        cv.put(SQLiteQueries.COL_CIR_DATETIME, rec.getCreationTime().getTime());
-        cv.put(SQLiteQueries.COL_CIR_SUM, rec.getSum());
-        cv.put(SQLiteQueries.COL_CIR_CURRENCY, rec.getCurrency());
-        cv.put(SQLiteQueries.COL_CIR_TAG, rec.getTag());
-        cv.put(SQLiteQueries.COL_CIR_COMMENT, rec.getComment());
+        cv.put(SQLiteDbQueries.COL_CIR_GUID, rec.getGuid());
+        cv.put(SQLiteDbQueries.COL_CIR_CI_GUID, rec.getGroupGuid());
+        cv.put(SQLiteDbQueries.COL_CIR_DATETIME, rec.getCreationTime()
+                .getTime());
+        cv.put(SQLiteDbQueries.COL_CIR_SUM, rec.getSum());
+        cv.put(SQLiteDbQueries.COL_CIR_CURRENCY, rec.getCurrency());
+        cv.put(SQLiteDbQueries.COL_CIR_TAG, rec.getTag());
+        cv.put(SQLiteDbQueries.COL_CIR_COMMENT, rec.getComment());
         return cv;
     }
 
@@ -241,7 +245,7 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getWritableDatabase();
-            db.execSQL(SQLiteQueries.DEL_COST_ITEM,
+            db.execSQL(SQLiteDbQueries.DEL_COST_ITEM,
                     new Object[] { item.getId() });
         }
         finally
@@ -262,7 +266,7 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteQueries.GET_ALL_COST_ITEMS, null);
+            ds = db.rawQuery(SQLiteDbQueries.GET_ALL_COST_ITEMS, null);
 
             if (ds.moveToFirst())
             {
@@ -271,6 +275,36 @@ public class CostItemsService
                     result.add(fromCursor(ds));
                 } while (ds.moveToNext());
             }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
+    public CostItem getCostItemById(long id) throws Exception
+    {
+        LOG.T("CostItemsService::getCostItemById");
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        CostItem result = null;
+
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_BY_ID,
+                    new String[] { Long.toString(id) });
+
+            if (ds.moveToFirst())
+                result = fromCursor(ds);
+            else
+                throw new Exception("failed to get cost item by id: " + id);
         }
         finally
         {
@@ -293,7 +327,7 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getWritableDatabase();
-            db.execSQL(SQLiteQueries.INC_USE_COUNT,
+            db.execSQL(SQLiteDbQueries.INC_USE_COUNT,
                     new Object[] { item.getId() });
         }
         finally
@@ -306,13 +340,13 @@ public class CostItemsService
     private CostItem fromCursor(Cursor c)
     {
         CostItem item = new CostItem();
-        item.setGuid(c.getString(c.getColumnIndex(SQLiteQueries.COL_CI_GUID)));
-        item.setName(c.getString(c.getColumnIndex(SQLiteQueries.COL_CI_NAME)));
-        item.setId(c.getInt(c.getColumnIndex(SQLiteQueries.COL_CI_ID)));
+        item.setGuid(c.getString(c.getColumnIndex(SQLiteDbQueries.COL_CI_GUID)));
+        item.setName(c.getString(c.getColumnIndex(SQLiteDbQueries.COL_CI_NAME)));
+        item.setId(c.getInt(c.getColumnIndex(SQLiteDbQueries.COL_CI_ID)));
         item.setCreationTime(c.getString(c
-                .getColumnIndex(SQLiteQueries.COL_CI_CREATION_TIME)));
+                .getColumnIndex(SQLiteDbQueries.COL_CI_CREATION_TIME)));
         item.setVersion(c.getInt(c
-                .getColumnIndex(SQLiteQueries.COL_CI_DATA_VERSION)));
+                .getColumnIndex(SQLiteDbQueries.COL_CI_DATA_VERSION)));
 
         return item;
     }
