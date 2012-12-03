@@ -40,7 +40,7 @@ public class ExpenseItemsActivity extends Activity implements
         setContentView(R.layout.activity_expense_items);
         try
         {
-            view_ = new ExpenseItemsView(this);
+            view_ = new ExpenseItemsLogic(this);
 
             ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
             newButton.setOnClickListener(view_);
@@ -89,5 +89,5 @@ public class ExpenseItemsActivity extends Activity implements
         }
     }
 
-    private ExpenseItemsView view_;
+    private ExpenseItemsLogic view_;
 }

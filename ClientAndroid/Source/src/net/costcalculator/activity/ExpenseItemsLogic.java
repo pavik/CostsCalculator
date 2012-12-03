@@ -24,30 +24,29 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 /**
- * View is responsible for displaying available cost categories
+ * Logic is responsible for setup data on the view and handling user requests
  * 
  * <pre>
  * Usage:
  * {
- *     &#064;code
  *     // create instance
- *     ExpenseItemsView view = new ExpenseItemsView(activity);
+ *     ExpenseItemsLogic l = new ExpenseItemsLogic(activity);
  * 
  *     // activity uses view
  * 
  *     // destroy view
- *     view.release();
- *     view = null;
+ *     l.release();
+ *     l = null;
  * }
  * </pre>
  * 
  * @author Aliaksei Plashchanski
  * 
  */
-public class ExpenseItemsView implements OnItemClickListener,
+public class ExpenseItemsLogic implements OnItemClickListener,
         DialogInterface.OnClickListener, View.OnClickListener
 {
-    public ExpenseItemsView(Activity a) throws Exception
+    public ExpenseItemsLogic(Activity a) throws Exception
     {
         LOG.T("ExpenseItemsView::ExpenseItemsView()");
 

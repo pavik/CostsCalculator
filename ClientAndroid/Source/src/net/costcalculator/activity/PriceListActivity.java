@@ -34,7 +34,7 @@ public class PriceListActivity extends Activity
         try
         {
             setContentView(R.layout.activity_price_list);
-            view_ = new PricelListView(this, intent.getLongExtra(COST_ITEM_ID,
+            view_ = new PricelListLogic(this, intent.getLongExtra(COST_ITEM_ID,
                     0));
         }
         catch (Exception e)
@@ -56,5 +56,5 @@ public class PriceListActivity extends Activity
         }
     }
 
-    private PricelListView view_;
+    private PricelListLogic view_;
 }

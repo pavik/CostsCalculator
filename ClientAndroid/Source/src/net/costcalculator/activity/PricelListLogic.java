@@ -24,29 +24,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * View is responsible for displaying prices in the given expense item.
+ * Logic is responsible for setup data on the view and handling user requests
  * 
  * <pre>
  * Usage:
  * {
- *     &#064;code
  *     // create instance
- *     PricelListView view = new PricelListView(activity);
+ *     PricelListLogic l = new PricelListLogic(activity);
  * 
  *     // activity uses view
  * 
  *     // destroy view
- *     view.release();
- *     view = null;
+ *     l.release();
+ *     l = null;
  * }
  * </pre>
  * 
  * @author Aliaksei Plashchanski
  * 
  */
-public class PricelListView implements OnClickListener
+public class PricelListLogic implements OnClickListener
 {
-    public PricelListView(Activity a, long costItemId) throws Exception
+    public PricelListLogic(Activity a, long costItemId) throws Exception
     {
         LOG.T("PricelListView::PricelListView()");
 
