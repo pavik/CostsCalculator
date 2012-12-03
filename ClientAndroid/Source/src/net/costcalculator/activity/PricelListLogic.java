@@ -9,7 +9,9 @@
 package net.costcalculator.activity;
 
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 
 import net.costcalculator.service.CostItemRecordsAdapter;
 import net.costcalculator.util.ErrorHandler;
@@ -143,7 +145,7 @@ public class PricelListLogic implements OnClickListener
     private void initViewsContent()
     {
         etPrice_.setText("");
-        etCurrency_.setText("");
+        etCurrency_.setText(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
 
         priceRecordDate_ = Calendar.getInstance().getTime();
         etDate_.setText(priceRecordDate_.toLocaleString());
