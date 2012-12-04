@@ -44,5 +44,8 @@
     <string name="new_record_label">New record</string>
     <string name="close">Close</string>
     <string name="price_warning">At least price should be filled</string>
+    <color name="col_price_val">#0000FF</color>
+    <color name="col_price_list_item_back">#FFFF66</color>
+    <color name="col_date_val">#BEBEBE</color>
 
 </resources>

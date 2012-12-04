@@ -51,6 +51,7 @@ public class PricelListLogic implements OnClickListener
     {
         LOG.T("PricelListView::PricelListView()");
 
+        viewsVisibility_ = false;
         activity_ = a;
         adapter_ = new CostItemRecordsAdapter(activity_, costItemId);
         activity_.setTitle(adapter_.getCostItemName());
@@ -75,7 +76,10 @@ public class PricelListLogic implements OnClickListener
         etDate_.setEnabled(false);
 
         initViewsContent();
-        viewsVisibility_ = true;
+        if (adapter_.getCount() > 0)
+            hideViews();
+        else
+            showViews();
     }
 
     public void release()

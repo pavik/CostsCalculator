@@ -12,8 +12,11 @@ public final class R {
     }
     public static final class color {
         public static final int col_activity_background=0x7f050001;
+        public static final int col_date_val=0x7f050005;
         public static final int col_expense_item=0x7f050000;
         public static final int col_expense_item_cell_background=0x7f050002;
+        public static final int col_price_list_item_back=0x7f050004;
+        public static final int col_price_val=0x7f050003;
     }
     public static final class drawable {
         public static final int bg_grain_200x200=0x7f020000;
@@ -26,7 +29,8 @@ public final class R {
         public static final int ic_download=0x7f020007;
         public static final int ic_folder=0x7f020008;
         public static final int ic_launcher=0x7f020009;
-        public static final int radialbackground=0x7f02000a;
+        public static final int price_list_item_back=0x7f02000a;
+        public static final int radialbackground=0x7f02000b;
     }
     public static final class id {
         public static final int btn_save_price=0x7f08000c;
@@ -42,17 +46,20 @@ public final class R {
         public static final int get_shared_expense_item=0x7f080002;
         public static final int gridExpenseItems=0x7f080000;
         public static final int lv_price_list=0x7f08000d;
-        public static final int menu_settings=0x7f080011;
+        public static final int menu_settings=0x7f080013;
         public static final int new_expense_item=0x7f080001;
         public static final int quit_application=0x7f080004;
         public static final int tv_date=0x7f080008;
+        public static final int tv_date_val=0x7f080012;
         public static final int tv_price=0x7f080005;
+        public static final int tv_price_val=0x7f080011;
     }
     public static final class layout {
         public static final int activity_expense_items=0x7f030000;
         public static final int activity_price_list=0x7f030001;
         public static final int dialog_new_expense_item=0x7f030002;
         public static final int grid_cell_expense_item=0x7f030003;
+        public static final int view_price_list_item=0x7f030004;
     }
     public static final class menu {
         public static final int activity_expense_items=0x7f070000;

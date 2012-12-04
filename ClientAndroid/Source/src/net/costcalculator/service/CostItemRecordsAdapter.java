@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import net.costcalculator.activity.R;
 import net.costcalculator.util.LOG;
 
-import android.content.Context;
+import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -43,7 +45,7 @@ import android.widget.TextView;
  */
 public class CostItemRecordsAdapter extends BaseAdapter
 {
-    public CostItemRecordsAdapter(Context context, long costItemId)
+    public CostItemRecordsAdapter(Activity context, long costItemId)
             throws Exception
     {
         context_ = context;
@@ -125,10 +127,27 @@ public class CostItemRecordsAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        TextView tv = new TextView(context_);
-        tv.setText(getCostItemRecord(position).toString());
+        View item = null;
 
-        return tv;
+        if (convertView == null)
+        {
+            LayoutInflater inflater = context_.getLayoutInflater();
+            item = inflater.inflate(R.layout.view_price_list_item, parent,
+                    false);
+        }
+        else
+        {
+            item = convertView;
+        }
+
+        TextView tvPrice = (TextView) item.findViewById(R.id.tv_price_val);
+        TextView tvDate = (TextView) item.findViewById(R.id.tv_date_val);
+
+        CostItemRecord cir = getCostItemRecord(position);
+        tvPrice.setText(Double.toString(cir.getSum()) + " " + cir.getCurrency());
+        tvDate.setText(cir.getCreationTime().toLocaleString());
+
+        return item;
     }
 
     private CostItemRecord fetchCostItemRecordById(long id)
@@ -151,5 +170,5 @@ public class CostItemRecordsAdapter extends BaseAdapter
     private HashMap<Long, CostItemRecord> records_;
 
     private CostItem                      ci_;
-    private Context                       context_;
+    private Activity                      context_;
 }
