@@ -46,13 +46,15 @@ public final class R {
         public static final int get_shared_expense_item=0x7f080002;
         public static final int gridExpenseItems=0x7f080000;
         public static final int lv_price_list=0x7f08000d;
-        public static final int menu_settings=0x7f080013;
+        public static final int menu_settings=0x7f080015;
         public static final int new_expense_item=0x7f080001;
         public static final int quit_application=0x7f080004;
+        public static final int tv_comment=0x7f080014;
         public static final int tv_date=0x7f080008;
         public static final int tv_date_val=0x7f080012;
         public static final int tv_price=0x7f080005;
         public static final int tv_price_val=0x7f080011;
+        public static final int v_price_div=0x7f080013;
     }
     public static final class layout {
         public static final int activity_expense_items=0x7f030000;

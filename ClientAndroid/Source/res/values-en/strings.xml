@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Cost calculator</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_expense_items">Expense items</string>
+    <string name="new_expense_item">New expense item</string>
+    <string name="get_shared_expense_item">Get shared expense item</string>
+    <string name="expense_statistic">Expense statistic</string>
+    <string name="quit_application">Quit application</string>
+    <string name="app_loading">Loading&#8230;</string>
+    <string name="et_expense_item_name_hint">Type name here</string>
+
+    <color name="col_expense_item">#555555</color>
+
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="ci_food">Food</string>
+    <string name="ci_household">Household costs</string>
+    <string name="ci_clothes">Clothes</string>
+    <string name="ci_accommodation">Accommodation costs</string>
+    <string name="ci_credit">Bank credits</string>
+    <string name="ci_car">Car</string>
+    <string name="ci_health">Health services</string>
+    <string name="ci_restaurant">Restaurants</string>
+    <string name="ci_mobile">Modile phones</string>
+    <string name="ci_entertainment">Entertainment</string>
+    <string name="ci_other">Other</string>
+
+    <color name="col_activity_background">#E7EBF2</color>
+    <color name="col_expense_item_cell_background">#FFFFFF</color>
+
+    <string name="price_label">Price</string>
+    <string name="title_activity_price_list">Expense item: </string>
+    <string name="price_hint">Type price here</string>
+    <string name="date_label">Date</string>
+    <string name="currency_hint">Currency</string>
+    <string name="comment_label">Comment</string>
+    <string name="comment_hint">Type comment here</string>
+    <string name="tag_label">Tag</string>
+    <string name="tag_hint">Type tag here</string>
+    <string name="save_label">Save</string>
+    <string name="history_label">History of operations</string>
+    <string name="new_record_label">New record</string>
+    <string name="close">Close</string>
+    <string name="price_warning">At least price should be filled</string>
+    <color name="col_price_val">#0000FF</color>
+    <color name="col_price_list_item_back">#FFFF66</color>
+    <color name="col_date_val">#BEBEBE</color>
+
+</resources>
