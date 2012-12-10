@@ -97,7 +97,9 @@
         android:id="@+id/btn_save_price"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_label" />
+        android:text="@string/save_label"
+        android:background="@drawable/green_gradient"
+        style="@style/GradientButtonText" />
 
     <ListView
         android:id="@+id/lv_price_list"
