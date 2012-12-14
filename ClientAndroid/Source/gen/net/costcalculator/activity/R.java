@@ -16,7 +16,10 @@ public final class R {
         public static final int col_expense_item=0x7f050000;
         public static final int col_expense_item_cell_background=0x7f050002;
         public static final int col_price_list_item_back=0x7f050004;
+        public static final int col_price_list_item_split_line=0x7f050006;
         public static final int col_price_val=0x7f050003;
+        public static final int col_tag_back=0x7f050008;
+        public static final int col_tag_text=0x7f050007;
     }
     public static final class drawable {
         public static final int bg_grain_200x200=0x7f020000;
@@ -32,6 +35,7 @@ public final class R {
         public static final int ic_launcher=0x7f02000a;
         public static final int price_list_item_back=0x7f02000b;
         public static final int radialbackground=0x7f02000c;
+        public static final int tag_background=0x7f02000d;
     }
     public static final class id {
         public static final int btn_save_price=0x7f08000c;
@@ -47,7 +51,7 @@ public final class R {
         public static final int get_shared_expense_item=0x7f080002;
         public static final int gridExpenseItems=0x7f080000;
         public static final int lv_price_list=0x7f08000d;
-        public static final int menu_settings=0x7f080015;
+        public static final int menu_settings=0x7f080016;
         public static final int new_expense_item=0x7f080001;
         public static final int quit_application=0x7f080004;
         public static final int tv_comment=0x7f080014;
@@ -55,6 +59,7 @@ public final class R {
         public static final int tv_date_val=0x7f080012;
         public static final int tv_price=0x7f080005;
         public static final int tv_price_val=0x7f080011;
+        public static final int tv_tag=0x7f080015;
         public static final int v_price_div=0x7f080013;
     }
     public static final class layout {
@@ -110,11 +115,15 @@ public final class R {
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
+
         
          */
         public static final int AppBaseTheme=0x7f060000;

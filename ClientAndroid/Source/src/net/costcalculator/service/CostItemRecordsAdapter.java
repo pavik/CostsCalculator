@@ -144,19 +144,27 @@ public class CostItemRecordsAdapter extends BaseAdapter
         TextView tvDate = (TextView) item.findViewById(R.id.tv_date_val);
         View vDiv = item.findViewById(R.id.v_price_div);
         TextView tvComment = (TextView) item.findViewById(R.id.tv_comment);
+        TextView tvTag = (TextView) item.findViewById(R.id.tv_tag);
 
         CostItemRecord cir = getCostItemRecord(position);
-        tvPrice.setText(Double.toString(cir.getSum()) + " " + cir.getCurrency());
+        tvPrice.setText(DataFormatService.formatPrice(cir.getSum()) + " " + cir.getCurrency());
         tvDate.setText(cir.getCreationTime().toLocaleString());
+        tvComment.setText(cir.getComment());
+        tvTag.setText(cir.getTag());
         
-        if (cir.getComment().length() > 0)
-            tvComment.setText(cir.getComment());
+        if (cir.getComment().length() > 0 || cir.getTag().length() > 0)
+        {
+            vDiv.setVisibility(View.VISIBLE);
+            tvComment.setVisibility(cir.getComment().length() > 0 ? View.VISIBLE : View.GONE);
+            tvTag.setVisibility(cir.getTag().length() > 0 ? View.VISIBLE : View.GONE);
+        }
         else
         {
             vDiv.setVisibility(View.GONE);
             tvComment.setVisibility(View.GONE);
+            tvTag.setVisibility(View.GONE);
         }
-
+        
         return item;
     }
 

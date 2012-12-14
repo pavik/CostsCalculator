@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Cost calculator</string>
+    <string name="app_name">Expenses</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_expense_items">Expense items</string>
     <string name="new_expense_item">New expense item</string>

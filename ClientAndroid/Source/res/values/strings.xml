@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Калькулятор расходов</string>
+    <string name="app_name">Расходы</string>
     <string name="menu_settings">Конфигурация</string>
     <string name="title_activity_expense_items">Категории расходов</string>
     <string name="new_expense_item">Новая категория</string>
@@ -44,8 +44,11 @@
     <string name="new_record_label">Добавить новую запись</string>
     <string name="close">Закрыть</string>
     <string name="price_warning">Введите пожалуйста цену</string>
-    <color name="col_price_val">#0000FF</color>
+    <color name="col_price_val">#725998</color>
     <color name="col_price_list_item_back">#FFFF66</color>
-    <color name="col_date_val">#BEBEBE</color>
+    <color name="col_date_val">#808080</color>
+    <color name="col_price_list_item_split_line">#E5E5E5</color>
+    <color name="col_tag_text">#3B5958</color>
+    <color name="col_tag_back">#EDEFF4</color>
 
 </resources>

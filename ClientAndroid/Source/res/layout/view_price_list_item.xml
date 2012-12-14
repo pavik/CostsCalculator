@@ -17,8 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/price_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/col_price_val" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/col_price_val"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_date_val"
@@ -35,12 +36,20 @@
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:layout_margin="2dp"
-        android:background="#FF555555" />
+        android:background="@color/col_price_list_item_split_line" />
 
     <TextView
         android:id="@+id/tv_comment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/tv_tag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tag_background"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/col_tag_text" />
 
 </LinearLayout>
