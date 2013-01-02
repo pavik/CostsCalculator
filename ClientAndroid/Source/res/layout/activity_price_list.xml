@@ -106,6 +106,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@color/col_activity_background"
-        android:dividerHeight="7dp" />
+        android:dividerHeight="7dp"
+        android:listSelector="@android:color/transparent" />
 
 </LinearLayout>
