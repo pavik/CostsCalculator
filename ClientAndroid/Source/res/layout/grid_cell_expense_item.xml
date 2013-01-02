@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/expense_item_selector"
-    android:orientation="horizontal"
-    tools:ignore="UseCompoundDrawables" >
+    android:background="@drawable/expense_item_selector" >
 
     <ImageView
         android:id="@+id/cell_image"
@@ -13,22 +11,32 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_name" />
 
+    <ImageView
+        android:id="@+id/cell_image_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/cell_image"
+        android:layout_alignLeft="@id/cell_image"
+        android:contentDescription="@string/app_name" />
+
     <TextView
         android:id="@+id/cell_text"
-        android:layout_width="0dip"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/cell_image"
+        android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/col_expense_item"
         android:textStyle="bold" />
-    
+
     <TextView
         android:id="@+id/cell_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="2dp"
         android:gravity="right"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-</LinearLayout>
+</RelativeLayout>

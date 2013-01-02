@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.costcalculator.activity.R;
-
 import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
@@ -53,6 +52,8 @@ public class CostItemAdapter extends BaseAdapter
         costItems_ = CostItemsService.instance().getAllCostItems();
         if (costItems_.isEmpty())
             setup_basic_items();
+
+        velcomeBrand_ = context_.getResources().getString(R.string.ci_mobile);
     }
 
     public void release()
@@ -124,13 +125,26 @@ public class CostItemAdapter extends BaseAdapter
         }
 
         ImageView imageView = (ImageView) cell.findViewById(R.id.cell_image);
+        ImageView imageViewOverlay = (ImageView) cell
+                .findViewById(R.id.cell_image_overlay);
         TextView textView = (TextView) cell.findViewById(R.id.cell_text);
         TextView textViewCount = (TextView) cell.findViewById(R.id.cell_count);
 
         imageView.setImageResource(R.drawable.ic_folder);
+
+        final String posName = costItems_.get(position).getName();
+        if (posName.equals(velcomeBrand_))
+        {
+            imageViewOverlay.setImageResource(R.drawable.ic_velcom_logo);
+            imageViewOverlay.setVisibility(View.VISIBLE);
+        }
+        else
+            imageViewOverlay.setVisibility(View.GONE);
+
         textView.setText(costItems_.get(position).getName());
 
-        HashMap<String, Integer> m = CostItemsService.instance().getCostItemRecordsCount();
+        HashMap<String, Integer> m = CostItemsService.instance()
+                .getCostItemRecordsCount();
         if (m != null)
         {
             Integer n = m.get(costItems_.get(position).getGuid());
@@ -158,4 +172,5 @@ public class CostItemAdapter extends BaseAdapter
 
     private ArrayList<CostItem> costItems_;
     private Activity            context_;
+    private String              velcomeBrand_;
 }
