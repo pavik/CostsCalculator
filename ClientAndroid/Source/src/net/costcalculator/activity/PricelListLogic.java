@@ -76,10 +76,7 @@ public class PricelListLogic implements OnClickListener
         etDate_.setEnabled(false);
 
         initViewsContent();
-        if (adapter_.getCount() > 0)
-            hideViews();
-        else
-            showViews();
+        showViews();
     }
 
     public void release()
@@ -170,6 +167,7 @@ public class PricelListLogic implements OnClickListener
 
         viewsVisibility_ = true;
         btnSave_.setText(R.string.save_label);
+        etPrice_.requestFocus();
     }
 
     private void hideViews()
