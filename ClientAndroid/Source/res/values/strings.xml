@@ -50,5 +50,6 @@
     <color name="col_price_list_item_split_line">#E5E5E5</color>
     <color name="col_tag_text">#3B5958</color>
     <color name="col_tag_back">#EDEFF4</color>
+    <color name="col_count_val">#3B5998</color>
 
 </resources>

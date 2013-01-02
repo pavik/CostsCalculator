@@ -15,11 +15,20 @@
 
     <TextView
         android:id="@+id/cell_text"
-        android:layout_width="fill_parent"
+        android:layout_width="0dip"
         android:layout_height="fill_parent"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/col_expense_item"
         android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/cell_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:gravity="right"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

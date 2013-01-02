@@ -73,6 +73,11 @@ public class ExpenseItemsLogic implements OnItemClickListener,
         adapter_ = null;
     }
 
+    public void onActivityRestart()
+    {
+        adapter_.notifyDataSetChanged();
+    }
+    
     @Override
     public void onItemClick(AdapterView<?> av, View v, int pos, long id)
     {

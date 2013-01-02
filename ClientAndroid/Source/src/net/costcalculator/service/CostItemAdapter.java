@@ -9,6 +9,8 @@
 package net.costcalculator.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import net.costcalculator.activity.R;
 
 import android.app.Activity;
@@ -123,9 +125,17 @@ public class CostItemAdapter extends BaseAdapter
 
         ImageView imageView = (ImageView) cell.findViewById(R.id.cell_image);
         TextView textView = (TextView) cell.findViewById(R.id.cell_text);
+        TextView textViewCount = (TextView) cell.findViewById(R.id.cell_count);
 
         imageView.setImageResource(R.drawable.ic_folder);
         textView.setText(costItems_.get(position).getName());
+
+        HashMap<String, Integer> m = CostItemsService.instance().getCostItemRecordsCount();
+        if (m != null)
+        {
+            Integer n = m.get(costItems_.get(position).getGuid());
+            textViewCount.setText(n != null ? n.toString() : "0");
+        }
 
         return cell;
     }

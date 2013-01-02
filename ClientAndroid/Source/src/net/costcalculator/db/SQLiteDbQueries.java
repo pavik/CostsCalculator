@@ -90,6 +90,9 @@ public class SQLiteDbQueries
     public static final String COL_CIR_AUDIT_CT             = "cir_audit_ct";
     public static final String COL_CIR_AUDIT_VERSION        = "cir_audit_version";
 
+    // expressions columns
+    public static final String EXPR_CIR_COUNT               = "cir_count";
+
     // update condition
     public static final String COST_ITEM_RECORDS_U          = "cir_id = ? AND cir_audit_version = ?";
 
@@ -97,4 +100,6 @@ public class SQLiteDbQueries
     public static final String COST_ITEM_RECORDS_IDS        = "SELECT cir_id FROM cost_item_records WHERE cir_ci_guid = ? ORDER BY cir_datetime DESC";
 
     public static final String GET_COST_ITEM_RECORD_BY_ID   = "SELECT * FROM cost_item_records WHERE cir_id = ?";
+
+    public static final String GET_COUNT_COST_ITEM_RECORDS  = "SELECT cir_ci_guid, COUNT(cir_ci_guid) AS cir_count FROM  cost_item_records GROUP BY (cir_ci_guid) ORDER BY cir_count DESC";
 }

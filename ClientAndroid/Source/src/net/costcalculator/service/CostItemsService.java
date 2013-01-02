@@ -10,6 +10,7 @@ package net.costcalculator.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import android.content.ContentValues;
@@ -109,6 +110,14 @@ public class CostItemsService
                 long id = db.insert(SQLiteDbQueries.COST_ITEM_RECORDS, null,
                         getContent(rec));
                 rec.setId(id);
+                
+                if (cirCountCache_ != null)
+                {
+                    Integer n = cirCountCache_.get(rec.getGroupGuid());
+                    if (n == null)
+                        n = 0;
+                    cirCountCache_.put(rec.getGroupGuid(), n + 1);
+                }
             }
         }
         finally
@@ -351,6 +360,42 @@ public class CostItemsService
         return item;
     }
 
+    public HashMap<String, Integer> getCostItemRecordsCount()
+    {
+        LOG.T("CostItemsService::getCostItemRecordsCount");
+        if (cirCountCache_ != null)
+            return cirCountCache_;
+        
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        cirCountCache_ = new HashMap<String, Integer>();
+        
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.GET_COUNT_COST_ITEM_RECORDS, null);
+
+            if (ds.moveToFirst())
+            {
+                int keyCol = ds.getColumnIndex(SQLiteDbQueries.COL_CIR_CI_GUID);
+                int valCol = ds.getColumnIndex(SQLiteDbQueries.EXPR_CIR_COUNT);
+                do
+                {
+                    cirCountCache_.put(ds.getString(keyCol), ds.getInt(valCol));
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+        
+        return cirCountCache_;
+    }
+    
     public static CostItemsService instance()
     {
         if (instance_ == null)
@@ -390,6 +435,7 @@ public class CostItemsService
     }
 
     private SQLiteDbProvider        dbprovider_;
+    private HashMap<String, Integer>    cirCountCache_;
 
     private static CostItemsService instance_;
 }

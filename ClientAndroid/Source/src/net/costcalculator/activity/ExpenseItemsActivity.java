@@ -40,10 +40,10 @@ public class ExpenseItemsActivity extends Activity implements
         setContentView(R.layout.activity_expense_items);
         try
         {
-            view_ = new ExpenseItemsLogic(this);
+            logic_ = new ExpenseItemsLogic(this);
 
             ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
-            newButton.setOnClickListener(view_);
+            newButton.setOnClickListener(logic_);
 
             ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
             quitButton.setOnClickListener(this);
@@ -55,14 +55,23 @@ public class ExpenseItemsActivity extends Activity implements
     }
 
     @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        LOG.T("ExpenseItemsActivity::onRestart");
+        
+        logic_.onActivityRestart();
+    }
+
+    @Override
     protected void onDestroy()
     {
         super.onDestroy();
 
-        if (view_ != null)
+        if (logic_ != null)
         {
-            view_.release();
-            view_ = null;
+            logic_.release();
+            logic_ = null;
         }
 
         CostItemsService.releaseInstance();
@@ -89,5 +98,5 @@ public class ExpenseItemsActivity extends Activity implements
         }
     }
 
-    private ExpenseItemsLogic view_;
+    private ExpenseItemsLogic logic_;
 }
