@@ -120,6 +120,15 @@ public class CostItemRecordsAdapter extends BaseAdapter
         return ids_.get(index);
     }
 
+    static class ViewHolder
+    {
+        public TextView tvPrice;
+        public TextView tvDate;
+        public View     vDiv;
+        public TextView tvComment;
+        public TextView tvTag;
+    }
+
     /*
      * @see android.widget.Adapter#getView(int, android.view.View,
      * android.view.ViewGroup)
@@ -134,37 +143,43 @@ public class CostItemRecordsAdapter extends BaseAdapter
             LayoutInflater inflater = context_.getLayoutInflater();
             item = inflater.inflate(R.layout.view_price_list_item, parent,
                     false);
+            ViewHolder vh = new ViewHolder();
+            vh.tvPrice = (TextView) item.findViewById(R.id.tv_price_val);
+            vh.tvDate = (TextView) item.findViewById(R.id.tv_date_val);
+            vh.vDiv = item.findViewById(R.id.v_price_div);
+            vh.tvComment = (TextView) item.findViewById(R.id.tv_comment);
+            vh.tvTag = (TextView) item.findViewById(R.id.tv_tag);
+            item.setTag(vh);
         }
         else
         {
             item = convertView;
         }
 
-        TextView tvPrice = (TextView) item.findViewById(R.id.tv_price_val);
-        TextView tvDate = (TextView) item.findViewById(R.id.tv_date_val);
-        View vDiv = item.findViewById(R.id.v_price_div);
-        TextView tvComment = (TextView) item.findViewById(R.id.tv_comment);
-        TextView tvTag = (TextView) item.findViewById(R.id.tv_tag);
-
+        ViewHolder vh = (ViewHolder) item.getTag();
         CostItemRecord cir = getCostItemRecord(position);
-        tvPrice.setText(DataFormatService.formatPrice(cir.getSum()) + " " + cir.getCurrency());
-        tvDate.setText(cir.getCreationTime().toLocaleString());
-        tvComment.setText(cir.getComment());
-        tvTag.setText(cir.getTag());
-        
+        vh.tvPrice.setText(DataFormatService.formatPrice(cir.getSum()) + " "
+                + cir.getCurrency());
+        vh.tvDate.setText(cir.getCreationTime().toLocaleString());
+        vh.tvComment.setText(cir.getComment());
+        vh.tvTag.setText(cir.getTag());
+
         if (cir.getComment().length() > 0 || cir.getTag().length() > 0)
         {
-            vDiv.setVisibility(View.VISIBLE);
-            tvComment.setVisibility(cir.getComment().length() > 0 ? View.VISIBLE : View.GONE);
-            tvTag.setVisibility(cir.getTag().length() > 0 ? View.VISIBLE : View.GONE);
+            vh.vDiv.setVisibility(View.VISIBLE);
+            vh.tvComment
+                    .setVisibility(cir.getComment().length() > 0 ? View.VISIBLE
+                            : View.GONE);
+            vh.tvTag.setVisibility(cir.getTag().length() > 0 ? View.VISIBLE
+                    : View.GONE);
         }
         else
         {
-            vDiv.setVisibility(View.GONE);
-            tvComment.setVisibility(View.GONE);
-            tvTag.setVisibility(View.GONE);
+            vh.vDiv.setVisibility(View.GONE);
+            vh.tvComment.setVisibility(View.GONE);
+            vh.tvTag.setVisibility(View.GONE);
         }
-        
+
         return item;
     }
 
