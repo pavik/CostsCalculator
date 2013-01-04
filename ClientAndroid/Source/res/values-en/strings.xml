@@ -47,5 +47,6 @@
     <color name="col_price_val">#0000FF</color>
     <color name="col_price_list_item_back">#FFFF66</color>
     <color name="col_date_val">#BEBEBE</color>
+    <string name="s_history_of_expenses">History of expenses</string>
 
 </resources>

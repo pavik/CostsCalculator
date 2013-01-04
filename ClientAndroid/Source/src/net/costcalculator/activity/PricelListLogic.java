@@ -58,6 +58,12 @@ public class PricelListLogic implements OnClickListener
 
         // initialize price list
         ListView lv = (ListView) activity_.findViewById(R.id.lv_price_list);
+        View header = activity_.getLayoutInflater().inflate(
+                R.layout.view_list_header, null);
+        TextView tvHeaderText = (TextView) header
+                .findViewById(R.id.textViewListHeader);
+        tvHeaderText.setText(R.string.s_history_of_expenses);
+        lv.addHeaderView(header);
         lv.setAdapter(adapter_);
 
         // set save button onClick callback
@@ -146,7 +152,8 @@ public class PricelListLogic implements OnClickListener
     private void initViewsContent()
     {
         etPrice_.setText("");
-        etCurrency_.setText(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
+        etCurrency_.setText(Currency.getInstance(Locale.getDefault())
+                .getCurrencyCode());
 
         priceRecordDate_ = Calendar.getInstance().getTime();
         etDate_.setText(priceRecordDate_.toLocaleString());
