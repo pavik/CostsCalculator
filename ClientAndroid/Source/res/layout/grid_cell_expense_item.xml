@@ -37,6 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="2dp"
         android:gravity="right"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/col_count_val" />
 
 </RelativeLayout>

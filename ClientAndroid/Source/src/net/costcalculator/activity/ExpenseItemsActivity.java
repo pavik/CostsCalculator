@@ -14,7 +14,7 @@ import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -45,6 +45,9 @@ public class ExpenseItemsActivity extends Activity implements
             ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
             newButton.setOnClickListener(logic_);
 
+            ImageButton reportButton = (ImageButton) findViewById(R.id.expense_statistic);
+            reportButton.setOnClickListener(this);
+            
             ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
             quitButton.setOnClickListener(this);
         }
@@ -80,20 +83,18 @@ public class ExpenseItemsActivity extends Activity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_expense_items, menu);
-        return true;
-    }
-
-    @Override
     public void onClick(View v)
     {
+        LOG.T("ExpenseItemsActivity::onClick");
+        
         switch (v.getId())
         {
         case R.id.quit_application:
             finish();
+            break;
+            
+        case R.id.expense_statistic:
+            startActivity(new Intent(this, StatisticReportActivity.class));
             break;
         }
     }

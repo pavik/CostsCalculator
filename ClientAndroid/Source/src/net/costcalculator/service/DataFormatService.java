@@ -10,6 +10,8 @@ package net.costcalculator.service;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Service provides set of static methods for data formatting
@@ -35,5 +37,13 @@ public class DataFormatService
         df.setMinimumFractionDigits(0);
         df.setGroupingUsed(true);
         return df.format(price);
+    }
+
+    /**
+     * Format date to string
+     */
+    public static String formatDate(Date d)
+    {
+        return SimpleDateFormat.getDateInstance().format(d);
     }
 }

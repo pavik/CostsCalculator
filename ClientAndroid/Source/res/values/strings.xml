@@ -44,15 +44,27 @@
     <string name="new_record_label">Добавить новую запись</string>
     <string name="close">Закрыть</string>
     <string name="price_warning">Введите пожалуйста цену</string>
+
     <color name="col_price_val">#725998</color>
     <color name="col_price_list_item_back">#FFFF66</color>
     <color name="col_date_val">#808080</color>
     <color name="col_price_list_item_split_line">#E5E5E5</color>
     <color name="col_tag_text">#3B5958</color>
     <color name="col_tag_back">#EDEFF4</color>
-    <color name="col_count_val">#3B5998</color>
+    <color name="col_count_val">#686868</color>
+    <color name="col_white">#FFFFFF</color>
+    <color name="col_black">#000000</color>
+    <color name="col_yellow">#f3ae1b</color>
+    <color name="col_light_gray">#AAAAAA</color>
+
     <string name="s_history_of_expenses">История расходов</string>
+
     <color name="col_list_view_header_back">#3B5998</color>
     <color name="col_list_view_header_text">#FFFFFF</color>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_statistic_report">Статистика расходов</string>
+    <string name="s_daily_expenses">Ежедневные расходы</string>
+    <string name="s_monthly_expenses">Ежемесячные расходы</string>
 
 </resources>

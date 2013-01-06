@@ -44,9 +44,14 @@
     <string name="new_record_label">New record</string>
     <string name="close">Close</string>
     <string name="price_warning">At least price should be filled</string>
+
     <color name="col_price_val">#0000FF</color>
     <color name="col_price_list_item_back">#FFFF66</color>
     <color name="col_date_val">#BEBEBE</color>
+
     <string name="s_history_of_expenses">History of expenses</string>
+    <string name="title_activity_statistic_report">Expenses statistic</string>
+    <string name="s_daily_expenses">Daily expenses</string>
+    <string name="s_monthly_expenses">Monthly expenses</string>
 
 </resources>

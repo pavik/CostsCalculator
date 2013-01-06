@@ -26,6 +26,10 @@
             android:name="net.costcalculator.activity.PriceListActivity"
             android:label="@string/title_activity_price_list" >
         </activity>
+        <activity
+            android:name="net.costcalculator.activity.StatisticReportActivity"
+            android:label="@string/title_activity_statistic_report" >
+        </activity>
     </application>
 
 </manifest>

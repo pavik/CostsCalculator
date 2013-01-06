@@ -131,7 +131,7 @@ public class ExpenseItemsLogic implements OnItemClickListener,
                         null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
         builder.setView(newItemView);
-        builder.setMessage(R.string.new_expense_item).setCancelable(false)
+        builder.setMessage(R.string.new_expense_item).setCancelable(true)
                 .setPositiveButton(R.string.confirm, this)
                 .setNegativeButton(R.string.cancel, this);
 

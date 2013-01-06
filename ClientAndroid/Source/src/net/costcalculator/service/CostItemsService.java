@@ -110,7 +110,7 @@ public class CostItemsService
                 long id = db.insert(SQLiteDbQueries.COST_ITEM_RECORDS, null,
                         getContent(rec));
                 rec.setId(id);
-                
+
                 if (cirCountCache_ != null)
                 {
                     Integer n = cirCountCache_.get(rec.getGroupGuid());
@@ -365,11 +365,11 @@ public class CostItemsService
         LOG.T("CostItemsService::getCostItemRecordsCount");
         if (cirCountCache_ != null)
             return cirCountCache_;
-        
+
         SQLiteDatabase db = null;
         Cursor ds = null;
         cirCountCache_ = new HashMap<String, Integer>();
-        
+
         try
         {
             db = dbprovider_.getReadableDatabase();
@@ -392,10 +392,120 @@ public class CostItemsService
             if (db != null)
                 db.close();
         }
-        
+
         return cirCountCache_;
     }
-    
+
+    public ArrayList<Date> getExpensesDates()
+    {
+        LOG.T("CostItemsService::getExpensesDates");
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<Date> result = new ArrayList<Date>();
+
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.GET_EXPENSES_DATES, null);
+
+            if (ds.moveToFirst())
+            {
+                int i = 0;
+                int colDatetime = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME);
+                do
+                {
+                    Date d = new Date(ds.getLong(colDatetime));
+                    if (i == 0)
+                    {
+                        result.add(d);
+                        ++i;
+                    }
+                    else if (!datesAreEqual(result.get(i - 1), d))
+                    {
+                        result.add(d);
+                        ++i;
+                    }
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
+    private boolean datesAreEqual(Date l, Date r)
+    {
+        return l.getYear() == r.getYear() && l.getMonth() == r.getMonth()
+                && l.getDate() == r.getDate();
+    }
+
+    public ArrayList<StatisticReportItem> getStatisticReport(Date from, Date to)
+            throws Exception
+    {
+        LOG.T("CostItemsService::getStatisticReport");
+        if (from == null || to == null)
+            throw new Exception("invalid argument: from = "
+                    + from.toLocaleString() + ", to = " + to.toLocaleString());
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<StatisticReportItem> result = new ArrayList<StatisticReportItem>();
+
+        try
+        {
+            Date dFrom = new Date(from.getYear(), from.getMonth(),
+                    from.getDate(), 0, 0, 0);
+            Date dTo = new Date(to.getYear(), to.getMonth(), to.getDate(), 23,
+                    59, 59);
+
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(
+                    SQLiteDbQueries.GET_EXPENSES_STAT_FOR_PERIOD,
+                    new String[] { Long.toString(dFrom.getTime()),
+                            Long.toString(dTo.getTime()) });
+
+            if (ds.moveToFirst())
+            {
+                int colGuid = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CI_GUID);
+                int colCurrency = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY);
+                int colCount = ds
+                        .getColumnIndex(SQLiteDbQueries.EXPR_CIR_COUNT);
+                int colSum = ds.getColumnIndex(SQLiteDbQueries.EXPR_CIR_SUM);
+
+                do
+                {
+                    StatisticReportItem item = new StatisticReportItem();
+                    item.dateFrom = from;
+                    item.dateTo = to;
+                    item.guid = ds.getString(colGuid);
+                    item.currency = ds.getString(colCurrency);
+                    item.sum = ds.getDouble(colSum);
+                    item.count = ds.getInt(colCount);
+                    result.add(item);
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
     public static CostItemsService instance()
     {
         if (instance_ == null)
@@ -434,8 +544,8 @@ public class CostItemsService
         }
     }
 
-    private SQLiteDbProvider        dbprovider_;
-    private HashMap<String, Integer>    cirCountCache_;
+    private SQLiteDbProvider         dbprovider_;
+    private HashMap<String, Integer> cirCountCache_;
 
-    private static CostItemsService instance_;
+    private static CostItemsService  instance_;
 }

@@ -194,6 +194,7 @@ public class CostItemRecordsAdapter extends BaseAdapter
         catch (Exception e)
         {
             LOG.E("Failed to fetch cost item record by id = " + id);
+            LOG.E(e.getMessage());
         }
 
         return cir;
