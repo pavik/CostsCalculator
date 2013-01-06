@@ -10,6 +10,8 @@ package net.costcalculator.activity;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,23 +35,30 @@ import android.widget.TextView;
  * @author Aliaksei Plashchanski
  * 
  */
-public class StatisticReportLogic
+public class StatisticReportLogic implements OnClickListener
 {
+    public static final int DAILY_VIEW   = 1;
+    public static final int MONTHLY_VIEW = 2;
+
     public StatisticReportLogic(Activity a)
     {
         activity_ = a;
+        viewMode_ = DAILY_VIEW;
         dailyAdapter_ = new DailyReportAdapter(a);
+        monthlyAdapter_ = new MonthlyReportAdapter(a);
 
         // initialize list
-        ListView lv = (ListView) activity_
+        lvHistory_ = (ListView) activity_
                 .findViewById(R.id.lv_expenses_report);
         View header = activity_.getLayoutInflater().inflate(
-                R.layout.view_list_header, null);
-        TextView tvHeaderText = (TextView) header
-                .findViewById(R.id.textViewListHeader);
-        tvHeaderText.setText(R.string.s_daily_expenses);
-        lv.addHeaderView(header);
-        lv.setAdapter(dailyAdapter_);
+                R.layout.view_report_header, null);
+        tvHeaderText_ = (TextView) header.findViewById(R.id.textViewListHeader);
+        tvHeaderText_.setText(R.string.s_daily_expenses);
+        imgArrow_ = (ImageView) header
+                .findViewById(R.id.img_report_header_arrow);
+        imgArrow_.setOnClickListener(this);
+        lvHistory_.addHeaderView(header);
+        lvHistory_.setAdapter(dailyAdapter_);
     }
 
     public void release()
@@ -59,8 +68,40 @@ public class StatisticReportLogic
             dailyAdapter_.release();
             dailyAdapter_ = null;
         }
+        if (monthlyAdapter_ != null)
+        {
+            monthlyAdapter_.release();
+            monthlyAdapter_ = null;
+        }
     }
 
-    private Activity           activity_;
-    private DailyReportAdapter dailyAdapter_;
+    @Override
+    public void onClick(View v)
+    {
+        if (imgArrow_ != null && imgArrow_.getId() == v.getId())
+        {
+            if (viewMode_ == DAILY_VIEW)
+            {
+                lvHistory_.setAdapter(monthlyAdapter_);
+                viewMode_ = MONTHLY_VIEW;
+            }
+            else
+            {
+                lvHistory_.setAdapter(dailyAdapter_);
+                viewMode_ = DAILY_VIEW;
+            }
+            
+            tvHeaderText_
+                    .setText(viewMode_ == DAILY_VIEW ? R.string.s_daily_expenses
+                            : R.string.s_monthly_expenses);
+        }
+    }
+
+    private int                  viewMode_;
+    private ImageView            imgArrow_;
+    private TextView             tvHeaderText_;
+    private ListView             lvHistory_;
+    private Activity             activity_;
+    private DailyReportAdapter   dailyAdapter_;
+    private MonthlyReportAdapter monthlyAdapter_;
 }

@@ -46,4 +46,12 @@ public class DataFormatService
     {
         return SimpleDateFormat.getDateInstance().format(d);
     }
+    
+    /**
+     * Format year and month to string
+     */
+    public static String formatMonth(Date d)
+    {
+        return new SimpleDateFormat("MMMM yyyy").format(d);
+    }
 }
