@@ -101,9 +101,10 @@ public class DailyReportAdapter extends BaseAdapter
 
     static class ViewHolder
     {
-        public TextView tvPrice;
-        public TextView tvDate;
-        public View     vDivider;
+        public TextView     tvPrice;
+        public TextView     tvDate;
+        public View         vDivider;
+        public LinearLayout ll;
     }
 
     /*
@@ -162,7 +163,11 @@ public class DailyReportAdapter extends BaseAdapter
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.addRule(RelativeLayout.BELOW, vh.vDivider.getId());
+        
+        if (vh.ll != null)
+            rl.removeView(vh.ll);
         rl.addView(ll, rlp);
+        vh.ll = ll;
 
         return item;
     }

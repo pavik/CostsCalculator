@@ -102,9 +102,10 @@ public class MonthlyReportAdapter extends BaseAdapter
 
     static class ViewHolder
     {
-        public TextView tvPrice;
-        public TextView tvDate;
-        public View     vDivider;
+        public TextView     tvPrice;
+        public TextView     tvDate;
+        public View         vDivider;
+        public LinearLayout ll;
     }
 
     /*
@@ -163,7 +164,11 @@ public class MonthlyReportAdapter extends BaseAdapter
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.addRule(RelativeLayout.BELOW, vh.vDivider.getId());
+
+        if (vh.ll != null)
+            rl.removeView(vh.ll);
         rl.addView(ll, rlp);
+        vh.ll = ll;
 
         return item;
     }
@@ -211,7 +216,8 @@ public class MonthlyReportAdapter extends BaseAdapter
         Date date = months_.get(position);
         try
         {
-            report = CostItemsService.instance().getStatisticReport(date, endOfMonth(date));
+            report = CostItemsService.instance().getStatisticReport(date,
+                    endOfMonth(date));
         }
         catch (Exception e)
         {
@@ -221,7 +227,7 @@ public class MonthlyReportAdapter extends BaseAdapter
 
         return report;
     }
-    
+
     private Date endOfMonth(Date d)
     {
         Date res = new Date(d.getTime());
