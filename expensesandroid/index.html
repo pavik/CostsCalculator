@@ -43,8 +43,14 @@
 
     <div class="container">
 
-      <h3>{{ page_header }}</h3>
-	  {{ page_content }}
+    <h3>{{ page_header }}</h3>
+	{{ page_content }}
+	{% for msg in feedbacklist %}
+	  <blockquote id="{{msg.key()}}">
+        <p><b>{{ msg.text }}</b></p>
+        <small>{{ msg.postdate }}, {{ msg.user }}</small>
+      </blockquote>
+    {% endfor %}
 
     </div> <!-- /container -->
 
