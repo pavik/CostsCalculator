@@ -62,7 +62,6 @@
     <color name="col_list_view_header_back">#3B5998</color>
     <color name="col_list_view_header_text">#FFFFFF</color>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_statistic_report">Статистика расходов</string>
     <string name="s_daily_expenses">Ежедневные расходы</string>
     <string name="s_monthly_expenses">Ежемесячные расходы</string>

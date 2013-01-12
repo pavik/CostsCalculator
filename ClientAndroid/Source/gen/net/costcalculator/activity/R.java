@@ -123,7 +123,6 @@ public final class R {
         public static final int et_expense_item_name_hint=0x7f040008;
         public static final int expense_statistic=0x7f040005;
         public static final int get_shared_expense_item=0x7f040004;
-        public static final int hello_world=0x7f040025;
         public static final int history_label=0x7f040020;
         public static final int menu_settings=0x7f040001;
         public static final int new_expense_item=0x7f040003;
@@ -132,15 +131,15 @@ public final class R {
         public static final int price_label=0x7f040016;
         public static final int price_warning=0x7f040023;
         public static final int quit_application=0x7f040006;
-        public static final int s_daily_expenses=0x7f040027;
+        public static final int s_daily_expenses=0x7f040026;
         public static final int s_history_of_expenses=0x7f040024;
-        public static final int s_monthly_expenses=0x7f040028;
+        public static final int s_monthly_expenses=0x7f040027;
         public static final int save_label=0x7f04001f;
         public static final int tag_hint=0x7f04001e;
         public static final int tag_label=0x7f04001d;
         public static final int title_activity_expense_items=0x7f040002;
         public static final int title_activity_price_list=0x7f040017;
-        public static final int title_activity_statistic_report=0x7f040026;
+        public static final int title_activity_statistic_report=0x7f040025;
     }
     public static final class style {
         /** 
