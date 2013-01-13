@@ -48,6 +48,9 @@ public class ExpenseItemsActivity extends Activity implements
             ImageButton reportButton = (ImageButton) findViewById(R.id.expense_statistic);
             reportButton.setOnClickListener(this);
             
+            ImageButton sharedButton = (ImageButton) findViewById(R.id.get_shared_expense_item);
+            sharedButton.setVisibility(View.GONE);
+            
             ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
             quitButton.setOnClickListener(this);
         }
