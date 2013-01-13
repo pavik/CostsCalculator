@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/col_activity_background"
+    android:orientation="vertical"
+    tools:context=".BackupActivity" >
+
+    <TextView
+        android:id="@+id/tv_backup_intro"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:linksClickable="true"
+        android:padding="5dp"
+        android:text="@string/s_backup_intro"
+        android:textColorLink="@color/col_yellow"
+        android:textStyle="bold"
+        android:typeface="normal" />
+
+    <Button
+        android:id="@+id/btn_link_dropbox"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_gradient"
+        android:text="@string/s_btn_login_dropbox" />
+
+    <Button
+        android:id="@+id/btn_backup_dropbox"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_gradient"
+        android:text="@string/s_btn_backup_into_dropbox" />
+
+    <Button
+        android:id="@+id/btn_restore_dropbox"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_gradient"
+        android:text="@string/s_btn_restore_from_dropbox" />
+
+    <ListView
+        android:id="@+id/lv_drop_box_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="2dp"
+        android:divider="@color/col_activity_background"
+        android:dividerHeight="2dp" />
+
+</LinearLayout>

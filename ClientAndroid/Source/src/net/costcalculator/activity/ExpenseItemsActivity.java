@@ -47,7 +47,10 @@ public class ExpenseItemsActivity extends Activity implements
 
             ImageButton reportButton = (ImageButton) findViewById(R.id.expense_statistic);
             reportButton.setOnClickListener(this);
-            
+
+            ImageButton backupButton = (ImageButton) findViewById(R.id.backup_expenses);
+            backupButton.setOnClickListener(this);
+
             ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
             quitButton.setOnClickListener(this);
         }
@@ -62,7 +65,7 @@ public class ExpenseItemsActivity extends Activity implements
     {
         super.onRestart();
         LOG.T("ExpenseItemsActivity::onRestart");
-        
+
         logic_.onActivityRestart();
     }
 
@@ -86,15 +89,19 @@ public class ExpenseItemsActivity extends Activity implements
     public void onClick(View v)
     {
         LOG.T("ExpenseItemsActivity::onClick");
-        
+
         switch (v.getId())
         {
         case R.id.quit_application:
             finish();
             break;
-            
+
         case R.id.expense_statistic:
             startActivity(new Intent(this, StatisticReportActivity.class));
+            break;
+
+        case R.id.backup_expenses:
+            startActivity(new Intent(this, BackupActivity.class));
             break;
         }
     }

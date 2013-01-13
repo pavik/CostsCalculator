@@ -63,7 +63,7 @@ public class CostItemsService
             row = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_BY_GUID,
                     new String[] { guid });
             if (row.moveToFirst())
-                result = fromCursor(row);
+                result = fromCursorCI(row);
             else
                 throw new Exception("failed to get cost item by guid: " + guid);
         }
@@ -76,6 +76,84 @@ public class CostItemsService
         }
 
         return result;
+    }
+
+    public CostItem getCostItemByGUID(String guid) throws Exception
+    {
+        LOG.T("CostItemsService::getCostItemByGUID");
+        if (guid.length() == 0)
+            throw new Exception("invalid argument: guid");
+
+        CostItem result = null;
+        SQLiteDatabase db = null;
+        Cursor row = null;
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            row = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_BY_GUID,
+                    new String[] { guid });
+            if (row.moveToFirst())
+                result = fromCursorCI(row);
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (row != null)
+                row.close();
+        }
+
+        return result;
+    }
+
+    public CostItemRecord getCostItemRecordByGUID(String guid) throws Exception
+    {
+        LOG.T("CostItemsService::getCostItemRecordByGUID");
+        if (guid.length() == 0)
+            throw new Exception("invalid argument: guid");
+
+        CostItemRecord result = null;
+        SQLiteDatabase db = null;
+        Cursor row = null;
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            row = db.rawQuery(SQLiteDbQueries.GET_COST_ITEM_RECORD_BY_GUID,
+                    new String[] { guid });
+            if (row.moveToFirst())
+                result = fromCursorCIR(row);
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (row != null)
+                row.close();
+        }
+
+        return result;
+    }
+
+    public void saveCostItem(CostItem ci) throws Exception
+    {
+        LOG.T("CostItemsService::saveCostItem");
+        if (ci == null)
+            throw new Exception("invalid argument: ci");
+        if (ci.getGuid().length() == 0)
+            throw new Exception("invalid argument: ci = " + ci.toString());
+
+        SQLiteDatabase db = null;
+        try
+        {
+            db = dbprovider_.getWritableDatabase();
+            db.execSQL(SQLiteDbQueries.INSERT_COST_ITEM,
+                    new Object[] { ci.getGuid(), ci.getName() });
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+        }
     }
 
     public CostItemRecord saveCostItemRecord(CostItemRecord rec)
@@ -144,26 +222,7 @@ public class CostItemsService
                     new String[] { Long.toString(id) });
 
             if (ds.moveToFirst())
-            {
-                cir = new CostItemRecord();
-                cir.setId(id);
-                cir.setGuid(ds.getString(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_GUID)));
-                cir.setGroupGuid(ds.getString(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CI_GUID)));
-                cir.setSum(ds.getDouble(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_SUM)));
-                cir.setCurrency(ds.getString(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY)));
-                cir.setComment(ds.getString(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_COMMENT)));
-                cir.setTag(ds.getString(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_TAG)));
-                cir.setVersion(ds.getInt(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_AUDIT_VERSION)));
-                cir.setCreationTime(new Date(ds.getLong(ds
-                        .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME))));
-            }
+                cir = fromCursorCIR(ds);
             else
                 throw new Exception("failed to get cost item record by id = "
                         + id);
@@ -280,7 +339,7 @@ public class CostItemsService
             {
                 do
                 {
-                    result.add(fromCursor(ds));
+                    result.add(fromCursorCI(ds));
                 } while (ds.moveToNext());
             }
         }
@@ -293,6 +352,21 @@ public class CostItemsService
         }
 
         return result;
+    }
+
+    public ArrayList<CostItemRecord> getAllCostItemRecords(CostItem ci)
+            throws Exception
+    {
+        LOG.T("CostItemsService::getAllCostItemRecords");
+        if (ci == null)
+            throw new Exception("invalid argument: ci");
+
+        ArrayList<CostItemRecord> cirList = new ArrayList<CostItemRecord>();
+        ArrayList<Long> cirIds = getCostItemRecordIds(ci);
+        for (int i = 0; i < cirIds.size(); ++i)
+            cirList.add(getCostItemRecord(cirIds.get(i)));
+
+        return cirList;
     }
 
     public CostItem getCostItemById(long id) throws Exception
@@ -310,7 +384,7 @@ public class CostItemsService
                     new String[] { Long.toString(id) });
 
             if (ds.moveToFirst())
-                result = fromCursor(ds);
+                result = fromCursorCI(ds);
             else
                 throw new Exception("failed to get cost item by id: " + id);
         }
@@ -345,7 +419,7 @@ public class CostItemsService
         }
     }
 
-    private CostItem fromCursor(Cursor c)
+    private CostItem fromCursorCI(Cursor c)
     {
         CostItem item = new CostItem();
         item.setGuid(c.getString(c.getColumnIndex(SQLiteDbQueries.COL_CI_GUID)));
@@ -357,6 +431,29 @@ public class CostItemsService
                 .getColumnIndex(SQLiteDbQueries.COL_CI_DATA_VERSION)));
 
         return item;
+    }
+
+    private CostItemRecord fromCursorCIR(Cursor ds)
+    {
+        CostItemRecord cir = new CostItemRecord();
+
+        cir.setId(ds.getLong(ds.getColumnIndex(SQLiteDbQueries.COL_CIR_ID)));
+        cir.setGuid(ds.getString(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_GUID)));
+        cir.setGroupGuid(ds.getString(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_CI_GUID)));
+        cir.setSum(ds.getDouble(ds.getColumnIndex(SQLiteDbQueries.COL_CIR_SUM)));
+        cir.setCurrency(ds.getString(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY)));
+        cir.setComment(ds.getString(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_COMMENT)));
+        cir.setTag(ds.getString(ds.getColumnIndex(SQLiteDbQueries.COL_CIR_TAG)));
+        cir.setVersion(ds.getInt(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_AUDIT_VERSION)));
+        cir.setCreationTime(new Date(ds.getLong(ds
+                .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME))));
+
+        return cir;
     }
 
     public HashMap<String, Integer> getCostItemRecordsCount()
@@ -538,6 +635,38 @@ public class CostItemsService
         }
 
         return result;
+    }
+
+    public void importCostItems(CostItem ci, ArrayList<CostItemRecord> cirList)
+            throws Exception
+    {
+        LOG.T("CostItemsService::importCostItems");
+        if (ci == null)
+            throw new Exception("invalid argument: ci");
+        if (cirList == null)
+            throw new Exception("invalid argument: cirList");
+        if (ci.getGuid().length() == 0)
+            return;
+
+        CostItem dbCI = getCostItemByGUID(ci.getGuid());
+        if (dbCI == null)
+        {
+            saveCostItem(ci);
+            dbCI = getCostItemByGUID(ci.getGuid());
+            if (dbCI == null)
+                return;
+        }
+
+        for (int i = 0; i < cirList.size(); ++i)
+        {
+            CostItemRecord cir = cirList.get(i);
+            if (cir.getGuid().length() > 0)
+            {
+                CostItemRecord dbCIR = getCostItemRecordByGUID(cir.getGuid());
+                if (dbCIR == null)
+                    saveCostItemRecord(cir);
+            }
+        }
     }
 
     public static CostItemsService instance()

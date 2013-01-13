@@ -102,6 +102,8 @@ public class SQLiteDbQueries
 
     public static final String GET_COST_ITEM_RECORD_BY_ID   = "SELECT * FROM cost_item_records WHERE cir_id = ?";
 
+    public static final String GET_COST_ITEM_RECORD_BY_GUID = "SELECT * FROM cost_item_records WHERE cir_guid = ?";
+
     public static final String GET_COUNT_COST_ITEM_RECORDS  = "SELECT cir_ci_guid, COUNT(cir_ci_guid) AS cir_count FROM  cost_item_records GROUP BY (cir_ci_guid) ORDER BY cir_count DESC";
 
     public static final String GET_EXPENSES_DATES           = "SELECT DISTINCT cir_datetime FROM cost_item_records ORDER BY cir_datetime DESC";

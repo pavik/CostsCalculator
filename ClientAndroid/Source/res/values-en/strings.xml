@@ -53,5 +53,18 @@
     <string name="title_activity_statistic_report">Expenses statistic</string>
     <string name="s_daily_expenses">Daily expenses</string>
     <string name="s_monthly_expenses">Monthly expenses</string>
-
+    <string name="s_title_activity_backup">Backup data</string>
+    <string name="s_backup_intro">In order to be able to make backup copy of your data you should create account in www.dropbox.com and link your account here</string>
+    <string name="s_btn_login_dropbox">Link Dropbox</string>
+    <string name="s_btn_logout_dropbox">Unlink Dropbox</string>
+    <string name="s_btn_backup_into_dropbox">Backup data into Dropbox</string>
+    <string name="s_btn_restore_from_dropbox">Restore data from Dropbox</string>
+    <string name="s_msg_dropbox_backup_ok">Backup successful</string>
+    <string name="s_msg_dropbox_restore_ok">Restore successful</string>
+    <string name="s_msg_uploading">Uploading&#8230;</string>
+    <string name="s_msg_no_data_for_backuping">There is no data for backup</string>
+    <string name="s_msg_no_backup_files_in_dropbox">There is no any data in your Dropbox account</string>
+    <string name="s_dropbox_file_list">Files list in Dropbox</string>
+    <string name="s_msg_dropbox_download_ok">Download file successfully completed</string>
+    <string name="s_msg_confirm_restore">Do you really want to restore data from file </string>
 </resources>

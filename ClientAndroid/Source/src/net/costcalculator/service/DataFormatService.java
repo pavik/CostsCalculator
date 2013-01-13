@@ -8,9 +8,11 @@
 
 package net.costcalculator.service;
 
+import android.annotation.SuppressLint;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -46,12 +48,24 @@ public class DataFormatService
     {
         return SimpleDateFormat.getDateInstance().format(d);
     }
-    
+
     /**
      * Format year and month to string
      */
+    @SuppressLint("SimpleDateFormat")
     public static String formatMonth(Date d)
     {
         return new SimpleDateFormat("MMMM yyyy").format(d);
+    }
+
+    /**
+     * File name contains current time info with extension .JSON
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static String getBackupFileNameNow()
+    {
+        String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
+                .format(Calendar.getInstance().getTime());
+        return fileName + ".JSON";
     }
 }

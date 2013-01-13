@@ -65,5 +65,18 @@
     <string name="title_activity_statistic_report">Статистика расходов</string>
     <string name="s_daily_expenses">Ежедневные расходы</string>
     <string name="s_monthly_expenses">Ежемесячные расходы</string>
-
+    <string name="s_title_activity_backup">Резервное копирование данных</string>
+    <string name="s_backup_intro">Чтобы воспользоваться возможностью резервного копирования данных необходимо создать учетную запись в www.dropbox.com и выполнить вход в Dropbox здесь</string>
+    <string name="s_btn_login_dropbox">Войти в Dropbox</string>
+    <string name="s_btn_logout_dropbox">Выйти из Dropbox</string>
+    <string name="s_btn_backup_into_dropbox">Копировать данные в Dropbox</string>
+    <string name="s_btn_restore_from_dropbox">Восстановить данные из Dropbox</string>
+    <string name="s_msg_dropbox_backup_ok">Копирование данных завершено успешно</string>
+    <string name="s_msg_dropbox_download_ok">Загрузка данных завершена успешно</string>
+    <string name="s_msg_dropbox_restore_ok">Восстановление данных завершено успешно</string>
+    <string name="s_msg_uploading">Загрузка данных&#8230;</string>
+    <string name="s_msg_no_data_for_backuping">Нет данных для загрузки</string>
+    <string name="s_msg_no_backup_files_in_dropbox">В вашем Dropbox аккаунте нет резервных копий данных</string>
+    <string name="s_dropbox_file_list">Список файлов в Dropbox</string>
+    <string name="s_msg_confirm_restore">Вы действительно хотите восстановить данные из файла </string>
 </resources>
