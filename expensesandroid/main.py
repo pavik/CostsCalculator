@@ -10,10 +10,27 @@ jinja_environment = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
   def get(self):
+    page_content = u'<p>Приложение позволяет вести учет ежедневных семейных расходов по различным категориям, а также просматривать ежедневную и ежемесячную статистику расходов по этим категориям.</p>'
+    page_content += u'<p><b>Доступные функции</b></p>'
+    page_content += u'<ul>'
+    page_content += u'<li>встроенные категории расходов;</li>'
+    page_content += u'<li>добавление своих категорий расходов;</li>'
+    page_content += u'<li>добавление расходов в доступных категориях (можно внести цену, комментарий и тег);</li>'
+    page_content += u'<li>просмотр ежедневной статистики расходов;</li>'
+    page_content += u'<li>просмотр ежемесячной статистики расходов.</li>'
+    page_content += u'</ul>'
+    page_content += u'<p><b>Скриншоты программы</b></p>'
+    page_content +=u'<img src="img/main.png" class="img-polaroid" />'
+    page_content +=u'<img src="img/category_new_item.png" class="img-polaroid" />'
+    page_content +=u'<img src="img/category_history.png" class="img-polaroid" />'
+    page_content +=u'<img src="img/daily_stat.png" class="img-polaroid" />'
+    page_content +=u'<img src="img/monthly_stat.png" class="img-polaroid" />'
+    page_content +=u'<img src="img/new_category.png" class="img-polaroid" />'
+
     template_values = {
       'class_active_main' : 'class="active"',
       'page_header': u'Расходы для Android - приложение для ведения семейных расходов',
-      'page_content': u'<p>Приложение позволяет вести учет ежедневных семейных расходов.</p>'
+      'page_content': page_content
     }
     template = jinja_environment.get_template('index.html')
     self.response.out.write(template.render(template_values))
