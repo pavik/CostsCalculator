@@ -19,9 +19,19 @@ class MainPage(webapp2.RequestHandler):
 
 class AboutPage(webapp2.RequestHandler):
   def get(self):
+    page_content = u'<p>Дополнительная информация о конкурсе доступна на странице <a href="http://android.velcom.by">http://android.velcom.by</a></p>'
+    page_content += u'<blockquote><p><b>В следующей версии будут доступны новые функции (дата релиза 1 марта 2013 года)</b></p>'
+    page_content += u'<ul>'
+    page_content += u'<li>Создание резервных копий данных в Dropbox аккаунте пользователя</li>'
+    page_content += u'<li>Восстановление данных пользователя из резервных копий (удобно при переходе на другое устройство)</li>'
+    page_content += u'<li>Возможность удаления и изменения категорий расходов</li>'
+    page_content += u'<li>Возможность редактирования записей в истории расходов</li>'
+    page_content += u'<li>Автозаполнение комментариев, тегов, валюты расходов на основе ранее введенных данных</li>'
+    page_content += u'</ul></blockquote>'
+
     template_values = {
       'page_header': u'Приложение разработано для конкурса velcom android masters',
-      'page_content': u'<p>Дополнительная информация о конкурсе доступна на странице <a href="http://android.velcom.by">http://android.velcom.by</a></p>'
+      'page_content': page_content
     }
     template = jinja_environment.get_template('index.html')
     self.response.out.write(template.render(template_values))
@@ -30,7 +40,7 @@ class DownloadPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
       'page_header': u'Последняя версия приложения доступна для загрузки в Google Play',
-      'page_content': u'<p><a href="https://play.google.com">Перейти в Google Play</a></p>'
+      'page_content': u'<p><a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity">Перейти в Google Play</a></p><p><a href="https://www.dropbox.com/s/ssu6fq57ndhhe62/Expenses.apk">Загрузить приложение из Dropbox</a></p>'
     }
     template = jinja_environment.get_template('index.html')
     self.response.out.write(template.render(template_values))
