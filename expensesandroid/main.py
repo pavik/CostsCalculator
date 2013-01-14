@@ -11,6 +11,7 @@ jinja_environment = jinja2.Environment(
 class MainPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
+      'class_active_main' : 'class="active"',
       'page_header': u'Расходы для Android - приложение для ведения семейных расходов',
       'page_content': u'<p>Приложение позволяет вести учет ежедневных семейных расходов.</p>'
     }
@@ -30,6 +31,7 @@ class AboutPage(webapp2.RequestHandler):
     page_content += u'</ul></blockquote>'
 
     template_values = {
+      'class_active_about' : 'class="active"',
       'page_header': u'Приложение разработано для конкурса velcom android masters',
       'page_content': page_content
     }
@@ -39,6 +41,7 @@ class AboutPage(webapp2.RequestHandler):
 class DownloadPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
+      'class_active_download' : 'class="active"',
       'page_header': u'Последняя версия приложения доступна для загрузки в Google Play',
       'page_content': u'<p><a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity">Перейти в Google Play</a></p><p><a href="https://www.dropbox.com/s/ssu6fq57ndhhe62/Expenses.apk">Загрузить приложение из Dropbox</a></p>'
     }
@@ -48,6 +51,7 @@ class DownloadPage(webapp2.RequestHandler):
 class ContactPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
+      'class_active_contact' : 'class="active"',
       'page_header': u'На этой странице можно отправить сообщение разработчикам',
       'page_content': u'<form action="/sendemail" method="POST">\
         <label>Адрес для ответа</label>\
@@ -88,6 +92,7 @@ class FeedbackPage(webapp2.RequestHandler):
     feedbacklist = db.GqlQuery("SELECT * FROM FeedbackMessage")
 
     template_values = {
+      'class_active_feedback' : 'class="active"',
       'page_header': u'На этой странице можно оставить отзыв о приложении',
       'page_content': u'<form action="/sendfeedback" method="POST">\
         <label>Ваше имя</label>\
