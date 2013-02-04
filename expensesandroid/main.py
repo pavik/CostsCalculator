@@ -37,7 +37,10 @@ class MainPage(webapp2.RequestHandler):
 
 class AboutPage(webapp2.RequestHandler):
   def get(self):
-    page_content = u'<p>Дополнительная информация о конкурсе доступна на странице <a href="http://android.velcom.by">http://android.velcom.by</a></p>'
+    page_content = u'<p></p>'
+    page_content += u'<blockquote><p>'
+    page_content += u'В связи со стремительным ростом интереса пользователей к приложению, команда разработчиков постарается реализовать новые функции раньше 1 марта 2013 года'
+    page_content += u'</p></blockquote>'
     page_content += u'<blockquote><p><b>В следующей версии будут доступны новые функции (дата релиза 1 марта 2013 года)</b></p>'
     page_content += u'<ul>'
     page_content += u'<li>Создание резервных копий данных в Dropbox аккаунте пользователя</li>'
@@ -46,10 +49,14 @@ class AboutPage(webapp2.RequestHandler):
     page_content += u'<li>Возможность редактирования записей в истории расходов</li>'
     page_content += u'<li>Автозаполнение комментариев, тегов, валюты расходов на основе ранее введенных данных</li>'
     page_content += u'</ul></blockquote>'
+    page_content += u'<blockquote><p>'
+    page_content += u'Первая официальная версия приложеня 1.4 разработана для конкурса velcom android masters. '
+    page_content += u'Дополнительная информация о конкурсе доступна на странице <a href="http://android.velcom.by">http://android.velcom.by</a>'
+    page_content += u'</p></blockquote>'
 
     template_values = {
       'class_active_about' : 'class="active"',
-      'page_header': u'Приложение разработано для конкурса velcom android masters',
+      'page_header': u'Актуальная информация о развитии проекта',
       'page_content': page_content
     }
     template = jinja_environment.get_template('index.html')
