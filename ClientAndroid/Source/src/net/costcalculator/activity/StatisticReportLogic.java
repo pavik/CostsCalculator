@@ -55,9 +55,12 @@ public class StatisticReportLogic implements OnClickListener
                 R.layout.view_report_header, null);
         tvHeaderText_ = (TextView) header.findViewById(R.id.textViewListHeader);
         tvHeaderText_.setText(R.string.s_daily_expenses);
-        imgArrow_ = (ImageView) header
-                .findViewById(R.id.img_report_header_arrow);
-        imgArrow_.setOnClickListener(this);
+        imgArrowRight_ = (ImageView) header
+                .findViewById(R.id.img_report_header_arrow_right);
+        imgArrowRight_.setOnClickListener(this);
+        imgArrowLeft_ = (ImageView) header
+                .findViewById(R.id.img_report_header_arrow_left);
+        imgArrowLeft_.setOnClickListener(this);
         lvHistory_.addHeaderView(header);
         lvHistory_.setAdapter(dailyAdapter_);
         lvHistory_.setOnTouchListener(new OnTouchListener()
@@ -92,8 +95,10 @@ public class StatisticReportLogic implements OnClickListener
     @Override
     public void onClick(View v)
     {
-        if (imgArrow_ != null && imgArrow_.getId() == v.getId())
+        if (imgArrowRight_ != null && imgArrowRight_.getId() == v.getId())
             nextPage();
+        if (imgArrowLeft_ != null && imgArrowLeft_.getId() == v.getId())
+            nextPage();        
     }
 
     private void nextPage()
@@ -126,7 +131,7 @@ public class StatisticReportLogic implements OnClickListener
         float touchUpY = y;
         float a = Math.abs(touchDownX_ - touchUpX);
         float b = Math.abs(touchDownY_ - touchUpY);
-        double c = Math.sqrt(a*a + b*b);
+        double c = Math.sqrt(a * a + b * b);
         if (c < 10.0)
             return;
         else if (a / c > sin70_)
@@ -137,7 +142,7 @@ public class StatisticReportLogic implements OnClickListener
     private float                touchDownX_;
     private float                touchDownY_;
     private int                  viewMode_;
-    private ImageView            imgArrow_;
+    private ImageView            imgArrowRight_, imgArrowLeft_;
     private TextView             tvHeaderText_;
     private ListView             lvHistory_;
     private Activity             activity_;
