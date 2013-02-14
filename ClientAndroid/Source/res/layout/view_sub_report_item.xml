@@ -7,6 +7,7 @@
         android:id="@+id/tv_cat_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/col_black" />
 
@@ -15,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="2dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/col_price_val" />
 
