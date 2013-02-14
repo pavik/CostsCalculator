@@ -13,6 +13,7 @@ public final class R {
     public static final class color {
         public static final int col_activity_background=0x7f050001;
         public static final int col_black=0x7f05000b;
+        public static final int col_blue=0x7f050010;
         public static final int col_count_val=0x7f050009;
         public static final int col_date_val=0x7f050005;
         public static final int col_expense_item=0x7f050000;
@@ -55,38 +56,39 @@ public final class R {
         public static final int btn_backup_dropbox=0x7f080002;
         public static final int btn_link_dropbox=0x7f080001;
         public static final int btn_restore_dropbox=0x7f080003;
-        public static final int btn_save_price=0x7f080012;
-        public static final int cell_count=0x7f080019;
-        public static final int cell_image=0x7f080016;
-        public static final int cell_image_overlay=0x7f080017;
-        public static final int cell_text=0x7f080018;
-        public static final int et_comment=0x7f080011;
+        public static final int btn_save_price=0x7f080013;
+        public static final int cell_count=0x7f08001a;
+        public static final int cell_image=0x7f080017;
+        public static final int cell_image_overlay=0x7f080018;
+        public static final int cell_text=0x7f080019;
+        public static final int et_comment=0x7f080012;
         public static final int et_currency=0x7f08000d;
-        public static final int et_date=0x7f08000f;
-        public static final int et_expense_item_name=0x7f080015;
+        public static final int et_expense_item_name=0x7f080016;
         public static final int et_price=0x7f08000c;
-        public static final int et_tag=0x7f080010;
+        public static final int et_tag=0x7f080011;
         public static final int expense_statistic=0x7f080008;
         public static final int get_shared_expense_item=0x7f08000a;
         public static final int gridExpenseItems=0x7f080005;
-        public static final int img_report_header_arrow=0x7f080020;
+        public static final int img_report_header_arrow=0x7f080021;
         public static final int lv_drop_box_list=0x7f080004;
-        public static final int lv_expenses_report=0x7f080014;
-        public static final int lv_price_list=0x7f080013;
-        public static final int menu_settings=0x7f080023;
+        public static final int lv_expenses_report=0x7f080015;
+        public static final int lv_price_list=0x7f080014;
+        public static final int menu_settings=0x7f080024;
         public static final int new_expense_item=0x7f080006;
         public static final int quit_application=0x7f080009;
-        public static final int textViewListHeader=0x7f08001a;
+        public static final int textViewListHeader=0x7f08001b;
         public static final int tv_backup_intro=0x7f080000;
-        public static final int tv_cat_val=0x7f080022;
-        public static final int tv_comment=0x7f08001e;
+        public static final int tv_cat_val=0x7f080023;
+        public static final int tv_comment=0x7f08001f;
         public static final int tv_date=0x7f08000e;
-        public static final int tv_date_val=0x7f08001c;
+        public static final int tv_date_string=0x7f08000f;
+        public static final int tv_date_val=0x7f08001d;
         public static final int tv_price=0x7f08000b;
-        public static final int tv_price_val=0x7f08001b;
-        public static final int tv_tag=0x7f08001f;
-        public static final int v_divider=0x7f080021;
-        public static final int v_price_div=0x7f08001d;
+        public static final int tv_price_val=0x7f08001c;
+        public static final int tv_tag=0x7f080020;
+        public static final int tv_time_string=0x7f080010;
+        public static final int v_divider=0x7f080022;
+        public static final int v_price_div=0x7f08001e;
     }
     public static final class layout {
         public static final int activity_backup=0x7f030000;
@@ -146,12 +148,14 @@ public final class R {
         public static final int s_btn_restore_from_dropbox=0x7f04002d;
         public static final int s_daily_expenses=0x7f040026;
         public static final int s_dropbox_file_list=0x7f040034;
+        public static final int s_err_unknown_error=0x7f040037;
         public static final int s_history_of_expenses=0x7f040024;
         public static final int s_monthly_expenses=0x7f040027;
         public static final int s_msg_confirm_restore=0x7f040035;
         public static final int s_msg_dropbox_backup_ok=0x7f04002e;
         public static final int s_msg_dropbox_download_ok=0x7f04002f;
         public static final int s_msg_dropbox_restore_ok=0x7f040030;
+        public static final int s_msg_list_available_backups=0x7f040036;
         public static final int s_msg_no_backup_files_in_dropbox=0x7f040033;
         public static final int s_msg_no_data_for_backuping=0x7f040032;
         public static final int s_msg_uploading=0x7f040031;
@@ -162,6 +166,7 @@ public final class R {
         public static final int title_activity_expense_items=0x7f040002;
         public static final int title_activity_price_list=0x7f040017;
         public static final int title_activity_statistic_report=0x7f040025;
+        public static final int tv_placeholder=0x7f040038;
     }
     public static final class style {
         /** 

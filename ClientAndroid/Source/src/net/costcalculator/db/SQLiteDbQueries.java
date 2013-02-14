@@ -17,6 +17,8 @@ package net.costcalculator.db;
 public class SQLiteDbQueries
 {
     // table 'cost_items'
+    public static final String COST_ITEMS                   = "cost_items";
+
     public static final String TABLE_COST_ITEMS             = "CREATE TABLE cost_items ("
                                                                     + "ci_id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL UNIQUE ,"
                                                                     + "ci_guid VARCHAR NOT NULL  UNIQUE ,"
@@ -40,13 +42,13 @@ public class SQLiteDbQueries
     // queries of 'cost_items'
     public static final String INSERT_COST_ITEM             = "INSERT INTO cost_items(ci_guid, ci_name) VALUES(?, ?)";
 
+    public static final String COST_ITEM_UPDATE_BY_ID       = " ci_id = ? ";
+
     public static final String GET_COST_ITEM_BY_GUID        = "SELECT * FROM cost_items WHERE ci_guid = ?";
 
     public static final String DEL_COST_ITEM                = "DELETE FROM cost_items WHERE ci_id = ?";
 
-    public static final String INC_USE_COUNT                = "UPDATE cost_items SET ci_use_count = ci_use_count + 1 WHERE ci_id = ?";
-
-    public static final String GET_ALL_COST_ITEMS           = "SELECT * FROM cost_items ORDER BY ci_use_count DESC";
+    public static final String GET_ALL_COST_ITEMS           = "SELECT cost_items.*, COUNT(cost_items.ci_guid) AS n FROM cost_items LEFT JOIN cost_item_records ON cost_items.ci_guid = cost_item_records.cir_ci_guid GROUP BY cost_items.ci_guid ORDER BY n DESC";
 
     public static final String GET_COST_ITEM_BY_ID          = "SELECT * FROM cost_items WHERE ci_id = ?";
 
@@ -100,6 +102,8 @@ public class SQLiteDbQueries
     // queries of 'cost_item_records'
     public static final String COST_ITEM_RECORDS_IDS        = "SELECT cir_id FROM cost_item_records WHERE cir_ci_guid = ? ORDER BY cir_datetime DESC";
 
+    public static final String GET_ALL_COST_ITEM_RECORDS    = "SELECT * FROM cost_item_records";
+
     public static final String GET_COST_ITEM_RECORD_BY_ID   = "SELECT * FROM cost_item_records WHERE cir_id = ?";
 
     public static final String GET_COST_ITEM_RECORD_BY_GUID = "SELECT * FROM cost_item_records WHERE cir_guid = ?";
@@ -108,5 +112,7 @@ public class SQLiteDbQueries
 
     public static final String GET_EXPENSES_DATES           = "SELECT DISTINCT cir_datetime FROM cost_item_records ORDER BY cir_datetime DESC";
 
-    public static final String GET_EXPENSES_STAT_FOR_PERIOD = "SELECT cir_ci_guid, cir_currency, COUNT(*) AS cir_count, SUM(cir_sum) AS cir_sum FROM cost_item_records WHERE cir_datetime >= ? AND cir_datetime <= ? GROUP BY cir_ci_guid, cir_currency";
+    public static final String GET_EXPENSES_STAT_FOR_PERIOD = "SELECT cir_ci_guid, cir_currency, COUNT(*) AS cir_count, SUM(cir_sum) AS cir_sum FROM cost_item_records WHERE cir_datetime >= ? AND cir_datetime <= ? GROUP BY cir_ci_guid, cir_currency ORDER BY cir_sum DESC";
+
+    public static final String CIR_GET_LATEST_BY_DATETIME   = "SELECT cost_item_records.* FROM cost_item_records JOIN cost_items ON cost_items.ci_guid = cost_item_records.cir_ci_guid WHERE cost_items.ci_id = ? ORDER BY cost_item_records.cir_datetime DESC LIMIT 1";
 }

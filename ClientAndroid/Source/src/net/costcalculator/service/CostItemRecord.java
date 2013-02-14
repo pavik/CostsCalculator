@@ -11,15 +11,30 @@ package net.costcalculator.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import net.costcalculator.util.LOG;
+
+import org.json.simple.JSONObject;
+
 /**
- * This class represents business part of one record in the database table
- * 'cost_item_records'.
+ * This class represents expenses items in the category CostItem.
  * 
  * @author Aliaksei Plashchanski
  * 
  */
 public class CostItemRecord
 {
+    public static final String  JSON_OBJECT_SIG_NAME  = "json_object_id";
+    public static final String  JSON_OBJECT_SIG_VALUE = "cost_item_record";
+    public static final String ID                    = "1";
+    public static final String SUM                   = "2";
+    public static final String VERSION               = "3";
+    public static final String CT                    = "4";
+    public static final String GUID                  = "5";
+    public static final String GROUPGUID             = "6";
+    public static final String CURRENCY              = "7";
+    public static final String TAG                   = "8";
+    public static final String COMMENT               = "9";
+
     public CostItemRecord()
     {
         id_ = 0;
@@ -33,21 +48,92 @@ public class CostItemRecord
         comment_ = "";
     }
 
+    public void resetId()
+    {
+        id_ = 0;
+    }
+    
+    public boolean fromJSON(JSONObject json)
+    {
+        if (json == null)
+            return false;
+        try
+        {
+            Object o = null;
+            o = json.get(JSON_OBJECT_SIG_NAME);
+            if (o == null || !o.equals(JSON_OBJECT_SIG_VALUE))
+                return false;
+
+            o = json.get(ID);
+            if (o != null)
+                id_ = ((Long) o).intValue();
+
+            o = json.get(SUM);
+            if (o != null)
+                sum_ = (Double) o;
+
+            o = json.get(VERSION);
+            if (o != null)
+                version_ = ((Long) o).intValue();
+
+            o = json.get(CT);
+            if (o != null)
+                creationTime_ = new Date((Long) o);
+
+            o = json.get(GUID);
+            if (o != null)
+                guid_ = (String) o;
+
+            o = json.get(GROUPGUID);
+            if (o != null)
+                groupGuid_ = (String) o;
+
+            o = json.get(CURRENCY);
+            if (o != null)
+                currency_ = (String) o;
+
+            o = json.get(TAG);
+            if (o != null)
+                tag_ = (String) o;
+
+            o = json.get(COMMENT);
+            if (o != null)
+                comment_ = (String) o;
+        }
+        catch (Exception e)
+        {
+            LOG.E("CostItemRecord:fromJSON failed: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJSON()
+    {
+        JSONObject obj = new JSONObject();
+        obj.put(JSON_OBJECT_SIG_NAME, JSON_OBJECT_SIG_VALUE);
+        obj.put(ID, id_);
+        obj.put(SUM, sum_);
+        obj.put(VERSION, version_);
+        obj.put(CT, creationTime_.getTime());
+        if (guid_.length() > 0)
+            obj.put(GUID, guid_);
+        if (groupGuid_.length() > 0)
+            obj.put(GROUPGUID, groupGuid_);
+        if (currency_.length() > 0)
+            obj.put(CURRENCY, currency_);
+        if (tag_.length() > 0)
+            obj.put(TAG, tag_);
+        if (comment_.length() > 0)
+            obj.put(COMMENT, comment_);
+
+        return obj;
+    }
+
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("id_=").append(id_).append("; ");
-        sb.append("guid_=").append(guid_).append("; ");
-        sb.append("groupGuid=").append(groupGuid_).append("; ");
-        sb.append("creationTime=").append(creationTime_.toGMTString())
-                .append("; ");
-        sb.append("sum=").append(sum_).append("; ");
-        sb.append("currency=").append(currency_).append("; ");
-        sb.append("tag=").append(tag_).append("; ");
-        sb.append("comment=").append(comment_).append("; ");
-        sb.append("version=").append(version_).append("; ");
-
-        return sb.toString();
+        return toJSON().toJSONString();
     }
 
     public void setId(long id)
@@ -140,6 +226,11 @@ public class CostItemRecord
         return version_;
     }
 
+    /**
+     * Check if all required fields are filled
+     * 
+     * @return true - required fields are filled, false - otherwise
+     */
     public boolean isValid()
     {
         return guid_.length() > 0 && groupGuid_.length() > 0;

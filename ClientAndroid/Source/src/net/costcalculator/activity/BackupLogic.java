@@ -9,28 +9,22 @@
 package net.costcalculator.activity;
 
 import java.util.ArrayList;
-
 import org.json.simple.JSONArray;
 
 import net.costcalculator.service.DataFormatService;
-import net.costcalculator.service.JSONSerializer;
+import net.costcalculator.service.DropBoxService;
+import net.costcalculator.service.ImportService;
+import net.costcalculator.service.ImportStatistic;
+import net.costcalculator.service.JSONSerializerService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.TokenPair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -61,8 +55,7 @@ import android.widget.Toast;
  * @author Aliaksei Plashchanski
  * 
  */
-public class BackupLogic implements OnClickListener, OnItemClickListener,
-        DialogInterface.OnClickListener
+public class BackupLogic implements OnClickListener, OnItemClickListener
 {
     public BackupLogic(Activity a)
     {
@@ -84,20 +77,19 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
         btnBackup.setOnClickListener(this);
         btnRestore.setOnClickListener(this);
 
-        // We create a new AuthSession so that we can use the Dropbox API.
-        AndroidAuthSession session = buildSession();
-        api_ = new DropboxAPI<AndroidAuthSession>(session);
-
+        DropBoxService.create(context_);
         updateView();
     }
 
     public void release()
     {
+        DropBoxService.release();
     }
 
     public void onActivityResume()
     {
-        AndroidAuthSession session = api_.getSession();
+        AndroidAuthSession session = DropBoxService.instance().getDropboxAPI()
+                .getSession();
 
         // The next part must be inserted in the onResume() method of the
         // activity from which session.startAuthentication() was called, so
@@ -111,7 +103,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
 
                 // Store it locally in our app for later use
                 TokenPair tokens = session.getAccessTokenPair();
-                storeKeys(tokens.key, tokens.secret);
+                DropBoxService.instance().storeKeys(tokens.key, tokens.secret);
             }
             catch (IllegalStateException e)
             {
@@ -144,43 +136,44 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
     {
         if (drobboxDir_ != null)
         {
-            selectedFileName_ = drobboxDir_.getItem(pos);
+            final String selectedFileName = drobboxDir_.getItem((int) id);
             String message = context_.getResources().getString(
                     R.string.s_msg_confirm_restore)
-                    + " " + selectedFileName_;
+                    + " " + selectedFileName;
             AlertDialog.Builder builder = new AlertDialog.Builder(context_);
-            builder.setMessage(message).setCancelable(true)
-                    .setPositiveButton(R.string.confirm, this)
-                    .setNegativeButton(R.string.cancel, this);
+            builder.setMessage(message)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.confirm,
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which)
+                                {
+                                    restoreRequest(selectedFileName);
+                                }
+                            }).setNegativeButton(R.string.cancel, null);
 
-            alert_ = builder.create();
-            alert_.show();
-        }
-    }
-
-    @Override
-    public void onClick(DialogInterface di, int btn)
-    {
-        if (DialogInterface.BUTTON_POSITIVE == btn)
-        {
-            restoreRequest(selectedFileName_);
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
     private void linkUnlinkRequest()
     {
-        if (api_.getSession().isLinked())
+        if (DropBoxService.instance().getDropboxAPI().getSession().isLinked())
         {
-            api_.getSession().unlink();
+            DropBoxService.instance().getDropboxAPI().getSession().unlink();
 
             // Clear our stored keys
-            clearKeys();
+            DropBoxService.instance().clearKeys();
             updateView();
         }
         else
         {
             // Start the remote authentication
-            api_.getSession().startAuthentication(context_);
+            DropBoxService.instance().getDropboxAPI().getSession()
+                    .startAuthentication(context_);
         }
     }
 
@@ -189,7 +182,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
         try
         {
             String path = "/" + DataFormatService.getBackupFileNameNow();
-            JSONArray list = JSONSerializer.getAllCostItemsJSON();
+            JSONArray list = JSONSerializerService.getAllExpensesAsJSON();
             if (list.size() == 0)
             {
                 showToast(context_.getResources().getString(
@@ -197,16 +190,54 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
                 return;
             }
 
-            UploadFileLogic uploadLogic = new UploadFileLogic(context_, api_,
-                    path, list.toJSONString());
-            uploadLogic.execute();
+            String json = list.toJSONString();
+            UploadFileTask t = new UploadFileTask(context_, path, json,
+                    new AsyncTaskCompletionHandler<UploadFileTask>()
+                    {
+                        @Override
+                        public void taskComplete(UploadFileTask task)
+                        {
+                            backupRequestComplete(task);
+                        }
+                    });
+            t.execute();
         }
         catch (Exception e)
         {
             ErrorHandler.handleException(e, context_);
-            showToast(e.getLocalizedMessage());
         }
-        updateView();
+    }
+
+    private void backupRequestComplete(UploadFileTask t)
+    {
+        try
+        {
+            if (t == null)
+                throw new Exception("invalid argument: t");
+
+            if (t.isCancelled())
+            {
+                showToast("Task was cancelled.");
+                return;
+            }
+
+            if (t.get())
+                showToast(context_.getResources().getString(
+                        R.string.s_msg_dropbox_backup_ok));
+            else
+            {
+                ArrayList<String> errors = t.getErrors();
+                if (errors.size() > 0)
+                {
+                    updateView();
+                    showToast(errors.get(0));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
+        }
     }
 
     private void restoreRequest(String fileName)
@@ -216,52 +247,165 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
 
         try
         {
-            DownloadFileLogic dl = new DownloadFileLogic(context_, api_, "/"
-                    + fileName);
+            DownloadFileTask dl = new DownloadFileTask(context_,
+                    "/" + fileName,
+                    new AsyncTaskCompletionHandler<DownloadFileTask>()
+                    {
+                        @Override
+                        public void taskComplete(DownloadFileTask task)
+                        {
+                            downlowadRequestComplete(task);
+                        }
+                    });
             dl.execute();
         }
         catch (Exception e)
         {
             ErrorHandler.handleException(e, context_);
-            showToast(e.getLocalizedMessage());
         }
-        updateView();
+    }
+
+    private void downlowadRequestComplete(DownloadFileTask task)
+    {
+        try
+        {
+            if (task == null)
+                throw new Exception("invalid argument: task");
+
+            if (task.isCancelled())
+            {
+                showToast("Task was cancelled.");
+                return;
+            }
+            
+            if (task.get())
+            {
+                // import
+                final String json = task.getFile();
+                ImportExpensesTask imTask = new ImportExpensesTask(context_,
+                        ImportService.IMPORT_SIMPLE, new AsyncTaskCompletionHandler<ImportExpensesTask>()
+                        {
+                            @Override
+                            public void taskComplete(ImportExpensesTask task)
+                            {
+                                importRequestComplete(task);
+                            }
+                        });
+                imTask.execute(json);
+            }
+            else
+            {
+                ArrayList<String> errors = task.getErrors();
+                if (errors.size() > 0)
+                {
+                    updateView();
+                    showToast(errors.get(0));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
+        }
+    }
+
+    private void importRequestComplete(ImportExpensesTask task)
+    {
+        try
+        {
+            if (task == null)
+                throw new Exception("invalid argument: task");
+
+            if (task.isCancelled())
+            {
+                showToast("Task was cancelled.");
+                return;
+            }  
+            
+            ImportStatistic stat = task.get();
+            if (stat != null)
+                showToast("Import complete: " + stat.cir_ignored_existent);
+            else
+            {
+                ArrayList<String> errors = task.getErrors();
+                if (errors.size() > 0)
+                {
+                    updateView();
+                    showToast(errors.get(0));     
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
+        }        
     }
 
     private void readDirRequest()
     {
         try
         {
-            Entry dir = api_.metadata("/", 0, null, true, null);
-            ArrayList<String> files = new ArrayList<String>();
-            for (Entry e : dir.contents)
-            {
-                if (!e.isDir)
-                    files.add(e.fileName());
-            }
+            GetFolderContentTask task = new GetFolderContentTask(context_,
+                    new AsyncTaskCompletionHandler<GetFolderContentTask>()
+                    {
+                        @Override
+                        public void taskComplete(GetFolderContentTask task)
+                        {
+                            getFolderContentTaskComplete(task);
+                        }
+                    });
+            task.execute("/");
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
+        }
+    }
 
-            if (files.size() == 0)
+    private void getFolderContentTaskComplete(GetFolderContentTask task)
+    {
+        try
+        {
+            if (task == null)
+                throw new Exception("invalid argument: task");
+
+            if (task.isCancelled())
             {
-                showToast(context_.getResources().getString(
-                        R.string.s_msg_no_backup_files_in_dropbox));
+                showToast("Task was cancelled.");
                 return;
             }
 
-            drobboxDir_ = new ArrayAdapter<String>(context_,
-                    android.R.layout.simple_list_item_1, files);
-            lvDropbox.setAdapter(drobboxDir_);
+            ArrayList<String> files = task.get();
+            ArrayList<String> errors = task.getErrors();
+
+            if (files.size() == 0)
+            {
+                if (errors.size() == 0)
+                    showToast(context_.getResources().getString(
+                            R.string.s_msg_no_backup_files_in_dropbox));
+                else
+                {
+                    updateView();
+                    showToast(errors.get(0));
+                }
+            }
+            else
+            {
+                drobboxDir_ = new ArrayAdapter<String>(context_,
+                        android.R.layout.simple_list_item_1, files);
+                lvDropbox.setAdapter(drobboxDir_);
+            }
         }
-        catch (DropboxException e)
+        catch (Exception e)
         {
             ErrorHandler.handleException(e, context_);
-            showToast(e.getLocalizedMessage());
         }
-        updateView();
     }
 
     private void updateView()
     {
-        boolean isLinked = api_.getSession().isLinked();
+        boolean isLinked = DropBoxService.instance().getDropboxAPI()
+                .getSession().isLinked();
 
         tvIntro_.setVisibility(isLinked ? View.GONE : View.VISIBLE);
         btnBackup.setVisibility(isLinked ? View.VISIBLE : View.GONE);
@@ -274,101 +418,18 @@ public class BackupLogic implements OnClickListener, OnItemClickListener,
 
     private void showToast(String msg)
     {
-        Toast error = Toast.makeText(context_, msg, Toast.LENGTH_LONG);
-        error.show();
+        if (msg == null)
+            return;
+        Toast t = Toast.makeText(context_, msg, Toast.LENGTH_LONG);
+        t.show();
     }
 
-    /**
-     * Shows keeping the access keys returned from Trusted Authenticator in a
-     * local store, rather than storing user name & password, and
-     * re-authenticating each time (which is not to be done, ever).
-     * 
-     * @return Array of [access_key, access_secret], or null if none stored
-     */
-    private String[] getKeys()
-    {
-        SharedPreferences prefs = context_.getSharedPreferences(
-                ACCOUNT_PREFS_NAME, 0);
-        String key = prefs.getString(ACCESS_KEY_NAME, null);
-        String secret = prefs.getString(ACCESS_SECRET_NAME, null);
-        if (key != null && secret != null)
-        {
-            String[] ret = new String[2];
-            ret[0] = key;
-            ret[1] = secret;
-            return ret;
-        }
-        else
-        {
-            return null;
-        }
-    }
+    private Activity             context_;
+    private TextView             tvIntro_;
+    private Button               btnLinkUnlink;
+    private Button               btnBackup;
+    private Button               btnRestore;
+    private ListView             lvDropbox;
+    private ArrayAdapter<String> drobboxDir_;
 
-    /**
-     * Shows keeping the access keys returned from Trusted Authenticator in a
-     * local store, rather than storing user name & password, and
-     * re-authenticating each time (which is not to be done, ever).
-     */
-    private void storeKeys(String key, String secret)
-    {
-        // Save the access key for later
-        SharedPreferences prefs = context_.getSharedPreferences(
-                ACCOUNT_PREFS_NAME, 0);
-        Editor edit = prefs.edit();
-        edit.putString(ACCESS_KEY_NAME, key);
-        edit.putString(ACCESS_SECRET_NAME, secret);
-        edit.commit();
-    }
-
-    private void clearKeys()
-    {
-        SharedPreferences prefs = context_.getSharedPreferences(
-                ACCOUNT_PREFS_NAME, 0);
-        Editor edit = prefs.edit();
-        edit.clear();
-        edit.commit();
-    }
-
-    private AndroidAuthSession buildSession()
-    {
-        AppKeyPair appKeyPair = new AppKeyPair(APP_KEY, APP_SECRET);
-        AndroidAuthSession session;
-
-        String[] stored = getKeys();
-        if (stored != null)
-        {
-            AccessTokenPair accessToken = new AccessTokenPair(stored[0],
-                    stored[1]);
-            session = new AndroidAuthSession(appKeyPair, ACCESS_TYPE,
-                    accessToken);
-        }
-        else
-        {
-            session = new AndroidAuthSession(appKeyPair, ACCESS_TYPE);
-        }
-
-        return session;
-    }
-
-    private AlertDialog                    alert_;
-    private Activity                       context_;
-    private TextView                       tvIntro_;
-    private Button                         btnLinkUnlink;
-    private Button                         btnBackup;
-    private Button                         btnRestore;
-    private ListView                       lvDropbox;
-    // access to dropbox API
-    private DropboxAPI<AndroidAuthSession> api_;
-
-    private String                         selectedFileName_;
-    private ArrayAdapter<String>           drobboxDir_;
-    // dropbox keys
-    final static private String            APP_KEY            = "ahtmcea8sy7m8bo";
-    final static private String            APP_SECRET         = "x2jwbg8j0f0w7nw";
-
-    final static private AccessType        ACCESS_TYPE        = AccessType.APP_FOLDER;
-
-    final static private String            ACCOUNT_PREFS_NAME = "expenses_options";
-    final static private String            ACCESS_KEY_NAME    = "ACCESS_KEY";
-    final static private String            ACCESS_SECRET_NAME = "ACCESS_SECRET";
 }

@@ -30,9 +30,9 @@
     <color name="col_activity_background">#E7EBF2</color>
     <color name="col_expense_item_cell_background">#FFFFFF</color>
 
-    <string name="price_label">Price</string>
+    <string name="price_label">Amount</string>
     <string name="title_activity_price_list">Expense item: </string>
-    <string name="price_hint">Type price here</string>
+    <string name="price_hint">Type amount</string>
     <string name="date_label">Date</string>
     <string name="currency_hint">Currency</string>
     <string name="comment_label">Comment</string>
@@ -41,7 +41,7 @@
     <string name="tag_hint">Type tag here</string>
     <string name="save_label">Save</string>
     <string name="history_label">History of operations</string>
-    <string name="new_record_label">New record</string>
+    <string name="new_record_label">New expense</string>
     <string name="close">Close</string>
     <string name="price_warning">At least price should be filled</string>
 
@@ -67,4 +67,6 @@
     <string name="s_dropbox_file_list">Files list in Dropbox</string>
     <string name="s_msg_dropbox_download_ok">Download file successfully completed</string>
     <string name="s_msg_confirm_restore">Do you really want to restore data from file </string>
+    <string name="s_msg_list_available_backups">Downloading list of available backups</string>
+	<string name="s_err_unknown_error">Unknown error. Please try again.</string>    
 </resources>

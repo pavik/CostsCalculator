@@ -9,8 +9,10 @@
 package net.costcalculator.activity;
 
 import android.app.Activity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,8 +50,7 @@ public class StatisticReportLogic implements OnClickListener
         monthlyAdapter_ = new MonthlyReportAdapter(a);
 
         // initialize list
-        lvHistory_ = (ListView) activity_
-                .findViewById(R.id.lv_expenses_report);
+        lvHistory_ = (ListView) activity_.findViewById(R.id.lv_expenses_report);
         View header = activity_.getLayoutInflater().inflate(
                 R.layout.view_report_header, null);
         tvHeaderText_ = (TextView) header.findViewById(R.id.textViewListHeader);
@@ -59,6 +60,19 @@ public class StatisticReportLogic implements OnClickListener
         imgArrow_.setOnClickListener(this);
         lvHistory_.addHeaderView(header);
         lvHistory_.setAdapter(dailyAdapter_);
+        lvHistory_.setOnTouchListener(new OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
+                    onTouchDown(event.getRawX(), event.getRawY());
+                else if (event.getAction() == MotionEvent.ACTION_UP)
+                    onTouchUp(event.getRawX(), event.getRawY());
+                return false;
+            }
+        });
+        sin70_ = Math.sin(Math.toRadians(70.0));
     }
 
     public void release()
@@ -79,24 +93,49 @@ public class StatisticReportLogic implements OnClickListener
     public void onClick(View v)
     {
         if (imgArrow_ != null && imgArrow_.getId() == v.getId())
-        {
-            if (viewMode_ == DAILY_VIEW)
-            {
-                lvHistory_.setAdapter(monthlyAdapter_);
-                viewMode_ = MONTHLY_VIEW;
-            }
-            else
-            {
-                lvHistory_.setAdapter(dailyAdapter_);
-                viewMode_ = DAILY_VIEW;
-            }
-            
-            tvHeaderText_
-                    .setText(viewMode_ == DAILY_VIEW ? R.string.s_daily_expenses
-                            : R.string.s_monthly_expenses);
-        }
+            nextPage();
     }
 
+    private void nextPage()
+    {
+        if (viewMode_ == DAILY_VIEW)
+        {
+            lvHistory_.setAdapter(monthlyAdapter_);
+            viewMode_ = MONTHLY_VIEW;
+        }
+        else
+        {
+            lvHistory_.setAdapter(dailyAdapter_);
+            viewMode_ = DAILY_VIEW;
+        }
+
+        tvHeaderText_
+                .setText(viewMode_ == DAILY_VIEW ? R.string.s_daily_expenses
+                        : R.string.s_monthly_expenses);
+    }
+
+    private void onTouchDown(float x, float y)
+    {
+        touchDownX_ = x;
+        touchDownY_ = y;
+    }
+
+    private void onTouchUp(float x, float y)
+    {
+        float touchUpX = x;
+        float touchUpY = y;
+        float a = Math.abs(touchDownX_ - touchUpX);
+        float b = Math.abs(touchDownY_ - touchUpY);
+        double c = Math.sqrt(a*a + b*b);
+        if (c < 10.0)
+            return;
+        else if (a / c > sin70_)
+            nextPage();
+    }
+
+    private final double         sin70_;
+    private float                touchDownX_;
+    private float                touchDownY_;
     private int                  viewMode_;
     private ImageView            imgArrow_;
     private TextView             tvHeaderText_;

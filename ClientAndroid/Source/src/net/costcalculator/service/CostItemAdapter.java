@@ -67,11 +67,6 @@ public class CostItemAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
-    public void increaseUseCount(int pos) throws Exception
-    {
-        CostItemsService.instance().udpateCostItemUseCount(costItems_.get(pos));
-    }
-
     /*
      * @see android.widget.Adapter#getCount()
      */

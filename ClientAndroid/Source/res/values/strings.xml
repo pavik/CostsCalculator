@@ -30,9 +30,9 @@
     <color name="col_activity_background">#E7EBF2</color>
     <color name="col_expense_item_cell_background">#FFFFFF</color>
 
-    <string name="price_label">Цена</string>
+    <string name="price_label">Сумма</string>
     <string name="title_activity_price_list">Категория расходов: </string>
-    <string name="price_hint">Введите цену</string>
+    <string name="price_hint">Введите сумму</string>
     <string name="date_label">Дата</string>
     <string name="currency_hint">Валюта</string>
     <string name="comment_label">Комментарий</string>
@@ -79,4 +79,8 @@
     <string name="s_msg_no_backup_files_in_dropbox">В вашем Dropbox аккаунте нет резервных копий данных</string>
     <string name="s_dropbox_file_list">Список файлов в Dropbox</string>
     <string name="s_msg_confirm_restore">Вы действительно хотите восстановить данные из файла </string>
+    <string name="s_msg_list_available_backups">Загрузка списка резервных копий</string>
+    <string name="s_err_unknown_error">Произошла неизвестная ошибка. Попробуйте снова.</string>
+    <string name="tv_placeholder">placeholder</string>
+    <color name="col_blue">#0000FF</color>
 </resources>

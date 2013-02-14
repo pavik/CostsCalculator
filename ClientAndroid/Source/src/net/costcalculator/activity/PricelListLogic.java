@@ -13,17 +13,31 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 
+import net.costcalculator.service.CostItemRecord;
 import net.costcalculator.service.CostItemRecordsAdapter;
+import net.costcalculator.service.CostItemsService;
+import net.costcalculator.service.DataFormatService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * Logic is responsible for setup data on the view and handling user requests
@@ -49,12 +63,17 @@ public class PricelListLogic implements OnClickListener
 {
     public PricelListLogic(Activity a, long costItemId) throws Exception
     {
-        LOG.T("PricelListView::PricelListView()");
+        LOG.T("PricelListLogic::PricelListLogic");
 
         viewsVisibility_ = false;
         activity_ = a;
         adapter_ = new CostItemRecordsAdapter(activity_, costItemId);
         activity_.setTitle(adapter_.getCostItemName());
+        currency_ = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
+        CostItemRecord cir = CostItemsService.instance()
+                .getLatestCostItemRecordByDate(costItemId);
+        if (cir != null && cir.getCurrency().length() > 0)
+            currency_ = cir.getCurrency();
 
         // initialize price list
         ListView lv = (ListView) activity_.findViewById(R.id.lv_price_list);
@@ -73,21 +92,95 @@ public class PricelListLogic implements OnClickListener
         // find other views
         tvPrice_ = (TextView) activity_.findViewById(R.id.tv_price);
         tvDate_ = (TextView) activity_.findViewById(R.id.tv_date);
+        tvDateStr_ = (TextView) activity_.findViewById(R.id.tv_date_string);
+        tvTimeStr_ = (TextView) activity_.findViewById(R.id.tv_time_string);
 
         etPrice_ = (EditText) activity_.findViewById(R.id.et_price);
         etCurrency_ = (EditText) activity_.findViewById(R.id.et_currency);
         etComment_ = (EditText) activity_.findViewById(R.id.et_comment);
         etTag_ = (EditText) activity_.findViewById(R.id.et_tag);
-        etDate_ = (EditText) activity_.findViewById(R.id.et_date);
-        etDate_.setEnabled(false);
+        etPrice_.setOnEditorActionListener(new OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                    KeyEvent event)
+            {
+                switch (actionId)
+                {
+                case EditorInfo.IME_ACTION_NEXT:
+                    boolean result = false;
+                    TextView v1 = (TextView) v.focusSearch(View.FOCUS_RIGHT);
+                    if (v1 != null)
+                        result = v1.requestFocus(View.FOCUS_RIGHT);
+                    else if (!result)
+                    {
+                        v1 = (TextView) v.focusSearch(View.FOCUS_DOWN);
+                        if (v1 != null)
+                            result = v1.requestFocus(View.FOCUS_DOWN);
+                    }
+                    if (!result)
+                        v.onEditorAction(actionId);
+                    break;
 
-        initViewsContent();
+                default:
+                    v.onEditorAction(actionId);
+                    break;
+                }
+                return true;
+            }
+        });
+
+        tvDateStr_.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                if (priceRecordDate_ == null)
+                    priceRecordDate_ = Calendar.getInstance().getTime();
+                DatePickerDialog dpd = new DatePickerDialog(activity_,
+                        new DatePickerDialog.OnDateSetListener()
+                        {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                    int monthOfYear, int dayOfMonth)
+                            {
+                                dateChanged(year, monthOfYear, dayOfMonth);
+                            }
+                        }, priceRecordDate_.getYear(), priceRecordDate_
+                                .getMonth(), priceRecordDate_.getDate());
+                dpd.show();
+            }
+        });
+
+        tvTimeStr_.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (priceRecordDate_ == null)
+                    priceRecordDate_ = Calendar.getInstance().getTime();
+                TimePickerDialog tpd = new TimePickerDialog(activity_,
+                        new TimePickerDialog.OnTimeSetListener()
+                        {
+
+                            @Override
+                            public void onTimeSet(TimePicker view,
+                                    int hourOfDay, int minute)
+                            {
+                                timeChanged(hourOfDay, minute);
+                            }
+                        }, priceRecordDate_.getHours(), priceRecordDate_
+                                .getMinutes(), false);
+                tpd.show();
+            }
+        });
+
         showViews();
     }
 
     public void release()
     {
-        LOG.T("PricelListView::release()");
+        LOG.T("PricelListLogic::release()");
 
         activity_ = null;
         if (adapter_ != null)
@@ -131,11 +224,11 @@ public class PricelListLogic implements OnClickListener
         String comment = etComment_.getText().toString().trim();
         String tag = etTag_.getText().toString().trim();
         String currency = etCurrency_.getText().toString().trim();
+        currency_ = currency;
 
         adapter_.addNewCostItemRecord(priceRecordDate_, sum, comment, currency,
                 tag);
 
-        initViewsContent();
         hideViews();
     }
 
@@ -152,36 +245,73 @@ public class PricelListLogic implements OnClickListener
     private void initViewsContent()
     {
         etPrice_.setText("");
-        etCurrency_.setText(Currency.getInstance(Locale.getDefault())
-                .getCurrencyCode());
+        etCurrency_.setText(currency_);
 
         priceRecordDate_ = Calendar.getInstance().getTime();
-        etDate_.setText(priceRecordDate_.toLocaleString());
+        updateDateOnView();
+        updateTimeOnView();
 
         etTag_.setText("");
         etComment_.setText("");
     }
 
+    private void dateChanged(int year, int monthOfYear, int dayOfMonth)
+    {
+        priceRecordDate_.setYear(year);
+        priceRecordDate_.setMonth(monthOfYear);
+        priceRecordDate_.setDate(dayOfMonth);
+        updateDateOnView();
+    }
+
+    private void timeChanged(int hourOfDay, int minute)
+    {
+        priceRecordDate_.setHours(hourOfDay);
+        priceRecordDate_.setMinutes(minute);
+        updateTimeOnView();
+    }
+
+    private void updateDateOnView()
+    {
+        String date = DataFormatService.formatDate(priceRecordDate_);
+        SpannableString dateSS = new SpannableString(date);
+        dateSS.setSpan(new UnderlineSpan(), 0, date.length(), 0);
+        tvDateStr_.setText(dateSS);
+    }
+
+    private void updateTimeOnView()
+    {
+        String time = DataFormatService.formatTime(priceRecordDate_);
+        SpannableString timeSS = new SpannableString(time);
+        timeSS.setSpan(new UnderlineSpan(), 0, time.length(), 0);
+        tvTimeStr_.setText(timeSS);
+    }
+
     private void showViews()
     {
+        initViewsContent();
         tvPrice_.setVisibility(View.VISIBLE);
         etPrice_.setVisibility(View.VISIBLE);
         etCurrency_.setVisibility(View.VISIBLE);
         tvDate_.setVisibility(View.VISIBLE);
-        etDate_.setVisibility(View.VISIBLE);
+        tvDateStr_.setVisibility(View.VISIBLE);
+        tvTimeStr_.setVisibility(View.VISIBLE);
         etTag_.setVisibility(View.VISIBLE);
         etComment_.setVisibility(View.VISIBLE);
 
         viewsVisibility_ = true;
         btnSave_.setText(R.string.save_label);
-        etPrice_.requestFocus();
+
+        InputMethodManager inputManager = (InputMethodManager) activity_
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(etPrice_, InputMethodManager.SHOW_FORCED);
     }
 
     private void hideViews()
     {
         etComment_.setVisibility(View.GONE);
         etTag_.setVisibility(View.GONE);
-        etDate_.setVisibility(View.GONE);
+        tvDateStr_.setVisibility(View.GONE);
+        tvTimeStr_.setVisibility(View.GONE);
         tvDate_.setVisibility(View.GONE);
         etCurrency_.setVisibility(View.GONE);
         etPrice_.setVisibility(View.GONE);
@@ -189,16 +319,23 @@ public class PricelListLogic implements OnClickListener
 
         viewsVisibility_ = false;
         btnSave_.setText(R.string.new_record_label);
+
+        InputMethodManager inputManager = (InputMethodManager) activity_
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View v = activity_.getCurrentFocus();
+        if (v != null)
+            inputManager.hideSoftInputFromWindow(v.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private Date                   priceRecordDate_;
 
-    private TextView               tvPrice_, tvDate_;
-    private EditText               etPrice_, etCurrency_, etDate_, etComment_,
-            etTag_;
+    private TextView               tvPrice_, tvDate_, tvDateStr_, tvTimeStr_;
+    private EditText               etPrice_, etCurrency_, etComment_, etTag_;
     private Button                 btnSave_;
     boolean                        viewsVisibility_;
 
+    private String                 currency_;
     private Activity               activity_;
     private CostItemRecordsAdapter adapter_;
 }

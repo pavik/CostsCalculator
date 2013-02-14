@@ -48,7 +48,7 @@ public class ExpenseItemsLogic implements OnItemClickListener,
 {
     public ExpenseItemsLogic(Activity a) throws Exception
     {
-        LOG.T("ExpenseItemsView::ExpenseItemsView()");
+        LOG.T("ExpenseItemsLogic::ExpenseItemsLogic");
 
         activity_ = a;
         gridView_ = (GridView) activity_.findViewById(R.id.gridExpenseItems);
@@ -63,7 +63,7 @@ public class ExpenseItemsLogic implements OnItemClickListener,
 
     public void release()
     {
-        LOG.T("ExpenseItemsView::release()");
+        LOG.T("ExpenseItemsLogic::release()");
 
         activity_ = null;
         gridView_ = null;
@@ -81,15 +81,6 @@ public class ExpenseItemsLogic implements OnItemClickListener,
     @Override
     public void onItemClick(AdapterView<?> av, View v, int pos, long id)
     {
-        try
-        {
-            adapter_.increaseUseCount(pos);
-        }
-        catch (Exception e)
-        {
-            ErrorHandler.handleException(e, activity_);
-        }
-
         Intent intent = new Intent(activity_, PriceListActivity.class);
         intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
         activity_.startActivity(intent);

@@ -21,7 +21,7 @@
             android:paddingRight="2dp"
             android:text="@string/price_label"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:width="50dp" />
+            android:width="70dp" />
 
         <EditText
             android:id="@+id/et_price"
@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/price_hint"
+            android:imeOptions="actionNext"
             android:inputType="numberDecimal" />
 
         <EditText
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/currency_hint"
+            android:imeOptions="actionNext"
             android:inputType="textCapCharacters"
             android:maxLength="8" />
 
@@ -46,6 +48,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -55,14 +58,28 @@
             android:paddingRight="4dp"
             android:text="@string/date_label"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:width="50dp" />
+            android:width="70dp" />
 
-        <EditText
-            android:id="@+id/et_date"
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/tv_date_string"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="datetime" />
+            android:clickable="true"
+            android:paddingRight="3dp"
+            android:text="@string/tv_placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/col_blue" />
 
+        <TextView
+            android:id="@+id/tv_time_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:paddingLeft="3dp"
+            android:text="@string/tv_placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/col_blue" />
+                
     </LinearLayout>
 
     <LinearLayout
@@ -76,7 +93,9 @@
             android:id="@+id/et_tag"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tag_hint" />
+            android:hint="@string/tag_hint"
+            android:imeOptions="actionNext" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -90,16 +109,18 @@
             android:id="@+id/et_comment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/comment_hint" />
+            android:hint="@string/comment_hint"
+            android:imeOptions="actionDone" />
+
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_save_price"
+        style="@style/GradientButtonText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_label"
         android:background="@drawable/green_gradient"
-        style="@style/GradientButtonText" />
+        android:text="@string/save_label" />
 
     <ListView
         android:id="@+id/lv_price_list"

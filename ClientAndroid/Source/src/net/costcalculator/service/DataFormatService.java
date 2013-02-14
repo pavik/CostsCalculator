@@ -50,6 +50,14 @@ public class DataFormatService
     }
 
     /**
+     * Format time to string
+     */
+    public static String formatTime(Date d)
+    {
+        return SimpleDateFormat.getTimeInstance().format(d);
+    }
+
+    /**
      * Format year and month to string
      */
     @SuppressLint("SimpleDateFormat")
