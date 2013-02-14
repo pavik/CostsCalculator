@@ -709,6 +709,109 @@ public class CostItemsService
         return result;
     }
 
+    public ArrayList<String> getAllDistinctCurrencies()
+    {
+        LOG.T("CostItemsService::getAllDistinctCurrencies");
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<String> result = new ArrayList<String>();
+
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.CIR_GET_ALL_DISTINCT_CURRENCIES,
+                    null);
+
+            if (ds.moveToFirst())
+            {
+                final int col = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY);
+                do
+                {
+                    result.add(ds.getString(col));
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> getAllDistinctComments()
+    {
+        LOG.T("CostItemsService::getAllDistinctComments");
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<String> result = new ArrayList<String>();
+
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.CIR_GET_ALL_DISTINCT_COMMENTS,
+                    null);
+
+            if (ds.moveToFirst())
+            {
+                final int col = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_COMMENT);
+                do
+                {
+                    result.add(ds.getString(col));
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> getAllDistinctTags()
+    {
+        LOG.T("CostItemsService::getAllDistinctTags");
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<String> result = new ArrayList<String>();
+
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(SQLiteDbQueries.CIR_GET_ALL_DISTINCT_TAGS, null);
+
+            if (ds.moveToFirst())
+            {
+                final int col = ds.getColumnIndex(SQLiteDbQueries.COL_CIR_TAG);
+                do
+                {
+                    result.add(ds.getString(col));
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
     public static CostItemsService instance()
     {
         if (instance_ == null)

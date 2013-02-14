@@ -13,6 +13,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 
+import net.costcalculator.service.AutocompleteService;
 import net.costcalculator.service.CostItemRecord;
 import net.costcalculator.service.CostItemRecordsAdapter;
 import net.costcalculator.service.CostItemsService;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -96,9 +98,18 @@ public class PricelListLogic implements OnClickListener
         tvTimeStr_ = (TextView) activity_.findViewById(R.id.tv_time_string);
 
         etPrice_ = (EditText) activity_.findViewById(R.id.et_price);
-        etCurrency_ = (EditText) activity_.findViewById(R.id.et_currency);
-        etComment_ = (EditText) activity_.findViewById(R.id.et_comment);
-        etTag_ = (EditText) activity_.findViewById(R.id.et_tag);
+        etCurrency_ = (AutoCompleteTextView) activity_
+                .findViewById(R.id.et_currency);
+        etComment_ = (AutoCompleteTextView) activity_
+                .findViewById(R.id.et_comment);
+        etTag_ = (AutoCompleteTextView) activity_.findViewById(R.id.et_tag);
+
+        etCurrency_.setAdapter(AutocompleteService
+                .createCurrenciesAdapter(activity_));
+        etComment_.setAdapter(AutocompleteService
+                .createCommentsAdapter(activity_));
+        etTag_.setAdapter(AutocompleteService.createTagsAdapter(activity_));
+
         etPrice_.setOnEditorActionListener(new OnEditorActionListener()
         {
             @Override
@@ -330,8 +341,9 @@ public class PricelListLogic implements OnClickListener
 
     private Date                   priceRecordDate_;
 
+    private AutoCompleteTextView   etCurrency_, etComment_, etTag_;
     private TextView               tvPrice_, tvDate_, tvDateStr_, tvTimeStr_;
-    private EditText               etPrice_, etCurrency_, etComment_, etTag_;
+    private EditText               etPrice_;
     private Button                 btnSave_;
     boolean                        viewsVisibility_;
 
