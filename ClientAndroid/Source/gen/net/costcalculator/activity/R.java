@@ -45,12 +45,11 @@ public final class R {
         public static final int ic_folder=0x7f02000c;
         public static final int ic_launcher=0x7f02000d;
         public static final int ic_moneys_gray=0x7f02000e;
-        public static final int ic_velcom_logo=0x7f02000f;
-        public static final int img_background_selector=0x7f020010;
-        public static final int price_list_item_back=0x7f020011;
-        public static final int radialbackground=0x7f020012;
-        public static final int tag_background=0x7f020013;
-        public static final int yellow_gradient=0x7f020014;
+        public static final int img_background_selector=0x7f02000f;
+        public static final int price_list_item_back=0x7f020010;
+        public static final int radialbackground=0x7f020011;
+        public static final int tag_background=0x7f020012;
+        public static final int yellow_gradient=0x7f020013;
     }
     public static final class id {
         public static final int backup_expenses=0x7f080007;
