@@ -110,6 +110,10 @@ public class PricelListLogic implements OnClickListener
                 .createCommentsAdapter(activity_));
         etTag_.setAdapter(AutocompleteService.createTagsAdapter(activity_));
 
+        etCurrency_.setThreshold(1);
+        etComment_.setThreshold(1);
+        etTag_.setThreshold(1);
+
         etPrice_.setOnEditorActionListener(new OnEditorActionListener()
         {
             @Override

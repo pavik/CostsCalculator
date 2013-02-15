@@ -13,11 +13,12 @@ import net.costcalculator.service.CostItemAdapter;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
@@ -103,26 +104,32 @@ public class ExpenseItemsLogic
         final RelativeLayout newItemView = (RelativeLayout) activity_
                 .getLayoutInflater().inflate(R.layout.dialog_new_expense_item,
                         null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
-        builder.setView(newItemView);
-        builder.setMessage(R.string.new_expense_item)
-                .setCancelable(true)
-                .setPositiveButton(R.string.confirm,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which)
-                            {
-                                EditText editName = (EditText) newItemView
-                                        .findViewById(R.id.et_expense_item_name);
-                                addExpenseCategory(editName.getText()
-                                        .toString().trim());
-                            }
-                        }).setNegativeButton(R.string.cancel, null);
+        final Dialog d = new Dialog(activity_);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(newItemView);
 
-        AlertDialog alert = builder.create();
-        alert.show();
+        Button confirm = (Button) newItemView.findViewById(R.id.btn_confirm);
+        Button cancel = (Button) newItemView.findViewById(R.id.btn_cancel);
+        confirm.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                EditText editName = (EditText) newItemView
+                        .findViewById(R.id.et_expense_item_name);
+                addExpenseCategory(editName.getText().toString().trim());
+                d.dismiss();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                d.dismiss();
+            }
+        });
+        d.show();
     }
 
     private GridView        gridView_;
