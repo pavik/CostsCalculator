@@ -43,7 +43,15 @@ public class ExpenseItemsActivity extends Activity implements
             logic_ = new ExpenseItemsLogic(this);
 
             ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
-            newButton.setOnClickListener(logic_);
+            newButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (logic_ != null)
+                        logic_.newExpenseCategoryRequest();
+                }
+            });
 
             ImageButton reportButton = (ImageButton) findViewById(R.id.expense_statistic);
             reportButton.setOnClickListener(this);

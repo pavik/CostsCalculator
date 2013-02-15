@@ -43,8 +43,7 @@ import android.widget.GridView;
  * @author Aliaksei Plashchanski
  * 
  */
-public class ExpenseItemsLogic implements OnItemClickListener,
-        DialogInterface.OnClickListener, View.OnClickListener
+public class ExpenseItemsLogic
 {
     public ExpenseItemsLogic(Activity a) throws Exception
     {
@@ -58,7 +57,16 @@ public class ExpenseItemsLogic implements OnItemClickListener,
 
         adapter_ = new CostItemAdapter(activity_);
         gridView_.setAdapter(adapter_);
-        gridView_.setOnItemClickListener(this);
+        gridView_.setOnItemClickListener(new OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int pos, long id)
+            {
+                Intent intent = new Intent(activity_, PriceListActivity.class);
+                intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
+                activity_.startActivity(intent);
+            }
+        });
     }
 
     public void release()
@@ -67,7 +75,6 @@ public class ExpenseItemsLogic implements OnItemClickListener,
 
         activity_ = null;
         gridView_ = null;
-        alert_ = null;
         if (adapter_ != null)
             adapter_.release();
         adapter_ = null;
@@ -77,60 +84,47 @@ public class ExpenseItemsLogic implements OnItemClickListener,
     {
         adapter_.notifyDataSetChanged();
     }
-    
-    @Override
-    public void onItemClick(AdapterView<?> av, View v, int pos, long id)
-    {
-        Intent intent = new Intent(activity_, PriceListActivity.class);
-        intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
-        activity_.startActivity(intent);
-    }
 
-    @Override
-    public void onClick(DialogInterface di, int btn)
+    private void addExpenseCategory(String name)
     {
-        if (DialogInterface.BUTTON_POSITIVE == btn)
+        try
         {
-            try
-            {
-                EditText edit = (EditText) alert_
-                        .findViewById(R.id.et_expense_item_name);
-                adapter_.addNewCostItem(edit.getText().toString().trim());
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.handleException(e, activity_);
-            }
+            if (name.length() > 0)
+                adapter_.addNewCostItem(name);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
         }
     }
 
-    @Override
-    public void onClick(View v)
+    public void newExpenseCategoryRequest()
     {
-        switch (v.getId())
-        {
-        case R.id.new_expense_item:
-            showNewExpenseItemView();
-            break;
-        }
-    }
-
-    private void showNewExpenseItemView()
-    {
-        RelativeLayout newItemView = (RelativeLayout) activity_
+        final RelativeLayout newItemView = (RelativeLayout) activity_
                 .getLayoutInflater().inflate(R.layout.dialog_new_expense_item,
                         null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
         builder.setView(newItemView);
-        builder.setMessage(R.string.new_expense_item).setCancelable(true)
-                .setPositiveButton(R.string.confirm, this)
-                .setNegativeButton(R.string.cancel, this);
+        builder.setMessage(R.string.new_expense_item)
+                .setCancelable(true)
+                .setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which)
+                            {
+                                EditText editName = (EditText) newItemView
+                                        .findViewById(R.id.et_expense_item_name);
+                                addExpenseCategory(editName.getText()
+                                        .toString().trim());
+                            }
+                        }).setNegativeButton(R.string.cancel, null);
 
-        alert_ = builder.create();
-        alert_.show();
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
-    private AlertDialog     alert_;
     private GridView        gridView_;
     private Activity        activity_;
     private CostItemAdapter adapter_;
