@@ -166,6 +166,28 @@ public class CostItemsService
         }
     }
 
+    public void deleteCostItem(int id) throws Exception
+    {
+        LOG.T("CostItemsService::deleteCostItem");
+
+        SQLiteDatabase db = null;
+        try
+        {
+            db = dbprovider_.getWritableDatabase();
+            int affected = db.delete(SQLiteDbQueries.COST_ITEMS,
+                    SQLiteDbQueries.COST_ITEM_UPDATE_BY_ID,
+                    new String[] { Long.toString(id) });
+            if (affected != 1)
+                throw new Exception("failed to delete cost item by id: "
+                        + id);
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+        }
+    }
+    
     public CostItemRecord saveCostItemRecord(CostItemRecord rec)
             throws Exception
     {

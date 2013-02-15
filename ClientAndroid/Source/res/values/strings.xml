@@ -83,4 +83,8 @@
     <string name="s_err_unknown_error">Произошла неизвестная ошибка. Попробуйте снова.</string>
     <string name="tv_placeholder">placeholder</string>
     <color name="col_blue">#0000FF</color>
+    <string name="delete">Удалить</string>
+    <string name="edit">Изменить</string>
+    <string name="change_category">Изменить категорию</string>
+    <string name="warning_del_category">Вы действительно хотите удалить %s?</string>
 </resources>
