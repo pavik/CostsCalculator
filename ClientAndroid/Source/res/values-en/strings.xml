@@ -73,4 +73,5 @@
     <string name="edit">Edit</string>
     <string name="change_category">Change category</string>
     <string name="warning_del_category">Do you really want to delete %s?</string>
+    <string name="warning">Warning</string>
 </resources>

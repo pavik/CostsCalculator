@@ -255,7 +255,8 @@ public class ExpenseItemsLogic
                             {
                                 deleteCategoryRequest(pos);
                             }
-                        }).setNegativeButton(R.string.cancel, null);
+                        }).setNegativeButton(R.string.cancel, null)
+                .setIcon(R.drawable.ic_delete_large).setTitle(R.string.warning);
 
         AlertDialog alert = builder.create();
         alert.show();

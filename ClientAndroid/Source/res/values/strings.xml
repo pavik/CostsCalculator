@@ -87,4 +87,5 @@
     <string name="edit">Изменить</string>
     <string name="change_category">Изменить категорию</string>
     <string name="warning_del_category">Вы действительно хотите удалить %s?</string>
+    <string name="warning">Внимание</string>
 </resources>

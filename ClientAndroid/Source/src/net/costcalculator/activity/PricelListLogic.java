@@ -22,20 +22,27 @@ import net.costcalculator.util.LOG;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TextView.OnEditorActionListener;
@@ -84,6 +91,16 @@ public class PricelListLogic implements OnClickListener
         tvHeaderText.setText(R.string.s_history_of_expenses);
         lv.addHeaderView(header);
         lv.setAdapter(adapter_);
+        lv.setOnItemLongClickListener(new OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> av, View v, int pos,
+                    long id)
+            {
+                contextMenuRequest(id);
+                return true;
+            }
+        });
 
         // set save button onClick callback
         btnSave_ = (Button) activity_.findViewById(R.id.btn_save_price);
@@ -339,6 +356,93 @@ public class PricelListLogic implements OnClickListener
         if (v != null)
             inputManager.hideSoftInputFromWindow(v.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private void contextMenuRequest(final long id)
+    {
+        CostItemRecord cir = adapter_.getCostItemRecord(id);
+        final RelativeLayout menu = (RelativeLayout) activity_
+                .getLayoutInflater().inflate(R.layout.dialog_expense_cat_menu,
+                        null);
+
+        TextView header = (TextView) menu
+                .findViewById(R.id.tvDlgExpenseCatMenu);
+        header.setText(DataFormatService.formatPrice(cir.getSum()) + " "
+                + cir.getCurrency());
+
+        final Dialog d = new Dialog(activity_);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(menu);
+
+        LinearLayout edit = (LinearLayout) menu
+                .findViewById(R.id.menu_edit_layout);
+        edit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                d.dismiss();
+                editMenuRequest(id);
+            }
+        });
+
+        LinearLayout delete = (LinearLayout) menu
+                .findViewById(R.id.menu_del_layout);
+        delete.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                d.dismiss();
+                deleteMenuRequest(id);
+            }
+        });
+
+        d.show();
+    }
+
+    private void editMenuRequest(long id)
+    {
+    }
+
+    private void deleteMenuRequest(final long id)
+    {
+        CostItemRecord cir = adapter_.getCostItemRecord(id);
+        final String rawWarn = activity_.getResources().getString(
+                R.string.warning_del_category);
+        final String formattedWarn = String.format(
+                rawWarn,
+                DataFormatService.formatPrice(cir.getSum()) + " "
+                        + cir.getCurrency());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
+        builder.setMessage(formattedWarn)
+                .setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which)
+                            {
+                                deleteItemRequest(id);
+                            }
+                        }).setNegativeButton(R.string.cancel, null)
+                .setIcon(R.drawable.ic_delete_large).setTitle(R.string.warning);
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void deleteItemRequest(long id)
+    {
+        try
+        {
+            adapter_.deletePosition(id);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
     }
 
     private Date                   priceRecordDate_;

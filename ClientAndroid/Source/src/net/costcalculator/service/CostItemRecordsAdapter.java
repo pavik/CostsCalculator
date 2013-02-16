@@ -80,11 +80,12 @@ public class CostItemRecordsAdapter extends BaseAdapter
         return cir;
     }
 
-    public CostItemRecord getLatestCostItemRecordByDate(long costItemId) throws Exception
+    public CostItemRecord getLatestCostItemRecordByDate(long costItemId)
+            throws Exception
     {
         return cis_.getLatestCostItemRecordByDate(costItemId);
     }
-    
+
     public String getCostItemName()
     {
         return ci_.getName();
@@ -108,6 +109,14 @@ public class CostItemRecordsAdapter extends BaseAdapter
         return getCostItemRecord(index);
     }
 
+    public CostItemRecord getCostItemRecord(long id)
+    {
+        if (records_.containsKey(id))
+            return records_.get(id);
+        else
+            return fetchCostItemRecordById(id);
+    }
+
     public CostItemRecord getCostItemRecord(int index)
     {
         long key = getItemId(index);
@@ -115,6 +124,21 @@ public class CostItemRecordsAdapter extends BaseAdapter
             return records_.get(key);
         else
             return fetchCostItemRecordById(key);
+    }
+
+    public void deletePosition(long id) throws Exception
+    {
+        for (int i = 0; i < ids_.size(); ++i)
+        {
+            if (ids_.get(i) == id)
+            {
+                CostItemRecord cir = getCostItemRecord(id);
+                cis_.deleteCostItemRecord(cir);
+                ids_.remove(i);
+                records_.remove(id);
+                notifyDataSetChanged();
+            }
+        }
     }
 
     /*

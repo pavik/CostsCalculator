@@ -30,30 +30,35 @@ public final class R {
         public static final int col_yellow=0x7f05000c;
     }
     public static final class drawable {
-        public static final int bg_grain_200x200=0x7f020000;
-        public static final int blue_gradient_dlg_header=0x7f020001;
-        public static final int blue_gradient_list_header=0x7f020002;
-        public static final int expense_item_selector=0x7f020003;
-        public static final int green_gradient=0x7f020004;
-        public static final int grid_cell_expense_item_border=0x7f020005;
-        public static final int grid_cell_expense_item_border_clicked=0x7f020006;
-        public static final int ic_app_quit=0x7f020007;
-        public static final int ic_arrow_left=0x7f020008;
-        public static final int ic_arrow_right=0x7f020009;
-        public static final int ic_chart=0x7f02000a;
-        public static final int ic_delete=0x7f02000b;
-        public static final int ic_document_new=0x7f02000c;
-        public static final int ic_download=0x7f02000d;
-        public static final int ic_edit_1=0x7f02000e;
-        public static final int ic_edit_2=0x7f02000f;
-        public static final int ic_folder=0x7f020010;
-        public static final int ic_launcher=0x7f020011;
-        public static final int ic_moneys_gray=0x7f020012;
-        public static final int img_background_selector=0x7f020013;
-        public static final int price_list_item_back=0x7f020014;
-        public static final int radialbackground=0x7f020015;
-        public static final int tag_background=0x7f020016;
-        public static final int yellow_gradient=0x7f020017;
+        public static final int background_expense_item=0x7f020000;
+        public static final int background_expense_item_pressed=0x7f020001;
+        public static final int bg_grain_200x200=0x7f020002;
+        public static final int blue_gradient_dlg_header=0x7f020003;
+        public static final int blue_gradient_list_header=0x7f020004;
+        public static final int green_gradient=0x7f020005;
+        public static final int grid_cell_expense_item_border=0x7f020006;
+        public static final int grid_cell_expense_item_border_clicked=0x7f020007;
+        public static final int ic_app_quit=0x7f020008;
+        public static final int ic_arrow_left=0x7f020009;
+        public static final int ic_arrow_right=0x7f02000a;
+        public static final int ic_chart=0x7f02000b;
+        public static final int ic_delete=0x7f02000c;
+        public static final int ic_delete_large=0x7f02000d;
+        public static final int ic_document_new=0x7f02000e;
+        public static final int ic_download=0x7f02000f;
+        public static final int ic_edit_1=0x7f020010;
+        public static final int ic_edit_2=0x7f020011;
+        public static final int ic_edit_large=0x7f020012;
+        public static final int ic_folder=0x7f020013;
+        public static final int ic_launcher=0x7f020014;
+        public static final int ic_moneys_gray=0x7f020015;
+        public static final int img_background_selector=0x7f020016;
+        public static final int price_list_item_back=0x7f020017;
+        public static final int radialbackground=0x7f020018;
+        public static final int selector_expense_category=0x7f020019;
+        public static final int selector_expense_item=0x7f02001a;
+        public static final int tag_background=0x7f02001b;
+        public static final int yellow_gradient=0x7f02001c;
     }
     public static final class id {
         public static final int backup_expenses=0x7f080007;
@@ -186,6 +191,7 @@ public final class R {
         public static final int title_activity_price_list=0x7f040017;
         public static final int title_activity_statistic_report=0x7f040025;
         public static final int tv_placeholder=0x7f040038;
+        public static final int warning=0x7f04003d;
         public static final int warning_del_category=0x7f04003c;
     }
     public static final class style {
