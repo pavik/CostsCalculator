@@ -99,7 +99,7 @@ public class ExpenseItemsLogic
 
     public void onActivityRestart()
     {
-        adapter_.notifyDataSetChanged();
+        adapter_.refresh();
     }
 
     public void newExpenseCategoryRequest()

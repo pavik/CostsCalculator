@@ -277,14 +277,6 @@ public class CostItemsService
                 long id = db.insert(SQLiteDbQueries.COST_ITEM_RECORDS, null,
                         getContent(rec));
                 rec.setId(id);
-
-                if (cirCountCache_ != null)
-                {
-                    Integer n = cirCountCache_.get(rec.getGroupGuid());
-                    if (n == null)
-                        n = 0;
-                    cirCountCache_.put(rec.getGroupGuid(), n + 1);
-                }
             }
         }
         finally
@@ -591,12 +583,10 @@ public class CostItemsService
     public HashMap<String, Integer> getCostItemRecordsCount()
     {
         LOG.T("CostItemsService::getCostItemRecordsCount");
-        if (cirCountCache_ != null)
-            return cirCountCache_;
 
         SQLiteDatabase db = null;
         Cursor ds = null;
-        cirCountCache_ = new HashMap<String, Integer>();
+        HashMap<String, Integer> cirCountCache = new HashMap<String, Integer>();
 
         try
         {
@@ -609,7 +599,7 @@ public class CostItemsService
                 int valCol = ds.getColumnIndex(SQLiteDbQueries.EXPR_CIR_COUNT);
                 do
                 {
-                    cirCountCache_.put(ds.getString(keyCol), ds.getInt(valCol));
+                    cirCountCache.put(ds.getString(keyCol), ds.getInt(valCol));
                 } while (ds.moveToNext());
             }
         }
@@ -621,7 +611,7 @@ public class CostItemsService
                 db.close();
         }
 
-        return cirCountCache_;
+        return cirCountCache;
     }
 
     public ArrayList<Date> getExpensesMonths()
@@ -888,6 +878,5 @@ public class CostItemsService
         }
     }
 
-    private SQLiteDbProvider         dbprovider_;
-    private HashMap<String, Integer> cirCountCache_;
+    private SQLiteDbProvider dbprovider_;
 }

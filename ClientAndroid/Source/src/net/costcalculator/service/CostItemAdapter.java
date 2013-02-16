@@ -53,6 +53,7 @@ public class CostItemAdapter extends BaseAdapter
         costItems_ = cis_.getAllCostItems();
         if (costItems_.isEmpty())
             setup_basic_items();
+        counts_ = cis_.getCostItemRecordsCount();
     }
 
     public void release()
@@ -60,6 +61,14 @@ public class CostItemAdapter extends BaseAdapter
         cis_.release();
         cis_ = null;
         costItems_ = null;
+        counts_ = null;
+    }
+
+    public void refresh()
+    {
+        costItems_ = cis_.getAllCostItems();
+        counts_ = cis_.getCostItemRecordsCount();
+        notifyDataSetChanged();
     }
 
     public void addNewCostItem(String name) throws Exception
@@ -154,12 +163,8 @@ public class CostItemAdapter extends BaseAdapter
         imageViewOverlay.setVisibility(View.GONE);
         textView.setText(costItems_.get(position).getName());
 
-        HashMap<String, Integer> m = cis_.getCostItemRecordsCount();
-        if (m != null)
-        {
-            Integer n = m.get(costItems_.get(position).getGuid());
-            textViewCount.setText(n != null ? n.toString() : "0");
-        }
+        Integer n = counts_.get(costItems_.get(position).getGuid());
+        textViewCount.setText(n != null ? n.toString() : "0");
 
         return cell;
     }
@@ -180,7 +185,8 @@ public class CostItemAdapter extends BaseAdapter
         addNewCostItem(r.getString(R.string.ci_other));
     }
 
-    private ArrayList<CostItem> costItems_;
-    private Activity            context_;
-    private CostItemsService    cis_;
+    private ArrayList<CostItem>      costItems_;
+    private HashMap<String, Integer> counts_;
+    private Activity                 context_;
+    private CostItemsService         cis_;
 }
