@@ -56,15 +56,20 @@ public class MonthlyReportAdapter extends BaseAdapter
     public MonthlyReportAdapter(Activity a)
     {
         context_ = a;
-        months_ = CostItemsService.instance().getExpensesMonths();
+        cis_ = new CostItemsService(context_);
+        months_ = cis_.getExpensesMonths();
         costItemName_ = new Hashtable<String, String>();
-        ArrayList<CostItem> ci = CostItemsService.instance().getAllCostItems();
+        ArrayList<CostItem> ci = cis_.getAllCostItems();
         for (int i = 0; i < ci.size(); ++i)
             costItemName_.put(ci.get(i).getGuid(), ci.get(i).getName());
     }
 
     public void release()
     {
+        cis_.release();
+        cis_ = null;
+        months_ = null;
+        costItemName_ = null;
     }
 
     /*
@@ -216,8 +221,7 @@ public class MonthlyReportAdapter extends BaseAdapter
         Date date = months_.get(position);
         try
         {
-            report = CostItemsService.instance().getStatisticReport(date,
-                    endOfMonth(date));
+            report = cis_.getStatisticReport(date, endOfMonth(date));
         }
         catch (Exception e)
         {
@@ -250,6 +254,7 @@ public class MonthlyReportAdapter extends BaseAdapter
     }
 
     private Activity                  context_;
+    private CostItemsService          cis_;
     private ArrayList<Date>           months_;
     private Hashtable<String, String> costItemName_;
 }

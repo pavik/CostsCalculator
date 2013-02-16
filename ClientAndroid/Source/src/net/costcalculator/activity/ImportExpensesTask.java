@@ -68,7 +68,7 @@ public class ImportExpensesTask extends
         try
         {
             ImportStatistic stat = ImportService.importExpensesFromJSONString(
-                    params[0], importMode_, this);
+                    context_, params[0], importMode_, this);
             return stat;
         }
         catch (Exception e)
@@ -101,7 +101,7 @@ public class ImportExpensesTask extends
     {
         pd_.dismiss();
         if (handler_ != null)
-            handler_.taskComplete(this);        
+            handler_.taskComplete(this);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ImportExpensesTask extends
     {
         pd_.dismiss();
         if (handler_ != null)
-            handler_.taskComplete(this);        
+            handler_.taskComplete(this);
     }
 
     private int                                    importMode_;

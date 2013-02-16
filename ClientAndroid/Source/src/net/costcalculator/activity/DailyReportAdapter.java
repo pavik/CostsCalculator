@@ -55,15 +55,20 @@ public class DailyReportAdapter extends BaseAdapter
     public DailyReportAdapter(Activity a)
     {
         context_ = a;
-        dates_ = CostItemsService.instance().getExpensesDates();
+        cis_ = new CostItemsService(context_);
+        dates_ = cis_.getExpensesDates();
         costItemName_ = new Hashtable<String, String>();
-        ArrayList<CostItem> ci = CostItemsService.instance().getAllCostItems();
+        ArrayList<CostItem> ci = cis_.getAllCostItems();
         for (int i = 0; i < ci.size(); ++i)
             costItemName_.put(ci.get(i).getGuid(), ci.get(i).getName());
     }
 
     public void release()
     {
+        cis_.release();
+        cis_ = null;
+        dates_ = null;
+        costItemName_ = null;
     }
 
     /*
@@ -215,7 +220,7 @@ public class DailyReportAdapter extends BaseAdapter
         Date date = dates_.get(position);
         try
         {
-            report = CostItemsService.instance().getStatisticReport(date, date);
+            report = cis_.getStatisticReport(date, date);
         }
         catch (Exception e)
         {
@@ -236,6 +241,7 @@ public class DailyReportAdapter extends BaseAdapter
     }
 
     private Activity                  context_;
+    private CostItemsService          cis_;
     private ArrayList<Date>           dates_;
     private Hashtable<String, String> costItemName_;
 }

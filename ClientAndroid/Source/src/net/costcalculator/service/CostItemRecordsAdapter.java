@@ -49,15 +49,16 @@ public class CostItemRecordsAdapter extends BaseAdapter
             throws Exception
     {
         context_ = context;
-
-        ci_ = CostItemsService.instance().getCostItemById(costItemId);
-        ids_ = CostItemsService.instance().getCostItemRecordIds(ci_);
+        cis_ = new CostItemsService(context_);
+        ci_ = cis_.getCostItemById(costItemId);
+        ids_ = cis_.getCostItemRecordIds(ci_);
         records_ = new HashMap<Long, CostItemRecord>();
     }
 
     public void release()
     {
-        context_ = null;
+        cis_.release();
+        cis_ = null;
         ci_ = null;
         ids_ = null;
         records_ = null;
@@ -66,12 +67,12 @@ public class CostItemRecordsAdapter extends BaseAdapter
     public CostItemRecord addNewCostItemRecord(Date creationTime, double sum,
             String comment, String currency, String tag) throws Exception
     {
-        CostItemRecord cir = CostItemsService.instance().createCostItemRecord(
-                ci_.getGuid(), creationTime, sum);
+        CostItemRecord cir = cis_.createCostItemRecord(ci_.getGuid(),
+                creationTime, sum);
         cir.setComment(comment);
         cir.setCurrency(currency);
         cir.setTag(tag);
-        CostItemsService.instance().saveCostItemRecord(cir);
+        cis_.saveCostItemRecord(cir);
 
         ids_.add(0, cir.getId());
         records_.put(cir.getId(), cir);
@@ -79,6 +80,11 @@ public class CostItemRecordsAdapter extends BaseAdapter
         return cir;
     }
 
+    public CostItemRecord getLatestCostItemRecordByDate(long costItemId) throws Exception
+    {
+        return cis_.getLatestCostItemRecordByDate(costItemId);
+    }
+    
     public String getCostItemName()
     {
         return ci_.getName();
@@ -188,7 +194,7 @@ public class CostItemRecordsAdapter extends BaseAdapter
         CostItemRecord cir = null;
         try
         {
-            cir = CostItemsService.instance().getCostItemRecord(id);
+            cir = cis_.getCostItemRecord(id);
             records_.put(id, cir);
         }
         catch (Exception e)
@@ -202,7 +208,7 @@ public class CostItemRecordsAdapter extends BaseAdapter
 
     private ArrayList<Long>               ids_;
     private HashMap<Long, CostItemRecord> records_;
-
+    private CostItemsService              cis_;
     private CostItem                      ci_;
     private Activity                      context_;
 }

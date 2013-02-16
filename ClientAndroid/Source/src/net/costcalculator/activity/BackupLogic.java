@@ -182,7 +182,8 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
         try
         {
             String path = "/" + DataFormatService.getBackupFileNameNow();
-            JSONArray list = JSONSerializerService.getAllExpensesAsJSON();
+            JSONArray list = JSONSerializerService
+                    .getAllExpensesAsJSON(context_);
             if (list.size() == 0)
             {
                 showToast(context_.getResources().getString(
@@ -277,13 +278,14 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                 showToast("Task was cancelled.");
                 return;
             }
-            
+
             if (task.get())
             {
                 // import
                 final String json = task.getFile();
                 ImportExpensesTask imTask = new ImportExpensesTask(context_,
-                        ImportService.IMPORT_SIMPLE, new AsyncTaskCompletionHandler<ImportExpensesTask>()
+                        ImportService.IMPORT_SIMPLE,
+                        new AsyncTaskCompletionHandler<ImportExpensesTask>()
                         {
                             @Override
                             public void taskComplete(ImportExpensesTask task)
@@ -320,8 +322,8 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
             {
                 showToast("Task was cancelled.");
                 return;
-            }  
-            
+            }
+
             ImportStatistic stat = task.get();
             if (stat != null)
                 showToast("Import complete: " + stat.cir_ignored_existent);
@@ -331,14 +333,14 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                 if (errors.size() > 0)
                 {
                     updateView();
-                    showToast(errors.get(0));     
+                    showToast(errors.get(0));
                 }
             }
         }
         catch (Exception e)
         {
             ErrorHandler.handleException(e, context_);
-        }        
+        }
     }
 
     private void readDirRequest()
@@ -431,5 +433,4 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
     private Button               btnRestore;
     private ListView             lvDropbox;
     private ArrayAdapter<String> drobboxDir_;
-
 }

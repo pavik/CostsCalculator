@@ -16,7 +16,6 @@ import java.util.Locale;
 import net.costcalculator.service.AutocompleteService;
 import net.costcalculator.service.CostItemRecord;
 import net.costcalculator.service.CostItemRecordsAdapter;
-import net.costcalculator.service.CostItemsService;
 import net.costcalculator.service.DataFormatService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
@@ -72,8 +71,7 @@ public class PricelListLogic implements OnClickListener
         adapter_ = new CostItemRecordsAdapter(activity_, costItemId);
         activity_.setTitle(adapter_.getCostItemName());
         currency_ = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
-        CostItemRecord cir = CostItemsService.instance()
-                .getLatestCostItemRecordByDate(costItemId);
+        CostItemRecord cir = adapter_.getLatestCostItemRecordByDate(costItemId);
         if (cir != null && cir.getCurrency().length() > 0)
             currency_ = cir.getCurrency();
 

@@ -34,10 +34,11 @@ public class AutocompleteService
     {
         LOG.T("AutocompleteService::createCurrenciesAdapter");
 
-        List<String> currencies = CostItemsService.instance()
-                .getAllDistinctCurrencies();
+        CostItemsService cis = new CostItemsService(c);
+        List<String> currencies = cis.getAllDistinctCurrencies();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(c,
                 android.R.layout.simple_list_item_1, currencies);
+        cis.release();
         return adapter;
     }
 
@@ -45,9 +46,11 @@ public class AutocompleteService
     {
         LOG.T("AutocompleteService::createTagsAdapter");
 
-        List<String> tags = CostItemsService.instance().getAllDistinctTags();
+        CostItemsService cis = new CostItemsService(c);
+        List<String> tags = cis.getAllDistinctTags();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(c,
                 android.R.layout.simple_list_item_1, tags);
+        cis.release();
         return adapter;
     }
 
@@ -55,10 +58,11 @@ public class AutocompleteService
     {
         LOG.T("AutocompleteService::createCommentsAdapter");
 
-        List<String> comments = CostItemsService.instance()
-                .getAllDistinctComments();
+        CostItemsService cis = new CostItemsService(c);
+        List<String> comments = cis.getAllDistinctComments();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(c,
                 android.R.layout.simple_list_item_1, comments);
+        cis.release();
         return adapter;
     }
 }

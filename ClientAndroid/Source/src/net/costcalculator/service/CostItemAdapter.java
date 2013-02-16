@@ -49,18 +49,22 @@ public class CostItemAdapter extends BaseAdapter
     public CostItemAdapter(Activity context) throws Exception
     {
         context_ = context;
-        costItems_ = CostItemsService.instance().getAllCostItems();
+        cis_ = new CostItemsService(context_);
+        costItems_ = cis_.getAllCostItems();
         if (costItems_.isEmpty())
             setup_basic_items();
     }
 
     public void release()
     {
+        cis_.release();
+        cis_ = null;
+        costItems_ = null;
     }
 
     public void addNewCostItem(String name) throws Exception
     {
-        CostItem item = CostItemsService.instance().createCostItem(name);
+        CostItem item = cis_.createCostItem(name);
         costItems_.add(item);
         notifyDataSetChanged();
     }
@@ -71,7 +75,7 @@ public class CostItemAdapter extends BaseAdapter
         {
             CostItem ci = costItems_.get(pos);
             ci.setName(name);
-            CostItemsService.instance().saveCostItem(ci);
+            cis_.saveCostItem(ci);
             notifyDataSetChanged();
         }
     }
@@ -81,8 +85,8 @@ public class CostItemAdapter extends BaseAdapter
         if (pos >= 0 && pos < costItems_.size())
         {
             CostItem ci = costItems_.get(pos);
-            CostItemsService.instance().deleteCostItemRecords(ci);
-            CostItemsService.instance().deleteCostItem(ci);
+            cis_.deleteCostItemRecords(ci);
+            cis_.deleteCostItem(ci);
             costItems_.remove(pos);
             notifyDataSetChanged();
         }
@@ -150,8 +154,7 @@ public class CostItemAdapter extends BaseAdapter
         imageViewOverlay.setVisibility(View.GONE);
         textView.setText(costItems_.get(position).getName());
 
-        HashMap<String, Integer> m = CostItemsService.instance()
-                .getCostItemRecordsCount();
+        HashMap<String, Integer> m = cis_.getCostItemRecordsCount();
         if (m != null)
         {
             Integer n = m.get(costItems_.get(position).getGuid());
@@ -179,4 +182,5 @@ public class CostItemAdapter extends BaseAdapter
 
     private ArrayList<CostItem> costItems_;
     private Activity            context_;
+    private CostItemsService    cis_;
 }

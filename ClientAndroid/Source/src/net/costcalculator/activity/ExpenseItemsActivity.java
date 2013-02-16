@@ -9,7 +9,6 @@
 package net.costcalculator.activity;
 
 import net.costcalculator.activity.R;
-import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ public class ExpenseItemsActivity extends Activity implements
         // initialize global resources
         LOG.INITIALIZE();
         LOG.T("ExpenseItemsActivity::onCreate");
-        CostItemsService.createInstance(getApplicationContext());
 
         setContentView(R.layout.activity_expense_items);
         try
@@ -88,7 +86,6 @@ public class ExpenseItemsActivity extends Activity implements
             logic_ = null;
         }
 
-        CostItemsService.releaseInstance();
         LOG.T("ExpenseItemsActivity::onDestroy");
         LOG.RELEASE();
     }

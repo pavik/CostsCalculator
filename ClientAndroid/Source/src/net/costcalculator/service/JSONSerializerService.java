@@ -15,6 +15,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import android.content.Context;
+
 /**
  * Service provides static methods for encoding/decoding objects in json
  * 
@@ -44,17 +46,17 @@ public class JSONSerializerService
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public static JSONArray getAllExpensesAsJSON() throws Exception
+    public static JSONArray getAllExpensesAsJSON(Context c) throws Exception
     {
         LOG.T("JSONSerializerService::getAllExpensesAsJSON");
 
         JSONArray array = new JSONArray();
         JSONObject ci = new JSONObject();
         ci.put(JSON_OBJECT_SIG_NAME, JSON_OBJECT_COST_ITEM);
-        ci.put(JSON_OBJECT_SIG_VAL, getAllCostItemsAsJSON());
+        ci.put(JSON_OBJECT_SIG_VAL, getAllCostItemsAsJSON(c));
         JSONObject cir = new JSONObject();
         cir.put(JSON_OBJECT_SIG_NAME, JSON_OBJECT_COST_ITEM_RECORD);
-        cir.put(JSON_OBJECT_SIG_VAL, getAllCostItemRecordsAsJSON());
+        cir.put(JSON_OBJECT_SIG_VAL, getAllCostItemRecordsAsJSON(c));
 
         array.add(ci);
         array.add(cir);
@@ -112,30 +114,34 @@ public class JSONSerializerService
     }
 
     @SuppressWarnings("unchecked")
-    private static JSONArray getAllCostItemsAsJSON() throws Exception
+    private static JSONArray getAllCostItemsAsJSON(Context c) throws Exception
     {
         LOG.T("JSONSerializerService::getAllCostItemsAsJSON");
 
         JSONArray obj = new JSONArray();
-        ArrayList<CostItem> ciList = CostItemsService.instance()
-                .getAllCostItems();
+        CostItemsService cis = new CostItemsService(c);
+        ArrayList<CostItem> ciList = cis.getAllCostItems();
+
         for (int i = 0; i < ciList.size(); ++i)
             obj.add(ciList.get(i).toJSON());
 
+        cis.release();
         return obj;
     }
 
     @SuppressWarnings("unchecked")
-    private static JSONArray getAllCostItemRecordsAsJSON() throws Exception
+    private static JSONArray getAllCostItemRecordsAsJSON(Context c)
+            throws Exception
     {
         LOG.T("JSONSerializerService::getAllCostItemRecordsAsJSON");
 
         JSONArray obj = new JSONArray();
-        ArrayList<CostItemRecord> cirList = CostItemsService.instance()
-                .getAllCostItemRecords();
+        CostItemsService cis = new CostItemsService(c);
+        ArrayList<CostItemRecord> cirList = cis.getAllCostItemRecords();
         for (int i = 0; i < cirList.size(); ++i)
             obj.add(cirList.get(i).toJSON());
 
+        cis.release();
         return obj;
     }
 

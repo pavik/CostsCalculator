@@ -10,6 +10,8 @@ package net.costcalculator.service;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+
 import net.costcalculator.util.LOG;
 
 /**
@@ -33,8 +35,8 @@ public class ImportService
     public static final int IMPORT_OVERWRITE = 1; // import all expenses,
                                                   // overwrite existing items
 
-    public static ImportStatistic importExpensesFromJSONString(String json,
-            int importMode, ProgressCallback pc) throws Exception
+    public static ImportStatistic importExpensesFromJSONString(Context c,
+            String json, int importMode, ProgressCallback pc) throws Exception
     {
         LOG.T("ImportService::importExpensesFromJSONString");
         if (json.length() == 0)
@@ -48,18 +50,18 @@ public class ImportService
         if (pc != null)
             pc.publishProgress(1, 3);
 
-        importCostItems(ciList, importMode, stat);
+        importCostItems(c, ciList, importMode, stat);
         if (pc != null)
             pc.publishProgress(2, 3);
 
-        importCostItemRecords(cirList, importMode, stat);
+        importCostItemRecords(c, cirList, importMode, stat);
         if (pc != null)
             pc.publishProgress(3, 3);
 
         return stat;
     }
 
-    private static void importCostItems(ArrayList<CostItem> ciList,
+    private static void importCostItems(Context c, ArrayList<CostItem> ciList,
             int importMode, ImportStatistic stat)
     {
         LOG.T("ImportService::importCostItems");
@@ -74,6 +76,7 @@ public class ImportService
             return;
         }
 
+        CostItemsService cis = new CostItemsService(c);
         stat.ci_total = ciList.size();
         for (int i = 0; i < ciList.size(); ++i)
         {
@@ -85,17 +88,16 @@ public class ImportService
             }
             try
             {
-                CostItem dbci = CostItemsService.instance().getCostItemByGUID(
-                        ci.getGuid());
+                CostItem dbci = cis.getCostItemByGUID(ci.getGuid());
                 if (dbci == null)
                 {
-                    CostItemsService.instance().saveCostItem(ci);
+                    cis.saveCostItem(ci);
                     stat.ci_imported_new++;
                 }
                 else if (importMode == IMPORT_OVERWRITE)
                 {
                     ci.setId(dbci.getId());
-                    CostItemsService.instance().saveCostItem(ci);
+                    cis.saveCostItem(ci);
                     stat.ci_imported_overwritten++;
                 }
                 else if (importMode == IMPORT_SIMPLE)
@@ -111,9 +113,10 @@ public class ImportService
                 LOG.E("Exception: " + e.getMessage());
             }
         }
+        cis.release();
     }
 
-    private static void importCostItemRecords(
+    private static void importCostItemRecords(Context c,
             ArrayList<CostItemRecord> cirList, int importMode,
             ImportStatistic stat)
     {
@@ -129,6 +132,7 @@ public class ImportService
             return;
         }
 
+        CostItemsService cis = new CostItemsService(c);
         stat.cir_total = cirList.size();
         for (int i = 0; i < cirList.size(); ++i)
         {
@@ -140,17 +144,17 @@ public class ImportService
             }
             try
             {
-                CostItemRecord dbcir = CostItemsService.instance()
-                        .getCostItemRecordByGUID(cir.getGuid());
+                CostItemRecord dbcir = cis.getCostItemRecordByGUID(cir
+                        .getGuid());
                 if (dbcir == null)
                 {
-                    CostItemsService.instance().saveCostItemRecord(cir);
+                    cis.saveCostItemRecord(cir);
                     stat.cir_imported_new++;
                 }
                 else if (importMode == IMPORT_OVERWRITE)
                 {
                     cir.setId(dbcir.getId());
-                    CostItemsService.instance().saveCostItemRecord(cir);
+                    cis.saveCostItemRecord(cir);
                     stat.cir_imported_overwritten++;
                 }
                 else if (importMode == IMPORT_SIMPLE)
@@ -166,5 +170,6 @@ public class ImportService
                 LOG.E("Exception: " + e.getMessage());
             }
         }
+        cis.release();
     }
 }

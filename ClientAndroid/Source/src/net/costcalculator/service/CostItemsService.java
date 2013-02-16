@@ -22,20 +22,20 @@ import net.costcalculator.db.SQLiteDbProvider;
 import net.costcalculator.db.SQLiteDbQueries;
 
 /**
- * Provides singleton instance to interface for storing/retrieving cost items
- * from/to storage.
+ * Provides access to SQLite database.
  * 
  * <pre>
  * Usage:
- * {@code
- * // initialization
- * CostItemsService.createInstance(context);
+ * {
+ *     &#064;code
+ *     // initialization
+ *     CostItemsService s = CostItemsService(context);
  * 
- * // get instance
- * CostItemsService.instance().some_request();
+ *     // use instance
+ *     s.some_request();
  * 
- * // release instance
- * CostItemsService.releaseInstance();
+ *     // release instance
+ *     s.release();
  * }
  * </pre>
  * 
@@ -872,35 +872,13 @@ public class CostItemsService
         return result;
     }
 
-    public static CostItemsService instance()
-    {
-        if (instance_ == null)
-            LOG.E("instance_ is null");
-
-        return instance_;
-    }
-
-    public static void createInstance(Context context)
-    {
-        if (instance_ != null)
-            releaseInstance();
-        instance_ = new CostItemsService(context);
-    }
-
-    public static void releaseInstance()
-    {
-        if (instance_ != null)
-            instance_.release();
-        instance_ = null;
-    }
-
-    private CostItemsService(Context context)
+    public CostItemsService(Context context)
     {
         LOG.T("CostItemsService::CostItemsService");
         dbprovider_ = new SQLiteDbProvider(context);
     }
 
-    private void release()
+    public void release()
     {
         LOG.T("CostItemsService::release");
         if (dbprovider_ != null)
@@ -912,6 +890,4 @@ public class CostItemsService
 
     private SQLiteDbProvider         dbprovider_;
     private HashMap<String, Integer> cirCountCache_;
-
-    private static CostItemsService  instance_;
 }
