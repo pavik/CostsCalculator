@@ -149,7 +149,7 @@ public class CostItemsService
             if (ci.getId() > 0)
             {
                 int affected = db.update(SQLiteDbQueries.COST_ITEMS,
-                        getContent(ci), SQLiteDbQueries.COST_ITEM_UPDATE_BY_ID,
+                        getContent(ci), SQLiteDbQueries.COST_ITEM_WHERE_BY_ID,
                         new String[] { Long.toString(ci.getId()) });
                 if (affected != 1)
                     throw new Exception("failed to update cost item: "
@@ -166,28 +166,86 @@ public class CostItemsService
         }
     }
 
-    public void deleteCostItem(int id) throws Exception
+    public void deleteCostItem(CostItem ci) throws Exception
     {
         LOG.T("CostItemsService::deleteCostItem");
+        if (ci == null)
+            throw new Exception("invalid argument: ci");
 
-        SQLiteDatabase db = null;
-        try
+        if (ci.getId() > 0)
         {
-            db = dbprovider_.getWritableDatabase();
-            int affected = db.delete(SQLiteDbQueries.COST_ITEMS,
-                    SQLiteDbQueries.COST_ITEM_UPDATE_BY_ID,
-                    new String[] { Long.toString(id) });
-            if (affected != 1)
-                throw new Exception("failed to delete cost item by id: "
-                        + id);
-        }
-        finally
-        {
-            if (db != null)
-                db.close();
+            SQLiteDatabase db = null;
+            try
+            {
+                db = dbprovider_.getWritableDatabase();
+                int affected = db.delete(SQLiteDbQueries.COST_ITEMS,
+                        SQLiteDbQueries.COST_ITEM_WHERE_BY_ID,
+                        new String[] { Long.toString(ci.getId()) });
+                if (affected != 1)
+                    throw new Exception("failed to delete cost item by id: "
+                            + ci.getId());
+            }
+            finally
+            {
+                if (db != null)
+                    db.close();
+            }
         }
     }
-    
+
+    public void deleteCostItemRecords(CostItem ci) throws Exception
+    {
+        LOG.T("CostItemsService::deleteCostItemRecords");
+        if (ci == null)
+            throw new Exception("invalid argument: ci");
+
+        if (ci.getGuid().length() > 0)
+        {
+            SQLiteDatabase db = null;
+            try
+            {
+                db = dbprovider_.getWritableDatabase();
+                int affected = db.delete(SQLiteDbQueries.COST_ITEM_RECORDS,
+                        SQLiteDbQueries.COST_ITEM_RECORDS_WHERE_BY_CI_GUID,
+                        new String[] { ci.getGuid() });
+                LOG.D("affected: " + affected);
+            }
+            finally
+            {
+                if (db != null)
+                    db.close();
+            }
+        }
+    }
+
+    public void deleteCostItemRecord(CostItemRecord cir) throws Exception
+    {
+        LOG.T("CostItemsService::deleteCostItemRecord");
+        if (cir == null)
+            throw new Exception("invalid argument: cir");
+
+        if (cir.getId() > 0)
+        {
+            SQLiteDatabase db = null;
+            try
+            {
+                db = dbprovider_.getWritableDatabase();
+                int affected = db.delete(SQLiteDbQueries.COST_ITEM_RECORDS,
+                        SQLiteDbQueries.COST_ITEM_RECORDS_WHERE_BY_ID,
+                        new String[] { Long.toString(cir.getId()) });
+                if (affected != 1)
+                    throw new Exception(
+                            "failed to delete cost item record by id: "
+                                    + cir.getId());
+            }
+            finally
+            {
+                if (db != null)
+                    db.close();
+            }
+        }
+    }
+
     public CostItemRecord saveCostItemRecord(CostItemRecord rec)
             throws Exception
     {
@@ -382,26 +440,6 @@ public class CostItemsService
         cv.put(SQLiteDbQueries.COL_CI_NAME, ci.getName());
         cv.put(SQLiteDbQueries.COL_CI_CREATION_TIME, ci.getCreationTime());
         return cv;
-    }
-
-    public void deleteCostItem(CostItem item) throws Exception
-    {
-        LOG.T("CostItemsService::deleteCostItem");
-        if (item.getId() <= 0)
-            throw new Exception("invalid argument: item = " + item.toString());
-
-        SQLiteDatabase db = null;
-        try
-        {
-            db = dbprovider_.getWritableDatabase();
-            db.execSQL(SQLiteDbQueries.DEL_COST_ITEM,
-                    new Object[] { item.getId() });
-        }
-        finally
-        {
-            if (db != null)
-                db.close();
-        }
     }
 
     public ArrayList<CostItem> getAllCostItems()

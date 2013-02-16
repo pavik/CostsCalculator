@@ -151,8 +151,8 @@ public class DailyReportAdapter extends BaseAdapter
                     .findViewById(R.id.tv_price_val);
             TextView tvSubCat = (TextView) repItemView
                     .findViewById(R.id.tv_cat_val);
-            tvSubCat.setText(costItemName_.get(repItem.guid).toString() + " ("
-                    + repItem.count + ")");
+            tvSubCat.setText(getNameByGUID(repItem.guid) + " (" + repItem.count
+                    + ")");
             tvSubPrice.setText(DataFormatService.formatPrice(repItem.sum) + " "
                     + repItem.currency);
             ll.addView(repItemView);
@@ -163,7 +163,7 @@ public class DailyReportAdapter extends BaseAdapter
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.addRule(RelativeLayout.BELOW, vh.vDivider.getId());
-        
+
         if (vh.ll != null)
             rl.removeView(vh.ll);
         rl.addView(ll, rlp);
@@ -224,6 +224,15 @@ public class DailyReportAdapter extends BaseAdapter
         }
 
         return report;
+    }
+
+    private String getNameByGUID(String guid)
+    {
+        String val = costItemName_.get(guid);
+        if (val != null)
+            return val;
+        else
+            return "-";
     }
 
     private Activity                  context_;

@@ -152,8 +152,8 @@ public class MonthlyReportAdapter extends BaseAdapter
                     .findViewById(R.id.tv_price_val);
             TextView tvSubCat = (TextView) repItemView
                     .findViewById(R.id.tv_cat_val);
-            tvSubCat.setText(costItemName_.get(repItem.guid).toString() + " ("
-                    + repItem.count + ")");
+            tvSubCat.setText(getNameByGUID(repItem.guid) + " (" + repItem.count
+                    + ")");
             tvSubPrice.setText(DataFormatService.formatPrice(repItem.sum) + " "
                     + repItem.currency);
             ll.addView(repItemView);
@@ -238,6 +238,15 @@ public class MonthlyReportAdapter extends BaseAdapter
         res.setMinutes(59);
         res.setSeconds(59);
         return res;
+    }
+
+    private String getNameByGUID(String guid)
+    {
+        String val = costItemName_.get(guid);
+        if (val != null)
+            return val;
+        else
+            return "-";
     }
 
     private Activity                  context_;

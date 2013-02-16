@@ -67,7 +67,7 @@ public class CostItemAdapter extends BaseAdapter
 
     public void changeName(String name, int pos) throws Exception
     {
-        if (name.length() > 0 && pos >=0 && pos < costItems_.size())
+        if (name.length() > 0 && pos >= 0 && pos < costItems_.size())
         {
             CostItem ci = costItems_.get(pos);
             ci.setName(name);
@@ -75,18 +75,19 @@ public class CostItemAdapter extends BaseAdapter
             notifyDataSetChanged();
         }
     }
-    
+
     public void deletePosition(int pos) throws Exception
     {
-        if (pos >=0 && pos < costItems_.size())
+        if (pos >= 0 && pos < costItems_.size())
         {
             CostItem ci = costItems_.get(pos);
-            CostItemsService.instance().deleteCostItem(ci.getId());
+            CostItemsService.instance().deleteCostItemRecords(ci);
+            CostItemsService.instance().deleteCostItem(ci);
             costItems_.remove(pos);
             notifyDataSetChanged();
         }
     }
-    
+
     /*
      * @see android.widget.Adapter#getCount()
      */
