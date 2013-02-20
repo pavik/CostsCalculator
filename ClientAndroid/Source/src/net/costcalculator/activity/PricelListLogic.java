@@ -167,6 +167,9 @@ public class PricelListLogic implements OnClickListener
             {
                 if (priceRecordDate_ == null)
                     priceRecordDate_ = Calendar.getInstance().getTime();
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(priceRecordDate_);
                 DatePickerDialog dpd = new DatePickerDialog(activity_,
                         new DatePickerDialog.OnDateSetListener()
                         {
@@ -176,8 +179,8 @@ public class PricelListLogic implements OnClickListener
                             {
                                 dateChanged(year, monthOfYear, dayOfMonth);
                             }
-                        }, priceRecordDate_.getYear(), priceRecordDate_
-                                .getMonth(), priceRecordDate_.getDate());
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
+                                .get(Calendar.DATE));
                 dpd.show();
             }
         });
@@ -189,6 +192,9 @@ public class PricelListLogic implements OnClickListener
             {
                 if (priceRecordDate_ == null)
                     priceRecordDate_ = Calendar.getInstance().getTime();
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(priceRecordDate_);
                 TimePickerDialog tpd = new TimePickerDialog(activity_,
                         new TimePickerDialog.OnTimeSetListener()
                         {
@@ -199,8 +205,7 @@ public class PricelListLogic implements OnClickListener
                             {
                                 timeChanged(hourOfDay, minute);
                             }
-                        }, priceRecordDate_.getHours(), priceRecordDate_
-                                .getMinutes(), false);
+                        }, c.get(Calendar.HOUR), c.get(Calendar.MINUTE), true);
                 tpd.show();
             }
         });
@@ -287,16 +292,22 @@ public class PricelListLogic implements OnClickListener
 
     private void dateChanged(int year, int monthOfYear, int dayOfMonth)
     {
-        priceRecordDate_.setYear(year);
-        priceRecordDate_.setMonth(monthOfYear);
-        priceRecordDate_.setDate(dayOfMonth);
+        Calendar c = Calendar.getInstance();
+        c.setTime(priceRecordDate_);
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, monthOfYear);
+        c.set(Calendar.DATE, dayOfMonth);
+        priceRecordDate_ = c.getTime();
         updateDateOnView();
     }
 
     private void timeChanged(int hourOfDay, int minute)
     {
-        priceRecordDate_.setHours(hourOfDay);
-        priceRecordDate_.setMinutes(minute);
+        Calendar c = Calendar.getInstance();
+        c.setTime(priceRecordDate_);
+        c.set(Calendar.HOUR, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        priceRecordDate_ = c.getTime();
         updateTimeOnView();
     }
 

@@ -65,6 +65,7 @@
             android:id="@+id/tv_date_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/img_background_selector"
             android:clickable="true"
             android:paddingRight="3dp"
             android:text="@string/tv_placeholder"
@@ -75,11 +76,13 @@
             android:id="@+id/tv_time_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/img_background_selector"
             android:clickable="true"
             android:paddingLeft="3dp"
             android:text="@string/tv_placeholder"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/col_blue" />
+
     </LinearLayout>
 
     <LinearLayout
