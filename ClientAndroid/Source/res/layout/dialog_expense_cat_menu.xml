@@ -21,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvDlgExpenseCatMenu"
-        android:background="@drawable/img_background_selector"
+        android:background="@drawable/background_pressed_yellow"
         android:clickable="true"
         android:orientation="horizontal"
         android:padding="2dp" >
@@ -48,7 +48,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/menu_edit_layout"
-        android:background="@drawable/img_background_selector"
+        android:background="@drawable/background_pressed_yellow"
         android:clickable="true"
         android:orientation="horizontal"
         android:padding="2dp" >
