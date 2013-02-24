@@ -48,7 +48,7 @@ public class SQLiteDbQueries
 
     public static final String DEL_COST_ITEM                      = "DELETE FROM cost_items WHERE ci_id = ?";
 
-    public static final String GET_ALL_COST_ITEMS                 = "SELECT cost_items.*, COUNT(cost_items.ci_guid) AS n FROM cost_items LEFT JOIN cost_item_records ON cost_items.ci_guid = cost_item_records.cir_ci_guid GROUP BY cost_items.ci_guid ORDER BY n DESC";
+    public static final String GET_ALL_COST_ITEMS                 = "SELECT cost_items.*, COUNT(cost_item_records.cir_ci_guid) AS n FROM cost_items LEFT JOIN cost_item_records ON cost_items.ci_guid = cost_item_records.cir_ci_guid GROUP BY cost_items.ci_guid ORDER BY n DESC";
 
     public static final String GET_COST_ITEM_BY_ID                = "SELECT * FROM cost_items WHERE ci_id = ?";
 
