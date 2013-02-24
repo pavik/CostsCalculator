@@ -44,7 +44,7 @@
             android:src="@drawable/ic_document_new" />
 
         <ImageButton
-            android:id="@+id/get_shared_expense_item"
+            android:id="@+id/backup_expenses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/get_shared_expense_item"

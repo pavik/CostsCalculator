@@ -76,4 +76,19 @@ public class DataFormatService
                 .format(Calendar.getInstance().getTime());
         return fileName + ".JSON";
     }
+
+    public static String eraseAllCommasAndSpaces(String s)
+    {
+        if (s != null)
+        {
+            StringBuilder sb = new StringBuilder(s.length());
+            for (int i = 0; i < s.length(); ++i)
+                if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')
+                    sb.append(s.charAt(i));
+
+            return sb.toString();
+        }
+
+        return s;
+    }
 }

@@ -41,32 +41,41 @@ public class LOG
 
     public static void T(String msg)
     {
-        LogItem li = new LogItem();
-        li.tag = TAG_T;
-        li.msg = msg;
-        add(li);
-
-        Log.i(TAG_T, msg);
+        if (msg != null)
+        {
+            LogItem li = new LogItem();
+            li.tag = TAG_T;
+            li.msg = msg;
+            add(li);
+    
+            Log.i(TAG_T, msg);
+        }
     }
 
     public static void E(String msg)
     {
-        LogItem li = new LogItem();
-        li.tag = TAG_E;
-        li.msg = msg;
-        add(li);
-
-        Log.e(TAG_E, msg);
+        if (msg != null)
+        {
+            LogItem li = new LogItem();
+            li.tag = TAG_E;
+            li.msg = msg;
+            add(li);
+    
+            Log.e(TAG_E, msg);
+        }
     }
 
     public static void D(String msg)
     {
-        LogItem li = new LogItem();
-        li.tag = TAG_D;
-        li.msg = msg;
-        add(li);
-
-        Log.d(TAG_D, msg);
+        if (msg != null)
+        {        
+            LogItem li = new LogItem();
+            li.tag = TAG_D;
+            li.msg = msg;
+            add(li);
+    
+            Log.d(TAG_D, msg);
+        }
     }
 
     public static void INITIALIZE()

@@ -8,10 +8,12 @@
 
 package net.costcalculator.activity;
 
+import net.costcalculator.service.CancelCallback;
+import net.costcalculator.service.OkCallback;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.content.Intent;
 
 /**
@@ -20,7 +22,7 @@ import android.content.Intent;
  * @author Aliaksei Plashchanski
  * 
  */
-public class PriceListActivity extends Activity
+public class PriceListActivity extends FragmentActivity
 {
     public static final String COST_ITEM_ID = "cost_item_id";
 
@@ -30,12 +32,34 @@ public class PriceListActivity extends Activity
         super.onCreate(savedInstanceState);
         LOG.T("PriceListActivity::onCreate");
 
-        Intent intent = getIntent();
         try
         {
             setContentView(R.layout.activity_price_list);
-            view_ = new PricelListLogic(this, intent.getLongExtra(COST_ITEM_ID,
-                    0));
+
+            long ciId = getIntent().getLongExtra(COST_ITEM_ID, 0);
+            final FragmentEditPrice fragment = new FragmentEditPrice();
+            fragment.setCostItemId(ciId);
+            fragment.setOkCallback(new OkCallback()
+            {
+                @Override
+                public void ok(long r)
+                {
+                    okRequest(r);
+                    fragment.hideFragment();
+                }
+            });
+            fragment.setCancelCallback(new CancelCallback()
+            {
+                @Override
+                public void cancel()
+                {
+                    cancelRequest();
+                    fragment.hideFragment();
+                }
+            });
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_edit_price, fragment).commit();
+            logic_ = new PricelListLogic(this, ciId);
         }
         catch (Exception e)
         {
@@ -49,12 +73,31 @@ public class PriceListActivity extends Activity
         super.onDestroy();
         LOG.T("PriceListActivity::onDestroy");
 
-        if (view_ != null)
+        if (logic_ != null)
         {
-            view_.release();
-            view_ = null;
+            logic_.release();
+            logic_ = null;
         }
     }
 
-    private PricelListLogic view_;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (logic_ != null)
+            logic_.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void okRequest(long r)
+    {
+        if (logic_ != null)
+            logic_.okRequest(r);
+    }
+
+    private void cancelRequest()
+    {
+        if (logic_ != null)
+            logic_.cancelRequest();
+    }
+
+    private PricelListLogic logic_;
 }

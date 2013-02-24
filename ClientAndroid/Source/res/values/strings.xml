@@ -5,10 +5,8 @@
     <string name="menu_settings">Конфигурация</string>
     <string name="title_activity_expense_items">Категории расходов</string>
     <string name="new_expense_item">Новая категория</string>
-    <string name="get_shared_expense_item">Добавить общую категорию</string>
     <string name="expense_statistic">Статистика расходов</string>
     <string name="quit_application">Закрыть приложение</string>
-    <string name="app_loading">Загрузка&#8230;</string>
     <string name="et_expense_item_name_hint">Введите название</string>
 
     <color name="col_expense_item">#555555</color>
@@ -32,7 +30,7 @@
 
     <string name="price_label">Сумма</string>
     <string name="title_activity_price_list">Категория расходов: </string>
-    <string name="price_hint">Введите сумму</string>
+    <string name="price_hint">Расходы</string>
     <string name="date_label">Дата</string>
     <string name="currency_hint">Валюта</string>
     <string name="comment_label">Комментарий</string>
@@ -43,7 +41,7 @@
     <string name="history_label">История операций</string>
     <string name="new_record_label">Добавить новую запись</string>
     <string name="close">Закрыть</string>
-    <string name="price_warning">Введите пожалуйста цену</string>
+    <string name="price_warning">Введите пожалуйста сумму</string>
 
     <color name="col_price_val">#725998</color>
     <color name="col_price_list_item_back">#FFFF66</color>

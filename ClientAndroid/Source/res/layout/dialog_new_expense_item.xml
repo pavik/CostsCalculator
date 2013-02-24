@@ -38,7 +38,7 @@
             style="@style/GradientButtonText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:background="@drawable/green_gradient"
             android:text="@string/confirm" />
 
@@ -47,7 +47,7 @@
             style="@style/GradientButtonText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5"
             android:background="@drawable/green_gradient"
             android:text="@string/cancel" />
     </LinearLayout>

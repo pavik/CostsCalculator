@@ -86,6 +86,32 @@ public class CostItemRecordsAdapter extends BaseAdapter
         return cis_.getLatestCostItemRecordByDate(costItemId);
     }
 
+    public void updateCostItemRecord(long id)
+    {
+        CostItemRecord cir = fetchCostItemRecordById(id);
+        if (cir != null)
+            notifyDataSetChanged();
+        else
+            LOG.E("CostItemRecordsAdapter::updateCostItemRecord - failed with id = "
+                    + id);
+    }
+
+    public void newCostItemRecord(long id)
+    {
+        try
+        {
+            CostItemRecord cir = cis_.getCostItemRecord(id);
+            ids_.add(0, cir.getId());
+            records_.put(cir.getId(), cir);
+            notifyDataSetChanged();
+        }
+        catch (Exception e)
+        {
+            LOG.E("newCostItemRecord - id = " + id);
+            LOG.E(e.getMessage());
+        }
+    }
+
     public String getCostItemName()
     {
         return ci_.getName();

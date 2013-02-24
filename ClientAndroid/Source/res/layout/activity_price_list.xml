@@ -7,125 +7,13 @@
     android:padding="5dp"
     tools:context=".PriceListActivity" >
 
-    <LinearLayout
+    <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_edit_price"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="2dp"
-            android:text="@string/price_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:width="70dp" />
-
-        <EditText
-            android:id="@+id/et_price"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/price_hint"
-            android:imeOptions="actionNext"
-            android:inputType="numberDecimal" />
-
-        <AutoCompleteTextView
-            android:id="@+id/et_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/currency_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textCapCharacters"
-            android:maxLength="8"
-            android:textColor="@color/col_black" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dp"
-            android:text="@string/date_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:width="70dp" />
-
-        <TextView
-            android:id="@+id/tv_date_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_pressed_yellow"
-            android:clickable="true"
-            android:paddingRight="3dp"
-            android:text="@string/tv_placeholder"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/col_blue" />
-
-        <TextView
-            android:id="@+id/tv_time_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_pressed_yellow"
-            android:clickable="true"
-            android:paddingLeft="3dp"
-            android:text="@string/tv_placeholder"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/col_blue" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <AutoCompleteTextView
-            android:id="@+id/et_tag"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/tag_hint"
-            android:imeOptions="actionNext"
-            android:textColor="@color/col_black" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <AutoCompleteTextView
-            android:id="@+id/et_comment"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/comment_hint"
-            android:imeOptions="actionDone"
-            android:textColor="@color/col_black" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_save_price"
-        style="@style/GradientButtonText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/green_gradient"
-        android:text="@string/save_label" />
+        android:layout_height="wrap_content" >
+    </FrameLayout>
 
     <ListView
         android:id="@+id/lv_price_list"

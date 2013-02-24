@@ -43,7 +43,7 @@
     <string name="history_label">History of operations</string>
     <string name="new_record_label">New expense</string>
     <string name="close">Close</string>
-    <string name="price_warning">At least price should be filled</string>
+    <string name="price_warning">At least amount should be filled</string>
 
     <color name="col_price_val">#0000FF</color>
     <color name="col_price_list_item_back">#FFFF66</color>
