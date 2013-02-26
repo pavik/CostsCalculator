@@ -73,8 +73,13 @@ public class PricelListLogic
             public boolean onItemLongClick(AdapterView<?> av, View v, int pos,
                     long id)
             {
-                contextMenuRequest(id);
-                return true;
+                if (id > 0)
+                {
+                    contextMenuRequest(id);
+                    return true;
+                }
+                else
+                    return false;
             }
         });
     }
@@ -120,6 +125,7 @@ public class PricelListLogic
     private void contextMenuRequest(final long id)
     {
         CostItemRecord cir = adapter_.getCostItemRecord(id);
+
         final RelativeLayout menu = (RelativeLayout) activity_
                 .getLayoutInflater().inflate(R.layout.dialog_expense_cat_menu,
                         null);
