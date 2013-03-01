@@ -42,6 +42,17 @@ public class DataFormatService
     }
 
     /**
+     * Format price value to string without grouping by thousands
+     */
+    public static String priceToString(double price)
+    {
+        NumberFormat df = DecimalFormat.getInstance();
+        df.setMinimumFractionDigits(0);
+        df.setGroupingUsed(false);
+        return df.format(price).replace(',', '.');
+    }
+
+    /**
      * Format date to string
      */
     public static String formatDate(Date d)

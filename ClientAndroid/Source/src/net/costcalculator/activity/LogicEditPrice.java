@@ -171,7 +171,7 @@ public class LogicEditPrice
 
         if (cir != null)
         {
-            etPrice_.setText(DataFormatService.formatPrice(cir.getSum()));
+            etPrice_.setText(DataFormatService.priceToString(cir.getSum()));
             etCurrency_.setText(cir.getCurrency());
             etComment_.setText(cir.getComment());
             etTag_.setText(cir.getTag());
@@ -318,8 +318,7 @@ public class LogicEditPrice
                 .getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         View v = fragment_.getActivity().getCurrentFocus();
         if (v != null)
-            inputManager.hideSoftInputFromWindow(v.getWindowToken(),
-                    InputMethodManager.HIDE_IMPLICIT_ONLY);
+            inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void saveRequest()
