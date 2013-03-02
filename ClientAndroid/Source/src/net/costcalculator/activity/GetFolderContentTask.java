@@ -11,6 +11,7 @@ package net.costcalculator.activity;
 import java.util.ArrayList;
 
 import net.costcalculator.service.DropBoxService;
+import net.costcalculator.service.DropboxEntry;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,7 +35,7 @@ import android.os.AsyncTask;
  * 
  */
 public class GetFolderContentTask extends
-        AsyncTask<String, Long, ArrayList<String>>
+        AsyncTask<String, Long, ArrayList<DropboxEntry>>
 {
     public GetFolderContentTask(Context context,
             AsyncTaskCompletionHandler<GetFolderContentTask> handler)
@@ -62,12 +63,12 @@ public class GetFolderContentTask extends
     }
 
     @Override
-    protected ArrayList<String> doInBackground(String... s)
+    protected ArrayList<DropboxEntry> doInBackground(String... s)
     {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<DropboxEntry> list = new ArrayList<DropboxEntry>();
         for (int i = 0; i < s.length; ++i)
         {
-            ArrayList<String> dir = new ArrayList<String>();
+            ArrayList<DropboxEntry> dir = new ArrayList<DropboxEntry>();
             try
             {
                 dir = DropBoxService.instance().getFolderContent(s[i]);
@@ -99,7 +100,7 @@ public class GetFolderContentTask extends
     }
 
     @Override
-    protected void onPostExecute(ArrayList<String> result)
+    protected void onPostExecute(ArrayList<DropboxEntry> result)
     {
         pd_.dismiss();
         if (handler_ != null)
@@ -111,7 +112,7 @@ public class GetFolderContentTask extends
     {
         pd_.dismiss();
         if (handler_ != null)
-            handler_.taskComplete(this);        
+            handler_.taskComplete(this);
     }
 
     private Context                                          context_;

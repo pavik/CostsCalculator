@@ -75,4 +75,6 @@
     <string name="warning_del_category">Do you really want to delete %s?</string>
     <string name="warning">Warning</string>
     <string name="tv_placeholder">placeholder</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="bytes">bytes</string>
 </resources>

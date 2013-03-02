@@ -13,6 +13,7 @@ import org.json.simple.JSONArray;
 
 import net.costcalculator.service.DataFormatService;
 import net.costcalculator.service.DropBoxService;
+import net.costcalculator.service.DropboxEntry;
 import net.costcalculator.service.ImportService;
 import net.costcalculator.service.ImportStatistic;
 import net.costcalculator.service.JSONSerializerService;
@@ -29,7 +30,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,7 +55,7 @@ import android.widget.Toast;
  * @author Aliaksei Plashchanski
  * 
  */
-public class BackupLogic implements OnClickListener, OnItemClickListener
+public class BackupLogic
 {
     public BackupLogic(Activity a)
     {
@@ -65,20 +65,48 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
         btnBackup = (Button) context_.findViewById(R.id.btn_backup_dropbox);
         btnRestore = (Button) context_.findViewById(R.id.btn_restore_dropbox);
         lvDropbox = (ListView) context_.findViewById(R.id.lv_drop_box_list);
-        View header = context_.getLayoutInflater().inflate(
-                R.layout.view_list_header, null);
-        TextView tvHeaderText = (TextView) header
-                .findViewById(R.id.textViewListHeader);
-        tvHeaderText.setText(R.string.s_dropbox_file_list);
-        lvDropbox.addHeaderView(header);
-        lvDropbox.setOnItemClickListener(this);
+        lvDropbox.setOnItemClickListener(new OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+                    long id)
+            {
+                if (id >= 0)
+                    selectEntryRequest(id);
+            }
+        });
 
-        btnLinkUnlink.setOnClickListener(this);
-        btnBackup.setOnClickListener(this);
-        btnRestore.setOnClickListener(this);
+        btnLinkUnlink.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                linkUnlinkRequest();
+            }
+        });
+        btnBackup.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                backupRequest();
+            }
+        });
+        btnRestore.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                readDirRequest();
+            }
+        });
 
         DropBoxService.create(context_);
-        updateView();
+        boolean isLinked = DropBoxService.instance().getDropboxAPI()
+                .getSession().isLinked();
+        updateView(isLinked);
+        if (isLinked)
+            readDirRequest();
     }
 
     public void release()
@@ -111,32 +139,19 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                 LOG.E("Error authenticating: " + e.getLocalizedMessage());
             }
         }
-        updateView();
-    }
 
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-        case R.id.btn_link_dropbox:
-            linkUnlinkRequest();
-            break;
-        case R.id.btn_backup_dropbox:
-            backupRequest();
-            break;
-        case R.id.btn_restore_dropbox:
+        boolean isLinked = DropBoxService.instance().getDropboxAPI()
+                .getSession().isLinked();
+        updateView(isLinked);
+        if (isLinked)
             readDirRequest();
-            break;
-        }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> av, View v, int pos, long id)
+    public void selectEntryRequest(long id)
     {
-        if (drobboxDir_ != null)
+        if (drobboxAdapter_ != null)
         {
-            final String selectedFileName = drobboxDir_.getItem((int) id);
+            final String selectedFileName = drobboxAdapter_.getFileName(id);
             String message = context_.getResources().getString(
                     R.string.s_msg_confirm_restore)
                     + " " + selectedFileName;
@@ -167,7 +182,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
 
             // Clear our stored keys
             DropBoxService.instance().clearKeys();
-            updateView();
+            updateView(false);
         }
         else
         {
@@ -229,10 +244,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
             {
                 ArrayList<String> errors = t.getErrors();
                 if (errors.size() > 0)
-                {
-                    updateView();
                     showToast(errors.get(0));
-                }
             }
         }
         catch (Exception e)
@@ -299,10 +311,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
             {
                 ArrayList<String> errors = task.getErrors();
                 if (errors.size() > 0)
-                {
-                    updateView();
                     showToast(errors.get(0));
-                }
             }
         }
         catch (Exception e)
@@ -331,10 +340,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
             {
                 ArrayList<String> errors = task.getErrors();
                 if (errors.size() > 0)
-                {
-                    updateView();
                     showToast(errors.get(0));
-                }
             }
         }
         catch (Exception e)
@@ -353,7 +359,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                         @Override
                         public void taskComplete(GetFolderContentTask task)
                         {
-                            getFolderContentTaskComplete(task);
+                            readDirRequestComplete(task);
                         }
                     });
             task.execute("/");
@@ -364,7 +370,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
         }
     }
 
-    private void getFolderContentTaskComplete(GetFolderContentTask task)
+    private void readDirRequestComplete(GetFolderContentTask task)
     {
         try
         {
@@ -377,7 +383,7 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                 return;
             }
 
-            ArrayList<String> files = task.get();
+            ArrayList<DropboxEntry> files = task.get();
             ArrayList<String> errors = task.getErrors();
 
             if (files.size() == 0)
@@ -386,16 +392,12 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
                     showToast(context_.getResources().getString(
                             R.string.s_msg_no_backup_files_in_dropbox));
                 else
-                {
-                    updateView();
                     showToast(errors.get(0));
-                }
             }
             else
             {
-                drobboxDir_ = new ArrayAdapter<String>(context_,
-                        android.R.layout.simple_list_item_1, files);
-                lvDropbox.setAdapter(drobboxDir_);
+                drobboxAdapter_ = new DropboxAdapter(context_, files);
+                lvDropbox.setAdapter(drobboxAdapter_);
             }
         }
         catch (Exception e)
@@ -404,14 +406,11 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
         }
     }
 
-    private void updateView()
+    private void updateView(boolean isLinked)
     {
-        boolean isLinked = DropBoxService.instance().getDropboxAPI()
-                .getSession().isLinked();
-
         tvIntro_.setVisibility(isLinked ? View.GONE : View.VISIBLE);
-        btnBackup.setVisibility(isLinked ? View.VISIBLE : View.GONE);
-        btnRestore.setVisibility(isLinked ? View.VISIBLE : View.GONE);
+        btnBackup.setVisibility(isLinked ? View.GONE : View.GONE);
+        btnRestore.setVisibility(isLinked ? View.GONE : View.GONE);
         lvDropbox.setVisibility(isLinked ? View.VISIBLE : View.GONE);
 
         btnLinkUnlink.setText(isLinked ? R.string.s_btn_logout_dropbox
@@ -426,11 +425,11 @@ public class BackupLogic implements OnClickListener, OnItemClickListener
         t.show();
     }
 
-    private Activity             context_;
-    private TextView             tvIntro_;
-    private Button               btnLinkUnlink;
-    private Button               btnBackup;
-    private Button               btnRestore;
-    private ListView             lvDropbox;
-    private ArrayAdapter<String> drobboxDir_;
+    private Activity       context_;
+    private TextView       tvIntro_;
+    private Button         btnLinkUnlink;
+    private Button         btnBackup;
+    private Button         btnRestore;
+    private ListView       lvDropbox;
+    private DropboxAdapter drobboxAdapter_;
 }

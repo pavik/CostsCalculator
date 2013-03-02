@@ -7,6 +7,17 @@
     tools:context=".BackupActivity" >
 
     <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_gradient_list_header"
+        android:gravity="center"
+        android:text="@string/dropbox"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/col_list_view_header_text"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/tv_backup_intro"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

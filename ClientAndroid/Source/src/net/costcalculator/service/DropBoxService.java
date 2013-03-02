@@ -85,19 +85,25 @@ public class DropBoxService
         return api_;
     }
 
-    public ArrayList<String> getFolderContent(String folder)
+    public ArrayList<DropboxEntry> getFolderContent(String folder)
             throws DropboxException
     {
         LOG.T("DropBoxService::getFolderContent");
 
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<DropboxEntry> files = new ArrayList<DropboxEntry>();
 
         Entry dir = api_.metadata(folder.length() == 0 ? "/" : folder, 0, null,
                 true, null);
         for (Entry e : dir.contents)
         {
-            if (!e.isDir)
-                files.add(e.fileName());
+            if (!e.isDir && !e.isDeleted)
+            {
+                DropboxEntry file = new DropboxEntry();
+                file.name = e.fileName();
+                file.clientTime = e.clientMtime;
+                file.size = e.bytes;
+                files.add(file);
+            }
         }
 
         return files;
