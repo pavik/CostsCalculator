@@ -88,4 +88,5 @@
     <string name="warning">Внимание</string>
     <string name="dropbox">Dropbox</string>
     <string name="bytes">байт</string>
+    <string name="move">Переместить</string>
 </resources>

@@ -44,10 +44,37 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/menu_del_layout"
+        android:id="@+id/menu_move_layout"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/menu_edit_layout"
+        android:background="@drawable/background_pressed_yellow"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="2dp" >
+
+        <ImageView
+            android:id="@+id/menu_move_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_move" />
+
+        <TextView
+            android:id="@+id/tv_menu_move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="@string/move"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/menu_del_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_move_layout"
         android:background="@drawable/background_pressed_yellow"
         android:clickable="true"
         android:orientation="horizontal"

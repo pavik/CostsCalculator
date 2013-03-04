@@ -163,6 +163,18 @@ public class PricelListLogic
             }
         });
 
+        LinearLayout move = (LinearLayout) menu
+                .findViewById(R.id.menu_move_layout);
+        move.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                d.dismiss();
+                moveMenuRequest(id);
+            }
+        });
+
         d.show();
     }
 
@@ -200,6 +212,11 @@ public class PricelListLogic
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void moveMenuRequest(final long pos)
+    {
+        // TODO
     }
 
     private void deleteItemRequest(long id)

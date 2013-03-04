@@ -80,8 +80,13 @@ public class ExpenseItemsLogic
                     public boolean onItemLongClick(AdapterView<?> av, View v,
                             int pos, long id)
                     {
-                        categoryMenuRequest(pos);
-                        return true;
+                        if (id > 0)
+                        {
+                            categoryMenuRequest(pos);
+                            return true;
+                        }
+                        else
+                            return false;
                     }
                 });
     }
@@ -187,6 +192,18 @@ public class ExpenseItemsLogic
             }
         });
 
+        LinearLayout move = (LinearLayout) menu
+                .findViewById(R.id.menu_move_layout);
+        move.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                d.dismiss();
+                moveMenuRequest(pos);
+            }
+        });
+
         d.show();
     }
 
@@ -260,6 +277,11 @@ public class ExpenseItemsLogic
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void moveMenuRequest(final int pos)
+    {
+        // TODO
     }
 
     private void deleteCategoryRequest(int pos)

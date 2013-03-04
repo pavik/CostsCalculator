@@ -77,4 +77,5 @@
     <string name="tv_placeholder">placeholder</string>
     <string name="dropbox">Dropbox</string>
     <string name="bytes">bytes</string>
+    <string name="move">Move</string>
 </resources>
