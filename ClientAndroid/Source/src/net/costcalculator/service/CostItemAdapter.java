@@ -9,18 +9,13 @@
 package net.costcalculator.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import net.costcalculator.activity.R;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * Class is adapter between persistent storage and application logic.
@@ -46,14 +41,15 @@ import android.widget.TextView;
  */
 public class CostItemAdapter extends BaseAdapter
 {
-    public CostItemAdapter(Activity context) throws Exception
+    public CostItemAdapter(Activity context, AdapterViewBuilder<CostItem> vb)
+            throws Exception
     {
         context_ = context;
+        viewbuilder_ = vb;
         cis_ = new CostItemsService(context_);
         costItems_ = cis_.getAllCostItems();
         if (costItems_.isEmpty())
             setup_basic_items();
-        counts_ = cis_.getCostItemRecordsCount();
     }
 
     public void release()
@@ -61,13 +57,11 @@ public class CostItemAdapter extends BaseAdapter
         cis_.release();
         cis_ = null;
         costItems_ = null;
-        counts_ = null;
     }
 
     public void refresh()
     {
         costItems_ = cis_.getAllCostItems();
-        counts_ = cis_.getCostItemRecordsCount();
         notifyDataSetChanged();
     }
 
@@ -140,33 +134,8 @@ public class CostItemAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View cell = null;
-
-        if (convertView == null)
-        {
-            LayoutInflater inflater = context_.getLayoutInflater();
-            cell = inflater.inflate(R.layout.grid_cell_expense_item, parent,
-                    false);
-        }
-        else
-        {
-            cell = convertView;
-        }
-
-        ImageView imageView = (ImageView) cell.findViewById(R.id.cell_image);
-        ImageView imageViewOverlay = (ImageView) cell
-                .findViewById(R.id.cell_image_overlay);
-        TextView textView = (TextView) cell.findViewById(R.id.cell_text);
-        TextView textViewCount = (TextView) cell.findViewById(R.id.cell_count);
-
-        imageView.setImageResource(R.drawable.ic_folder);
-        imageViewOverlay.setVisibility(View.GONE);
-        textView.setText(costItems_.get(position).getName());
-
-        Integer n = counts_.get(costItems_.get(position).getGuid());
-        textViewCount.setText(n != null ? n.toString() : "0");
-
-        return cell;
+        return viewbuilder_.getView(position, convertView, parent,
+                costItems_.get(position));
     }
 
     private void setup_basic_items() throws NotFoundException, Exception
@@ -185,8 +154,8 @@ public class CostItemAdapter extends BaseAdapter
         addNewCostItem(r.getString(R.string.ci_other));
     }
 
-    private ArrayList<CostItem>      costItems_;
-    private HashMap<String, Integer> counts_;
-    private Activity                 context_;
-    private CostItemsService         cis_;
+    private ArrayList<CostItem>          costItems_;
+    private Activity                     context_;
+    private CostItemsService             cis_;
+    private AdapterViewBuilder<CostItem> viewbuilder_;
 }

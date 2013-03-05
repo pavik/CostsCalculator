@@ -11,6 +11,8 @@ package net.costcalculator.activity;
 import net.costcalculator.activity.R;
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemAdapter;
+import net.costcalculator.service.CostItemAdapterMainView;
+import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.app.Activity;
@@ -61,7 +63,10 @@ public class ExpenseItemsLogic
             throw new Exception("findViewById failed, id = "
                     + R.id.gridExpenseItems);
 
-        adapter_ = new CostItemAdapter(activity_);
+        cis_ = new CostItemsService(activity_);
+        viewbuilder_ = new CostItemAdapterMainView(activity_,
+                cis_.getCostItemRecordsCount());
+        adapter_ = new CostItemAdapter(activity_, viewbuilder_);
         gridView_.setAdapter(adapter_);
         gridView_.setOnItemClickListener(new OnItemClickListener()
         {
@@ -100,11 +105,16 @@ public class ExpenseItemsLogic
         if (adapter_ != null)
             adapter_.release();
         adapter_ = null;
+        if (cis_ != null)
+            cis_.release();
+        cis_ = null;
+        viewbuilder_ = null;
     }
 
     public void onActivityRestart()
     {
         adapter_.refresh();
+        viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
     }
 
     public void newExpenseCategoryRequest()
@@ -296,7 +306,9 @@ public class ExpenseItemsLogic
         }
     }
 
-    private GridView        gridView_;
-    private Activity        activity_;
-    private CostItemAdapter adapter_;
+    private GridView                gridView_;
+    private Activity                activity_;
+    private CostItemAdapter         adapter_;
+    private CostItemAdapterMainView viewbuilder_;
+    private CostItemsService        cis_;
 }
