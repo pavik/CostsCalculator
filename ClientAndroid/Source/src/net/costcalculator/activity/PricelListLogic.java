@@ -8,6 +8,9 @@
 
 package net.costcalculator.activity;
 
+import net.costcalculator.service.CostItem;
+import net.costcalculator.service.CostItemAdapter;
+import net.costcalculator.service.CostItemAdapterSimpleView;
 import net.costcalculator.service.CostItemRecord;
 import net.costcalculator.service.CostItemRecordsAdapter;
 import net.costcalculator.service.DataFormatService;
@@ -21,6 +24,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -214,9 +218,46 @@ public class PricelListLogic
         alert.show();
     }
 
-    private void moveMenuRequest(final long pos)
+    private void moveMenuRequest(final long id)
     {
-        // TODO
+        try
+        {
+            CostItemRecord cir = adapter_.getCostItemRecord(id);
+            final RelativeLayout rl = (RelativeLayout) activity_
+                    .getLayoutInflater().inflate(
+                            R.layout.dialog_select_expense_cat, null);
+
+            TextView header = (TextView) rl.findViewById(R.id.tv_move_to);
+            String s = activity_.getResources().getString(
+                    R.string.s_move_item_to);
+            header.setText(String.format(
+                    s,
+                    DataFormatService.formatPrice(cir.getSum()) + " "
+                            + cir.getCurrency()));
+
+            final Dialog d = new Dialog(activity_);
+            ListView lv = (ListView) rl.findViewById(R.id.lv_categories);
+            lv.setAdapter(new CostItemAdapter(activity_,
+                    new CostItemAdapterSimpleView(activity_)));
+            lv.setOnItemClickListener(new OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> av, View v, int posTo,
+                        long catId)
+                {
+                    if (id > 0)
+                        confirmMoveRequest(id, catId, d);
+                }
+            });
+
+            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            d.setContentView(rl);
+            d.show();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
     }
 
     private void deleteItemRequest(long id)
@@ -224,6 +265,57 @@ public class PricelListLogic
         try
         {
             adapter_.deletePosition(id);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+    }
+
+    private void confirmMoveRequest(final long id, final long catId,
+            final Dialog d)
+    {
+        try
+        {
+            CostItem ci = adapter_.getCostItem(catId);
+            CostItemRecord cir = adapter_.getCostItemRecord(id);
+            final String rawWarn = activity_.getResources().getString(
+                    R.string.warning_move_item);
+            final String formattedWarn = String.format(
+                    rawWarn,
+                    DataFormatService.formatPrice(cir.getSum()) + " "
+                            + cir.getCurrency(), ci.getName());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
+            builder.setMessage(formattedWarn)
+                    .setPositiveButton(R.string.confirm,
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which)
+                                {
+                                    d.dismiss();
+                                    moveExpensesRequest(id, catId);
+                                }
+                            }).setNegativeButton(R.string.cancel, null)
+                    .setIcon(R.drawable.ic_move_large)
+                    .setTitle(R.string.warning);
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+    }
+
+    private void moveExpensesRequest(long id, long catId)
+    {
+        try
+        {
+            adapter_.moveExpenses(id, catId);
         }
         catch (Exception e)
         {

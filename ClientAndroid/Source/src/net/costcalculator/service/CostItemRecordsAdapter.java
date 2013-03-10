@@ -112,9 +112,29 @@ public class CostItemRecordsAdapter extends BaseAdapter
         }
     }
 
+    public void moveExpenses(long id, long catId) throws Exception
+    {
+        if (cis_.moveCostItemRecord(getCostItemRecord(id), getCostItem(catId)))
+        {
+            for (int i = 0; i < ids_.size(); ++i)
+                if (ids_.get(i) == id)
+                {
+                    ids_.remove(i);
+                    records_.remove(id);
+                    break;
+                }
+            notifyDataSetChanged();
+        }
+    }
+
     public String getCostItemName()
     {
         return ci_.getName();
+    }
+
+    public CostItem getCostItem(long id) throws Exception
+    {
+        return cis_.getCostItemById(id);
     }
 
     /*

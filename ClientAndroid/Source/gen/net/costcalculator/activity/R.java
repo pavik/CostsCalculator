@@ -154,7 +154,7 @@ public final class R {
         public static final int activity_statistic_report=0x7f070003;
     }
     public static final class string {
-        public static final int app_loading=0x7f040042;
+        public static final int app_loading=0x7f040044;
         public static final int app_name=0x7f040000;
         public static final int bytes=0x7f04003d;
         public static final int cancel=0x7f040008;
@@ -181,7 +181,7 @@ public final class R {
         public static final int edit=0x7f040038;
         public static final int et_expense_item_name_hint=0x7f040006;
         public static final int expense_statistic=0x7f040004;
-        public static final int get_shared_expense_item=0x7f040041;
+        public static final int get_shared_expense_item=0x7f040043;
         public static final int history_label=0x7f04001e;
         public static final int menu_settings=0x7f040001;
         public static final int move=0x7f04003e;
@@ -201,6 +201,7 @@ public final class R {
         public static final int s_err_unknown_error=0x7f040035;
         public static final int s_history_of_expenses=0x7f040022;
         public static final int s_monthly_expenses=0x7f040025;
+        public static final int s_move_item_to=0x7f040040;
         public static final int s_move_to=0x7f04003f;
         public static final int s_msg_confirm_restore=0x7f040033;
         public static final int s_msg_dropbox_backup_ok=0x7f04002c;
@@ -220,7 +221,8 @@ public final class R {
         public static final int tv_placeholder=0x7f040036;
         public static final int warning=0x7f04003b;
         public static final int warning_del_category=0x7f04003a;
-        public static final int warning_move_category=0x7f040040;
+        public static final int warning_move_category=0x7f040041;
+        public static final int warning_move_item=0x7f040042;
     }
     public static final class style {
         /** 

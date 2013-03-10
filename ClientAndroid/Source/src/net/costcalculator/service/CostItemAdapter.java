@@ -100,13 +100,11 @@ public class CostItemAdapter extends BaseAdapter
         }
     }
 
-    public void moveExpenses(int fromCat, int toCat)
+    public void moveExpenses(int fromCat, long id)
     {
-        CostItem from = null, to = null;
+        CostItem from = null, to = getCostItem(id);
         if (fromCat >= 0 && fromCat < costItems_.size())
             from = costItems_.get(fromCat);
-        if (toCat >= 0 && toCat < costItems_.size())
-            to = costItems_.get(toCat);
         if (from != null && to != null)
             cis_.moveCostItems(from, to);
     }
@@ -132,6 +130,14 @@ public class CostItemAdapter extends BaseAdapter
     public CostItem getCostItem(int index)
     {
         return costItems_.get(index);
+    }
+
+    public CostItem getCostItem(long id)
+    {
+        for (int i = 0; i < costItems_.size(); ++i)
+            if (costItems_.get(i).getId() == id)
+                return costItems_.get(i);
+        return null;
     }
 
     /*

@@ -315,7 +315,7 @@ public class ExpenseItemsLogic
                         long id)
                 {
                     if (id > 0)
-                        confirmMoveRequest(posFrom, posTo, d);
+                        confirmMoveRequest(posFrom, id, d);
                 }
             });
 
@@ -341,11 +341,11 @@ public class ExpenseItemsLogic
         }
     }
 
-    private void confirmMoveRequest(final int posFrom, final int posTo,
+    private void confirmMoveRequest(final int posFrom, final long id,
             final Dialog d)
     {
         CostItem ciFrom = adapter_.getCostItem(posFrom);
-        CostItem ciTo = adapter_.getCostItem(posTo);
+        CostItem ciTo = adapter_.getCostItem(id);
         final String rawWarn = activity_.getResources().getString(
                 R.string.warning_move_category);
         final String formattedWarn = String.format(rawWarn, ciFrom.getName(),
@@ -361,7 +361,7 @@ public class ExpenseItemsLogic
                                     int which)
                             {
                                 d.dismiss();
-                                moveExpensesRequest(posFrom, posTo);
+                                moveExpensesRequest(posFrom, id);
                             }
                         }).setNegativeButton(R.string.cancel, null)
                 .setIcon(R.drawable.ic_move_large).setTitle(R.string.warning);
@@ -370,11 +370,11 @@ public class ExpenseItemsLogic
         alert.show();
     }
 
-    private void moveExpensesRequest(int fromCat, int toCat)
+    private void moveExpensesRequest(int fromCat, long id)
     {
         try
         {
-            adapter_.moveExpenses(fromCat, toCat);
+            adapter_.moveExpenses(fromCat, id);
             viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
             adapter_.refreshView();
         }
