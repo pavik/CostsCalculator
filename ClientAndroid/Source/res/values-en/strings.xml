@@ -78,4 +78,6 @@
     <string name="dropbox">Dropbox</string>
     <string name="bytes">bytes</string>
     <string name="move">Move</string>
+    <string name="s_move_to">Move expenses from %s to:</string>
+    <string name="warning_move_category">Move all expenses from %1$s to %2$s ?</string>
 </resources>

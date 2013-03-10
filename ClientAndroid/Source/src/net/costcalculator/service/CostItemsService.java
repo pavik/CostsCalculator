@@ -862,6 +862,36 @@ public class CostItemsService
         return result;
     }
 
+    public int moveCostItems(CostItem from, CostItem to)
+    {
+        LOG.T("CostItemsService::moveCostItems");
+        if (from == null)
+            throw new IllegalArgumentException("from is null");
+        if (to == null)
+            throw new IllegalArgumentException("to is null");
+
+        SQLiteDatabase db = null;
+        int result = 0;
+
+        try
+        {
+            db = dbprovider_.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(SQLiteDbQueries.COL_CIR_CI_GUID, to.getGuid());
+            result = db.update(SQLiteDbQueries.COST_ITEM_RECORDS, cv,
+                    SQLiteDbQueries.COST_ITEM_RECORDS_WHERE_BY_CI_GUID,
+                    new String[] { from.getGuid() });
+            LOG.D("moveCostItems: " + result);
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
     public CostItemsService(Context context)
     {
         LOG.T("CostItemsService::CostItemsService");

@@ -12,6 +12,7 @@ import net.costcalculator.activity.R;
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemAdapter;
 import net.costcalculator.service.CostItemAdapterMainView;
+import net.costcalculator.service.CostItemAdapterSimpleView;
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
@@ -26,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -113,8 +115,8 @@ public class ExpenseItemsLogic
 
     public void onActivityRestart()
     {
-        adapter_.refresh();
         viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
+        adapter_.reload();
     }
 
     public void newExpenseCategoryRequest()
@@ -289,9 +291,42 @@ public class ExpenseItemsLogic
         alert.show();
     }
 
-    private void moveMenuRequest(final int pos)
+    private void moveMenuRequest(final int posFrom)
     {
-        // TODO
+        try
+        {
+            CostItem ci = adapter_.getCostItem(posFrom);
+            final RelativeLayout rl = (RelativeLayout) activity_
+                    .getLayoutInflater().inflate(
+                            R.layout.dialog_select_expense_cat, null);
+
+            TextView header = (TextView) rl.findViewById(R.id.tv_move_to);
+            String s = activity_.getResources().getString(R.string.s_move_to);
+            header.setText(String.format(s, ci.getName()));
+
+            final Dialog d = new Dialog(activity_);
+            ListView lv = (ListView) rl.findViewById(R.id.lv_categories);
+            lv.setAdapter(new CostItemAdapter(activity_,
+                    new CostItemAdapterSimpleView(activity_)));
+            lv.setOnItemClickListener(new OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> av, View v, int posTo,
+                        long id)
+                {
+                    if (id > 0)
+                        confirmMoveRequest(posFrom, posTo, d);
+                }
+            });
+
+            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            d.setContentView(rl);
+            d.show();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
     }
 
     private void deleteCategoryRequest(int pos)
@@ -299,6 +334,49 @@ public class ExpenseItemsLogic
         try
         {
             adapter_.deletePosition(pos);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+    }
+
+    private void confirmMoveRequest(final int posFrom, final int posTo,
+            final Dialog d)
+    {
+        CostItem ciFrom = adapter_.getCostItem(posFrom);
+        CostItem ciTo = adapter_.getCostItem(posTo);
+        final String rawWarn = activity_.getResources().getString(
+                R.string.warning_move_category);
+        final String formattedWarn = String.format(rawWarn, ciFrom.getName(),
+                ciTo.getName());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
+        builder.setMessage(formattedWarn)
+                .setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which)
+                            {
+                                d.dismiss();
+                                moveExpensesRequest(posFrom, posTo);
+                            }
+                        }).setNegativeButton(R.string.cancel, null)
+                .setIcon(R.drawable.ic_move_large).setTitle(R.string.warning);
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void moveExpensesRequest(int fromCat, int toCat)
+    {
+        try
+        {
+            adapter_.moveExpenses(fromCat, toCat);
+            viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
+            adapter_.refreshView();
         }
         catch (Exception e)
         {

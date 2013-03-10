@@ -59,9 +59,14 @@ public class CostItemAdapter extends BaseAdapter
         costItems_ = null;
     }
 
-    public void refresh()
+    public void reload()
     {
         costItems_ = cis_.getAllCostItems();
+        notifyDataSetChanged();
+    }
+
+    public void refreshView()
+    {
         notifyDataSetChanged();
     }
 
@@ -93,6 +98,17 @@ public class CostItemAdapter extends BaseAdapter
             costItems_.remove(pos);
             notifyDataSetChanged();
         }
+    }
+
+    public void moveExpenses(int fromCat, int toCat)
+    {
+        CostItem from = null, to = null;
+        if (fromCat >= 0 && fromCat < costItems_.size())
+            from = costItems_.get(fromCat);
+        if (toCat >= 0 && toCat < costItems_.size())
+            to = costItems_.get(toCat);
+        if (from != null && to != null)
+            cis_.moveCostItems(from, to);
     }
 
     /*

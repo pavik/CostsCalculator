@@ -89,4 +89,6 @@
     <string name="dropbox">Dropbox</string>
     <string name="bytes">байт</string>
     <string name="move">Переместить</string>
+    <string name="s_move_to">Переместить расходы из %s в:</string>
+    <string name="warning_move_category">Переместить все расходы из %1$s в %2$s ?</string>
 </resources>

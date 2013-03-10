@@ -118,11 +118,13 @@ public class SQLiteDbQueries
 
     public static final String GET_EXPENSES_STAT_FOR_PERIOD       = "SELECT cir_ci_guid, cir_currency, COUNT(*) AS cir_count, SUM(cir_sum) AS cir_sum FROM cost_item_records WHERE cir_datetime >= ? AND cir_datetime <= ? GROUP BY cir_ci_guid, cir_currency ORDER BY cir_sum DESC";
 
-    public static final String CIR_GET_LATEST_BY_DATETIME        = "SELECT cost_item_records.* FROM cost_item_records JOIN cost_items ON cost_items.ci_guid = cost_item_records.cir_ci_guid WHERE cost_items.ci_id = ? ORDER BY cost_item_records.cir_datetime DESC LIMIT 1";
+    public static final String CIR_GET_LATEST_BY_DATETIME         = "SELECT cost_item_records.* FROM cost_item_records JOIN cost_items ON cost_items.ci_guid = cost_item_records.cir_ci_guid WHERE cost_items.ci_id = ? ORDER BY cost_item_records.cir_datetime DESC LIMIT 1";
 
     public static final String CIR_GET_ALL_DISTINCT_CURRENCIES    = "SELECT DISTINCT cir_currency FROM cost_item_records";
 
     public static final String CIR_GET_ALL_DISTINCT_TAGS          = "SELECT DISTINCT cir_tag FROM cost_item_records";
 
     public static final String CIR_GET_ALL_DISTINCT_COMMENTS      = "SELECT DISTINCT cir_comment FROM cost_item_records";
+
+    public static final String CIR_MOVE_COST_ITEM_RECORDS         = "UPDATE cost_item_records SET cir_ci_guid = ? WHERE cir_ci_guid = ?";
 }
