@@ -25,13 +25,16 @@ import com.dropbox.client2.session.TokenPair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,8 +108,6 @@ public class BackupLogic
         boolean isLinked = DropBoxService.instance().getDropboxAPI()
                 .getSession().isLinked();
         updateView(isLinked);
-        if (isLinked)
-            readDirRequest();
     }
 
     public void release()
@@ -335,7 +336,7 @@ public class BackupLogic
 
             ImportStatistic stat = task.get();
             if (stat != null)
-                showToast("Import complete: " + stat.cir_ignored_existent);
+                showImportStatistic(stat);
             else
             {
                 ArrayList<String> errors = task.getErrors();
@@ -415,6 +416,29 @@ public class BackupLogic
 
         btnLinkUnlink.setText(isLinked ? R.string.s_btn_logout_dropbox
                 : R.string.s_btn_login_dropbox);
+    }
+
+    private void showImportStatistic(ImportStatistic stat)
+    {
+        final RelativeLayout rl = (RelativeLayout) context_.getLayoutInflater()
+                .inflate(R.layout.dialog_import_statistic, null);
+
+        final Dialog d = new Dialog(context_);
+        ListView lv = (ListView) rl.findViewById(R.id.lv_items);
+        lv.setAdapter(new ImportStatisticAdapter(context_, stat));
+        Button ok = (Button) rl.findViewById(R.id.btn_ok);
+        ok.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                d.dismiss();
+            }
+        });
+
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(rl);
+        d.show();
     }
 
     private void showToast(String msg)

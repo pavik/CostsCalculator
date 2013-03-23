@@ -59,7 +59,7 @@ public class DownloadFileTask extends AsyncTask<Void, Long, Boolean> implements
         pd_.setMax(100);
         pd_.setMessage(path_);
         pd_.setTitle(context_.getResources()
-                .getString(R.string.s_msg_uploading));
+                .getString(R.string.s_msg_downloading));
         pd_.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd_.setProgress(0);
         pd_.setCancelable(false);

@@ -73,6 +73,8 @@
     <string name="s_msg_dropbox_download_ok">Загрузка данных завершена успешно</string>
     <string name="s_msg_dropbox_restore_ok">Восстановление данных завершено успешно</string>
     <string name="s_msg_uploading">Загрузка данных&#8230;</string>
+    <string name="s_msg_downloading">Загрузка данных&#8230;</string>
+    <string name="s_msg_importing">Импорт&#8230;</string>
     <string name="s_msg_no_data_for_backuping">Нет данных для загрузки</string>
     <string name="s_msg_no_backup_files_in_dropbox">В вашем Dropbox аккаунте нет резервных копий данных</string>
     <string name="s_dropbox_file_list">Список файлов в Dropbox</string>
@@ -93,4 +95,17 @@
     <string name="s_move_item_to">Переместить %s в:</string>
     <string name="warning_move_category">Переместить все расходы из %1$s в %2$s ?</string>
     <string name="warning_move_item">Переместить %1$s в %2$s ?</string>
+    <string name="stat_report">Статистика</string>
+    <string name="stat_ci_total">Всего категорий</string>
+    <string name="stat_ci_error">Ошибок (в категориях)</string>
+    <string name="stat_ci_ignored">Найдено категорий</string>
+    <string name="stat_ci_new">Добавлено категорий</string>
+    <string name="stat_ci_overwritten">Обновлено категорий</string>
+    <string name="stat_cir_total">Всего расходов</string>
+    <string name="stat_cir_error">Ошибок (в расходах)</string>
+    <string name="stat_cir_ignored">Найдено расходов</string>
+    <string name="stat_cir_new">Добавлено расходов</string>
+    <string name="stat_cir_overwritten">Обновлено расходов</string>
+    <string name="ok">OK</string>
+    <color name="col_red">#FF0000</color>
 </resources>

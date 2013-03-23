@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/col_activity_background" >
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_gradient_dlg_header"
+        android:gravity="center"
+        android:text="@string/stat_report"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/col_list_view_header_text"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/lv_items"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/tv_header"
+        android:layout_margin="2dp"
+        android:divider="@color/col_activity_background"
+        android:dividerHeight="2dp"
+        android:listSelector="@android:color/transparent" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lv_items"
+        android:background="@drawable/green_gradient"
+        android:text="@string/ok" />
+
+</RelativeLayout>

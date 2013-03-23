@@ -62,6 +62,8 @@
     <string name="s_msg_dropbox_backup_ok">Backup successful</string>
     <string name="s_msg_dropbox_restore_ok">Restore successful</string>
     <string name="s_msg_uploading">Uploading&#8230;</string>
+    <string name="s_msg_downloading">Downloading&#8230;</string>
+    <string name="s_msg_importing">Import&#8230;</string>
     <string name="s_msg_no_data_for_backuping">There is no data for backup</string>
     <string name="s_msg_no_backup_files_in_dropbox">There is no any data in your Dropbox account</string>
     <string name="s_dropbox_file_list">Files list in Dropbox</string>
@@ -82,4 +84,16 @@
     <string name="s_move_item_to">Move %s to:</string>
     <string name="warning_move_category">Move all expenses from %1$s to %2$s ?</string>
     <string name="warning_move_item">Move %1$s to %2$s ?</string>
+    <string name="stat_report">Statistic</string>
+    <string name="stat_ci_total">Total categories</string>
+    <string name="stat_ci_error">Error (in categories)</string>
+    <string name="stat_ci_ignored">Found categories</string>
+    <string name="stat_ci_new">Added categories</string>
+    <string name="stat_ci_overwritten">Updated categories</string>
+    <string name="stat_cir_total">Total expenses</string>
+    <string name="stat_cir_error">Error (in expenses)</string>
+    <string name="stat_cir_ignored">Found expenses</string>
+    <string name="stat_cir_new">Added expenses</string>
+    <string name="stat_cir_overwritten">Updated expenses</string>
+    <string name="ok">OK</string>
 </resources>

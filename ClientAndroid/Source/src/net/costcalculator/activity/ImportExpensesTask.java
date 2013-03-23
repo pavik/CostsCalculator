@@ -55,7 +55,7 @@ public class ImportExpensesTask extends
         pd_.setMax(100);
         pd_.setMessage("Dropbox");
         pd_.setTitle(context_.getResources()
-                .getString(R.string.s_msg_uploading));
+                .getString(R.string.s_msg_importing));
         pd_.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd_.setProgress(0);
         pd_.setCancelable(false);

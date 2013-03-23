@@ -9,13 +9,13 @@
 package net.costcalculator.service;
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import android.content.Context;
 
 import net.costcalculator.util.LOG;
 
 /**
- * Service provides static methods for importing expenses from external storage.
+ * Service provides static methods for importing expenses from json string.
  * 
  * <pre>
  * Usage:
@@ -40,7 +40,7 @@ public class ImportService
     {
         LOG.T("ImportService::importExpensesFromJSONString");
         if (json.length() == 0)
-            throw new Exception("Invalid argument: json");
+            throw new IllegalArgumentException("json");
 
         ImportStatistic stat = new ImportStatistic();
         ArrayList<CostItem> ciList = new ArrayList<CostItem>();
@@ -134,6 +134,14 @@ public class ImportService
 
         CostItemsService cis = new CostItemsService(c);
         stat.cir_total = cirList.size();
+
+        // get all cost items to fast check if cost item record
+        // belogns to any cost item category
+        ArrayList<CostItem> ciList = cis.getAllCostItems();
+        HashSet<String> ciGuids = new HashSet<String>();
+        for (int i = 0; i < ciList.size(); ++i)
+            ciGuids.add(ciList.get(i).getGuid());
+
         for (int i = 0; i < cirList.size(); ++i)
         {
             CostItemRecord cir = cirList.get(i);
@@ -142,6 +150,12 @@ public class ImportService
                 stat.cir_errors++;
                 continue;
             }
+            if (!ciGuids.contains(cir.getGroupGuid()))
+            {
+                stat.cir_errors++; // no category associated with item
+                continue;
+            }
+
             try
             {
                 CostItemRecord dbcir = cis.getCostItemRecordByGUID(cir
