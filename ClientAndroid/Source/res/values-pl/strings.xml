@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wydatki</string>
+    <string name="menu_settings">Ustawienia</string>
+    <string name="title_activity_expense_items">Kategorii wydatków</string>
+    <string name="new_expense_item">Dodaj kategorię</string>
+    <string name="expense_statistic">Statystyka wydatków</string>
+    <string name="quit_application">Wyjście</string>
+    <string name="et_expense_item_name_hint">Wpisz nazwę</string>
+
+    <color name="col_expense_item">#555555</color>
+
+    <string name="confirm">Zatwierdź</string>
+    <string name="cancel">Anuluj</string>
+    <string name="ci_food">Zakupy</string>
+    <string name="ci_household">Dom</string>
+    <string name="ci_clothes">Ubrania</string>
+    <string name="ci_accommodation">Rachunki</string>
+    <string name="ci_credit">Kredyty</string>
+    <string name="ci_car">Samochód</string>
+    <string name="ci_health">Zdrowie</string>
+    <string name="ci_restaurant">Restauracja</string>
+    <string name="ci_mobile">Telefon</string>
+    <string name="ci_entertainment">Rozrywka</string>
+    <string name="ci_other">Inne</string>
+
+    <color name="col_activity_background">#E7EBF2</color>
+    <color name="col_expense_item_cell_background">#FFFFFF</color>
+
+    <string name="price_label">Suma</string>
+    <string name="title_activity_price_list">Kategoria: </string>
+    <string name="price_hint">Wydatki</string>
+    <string name="date_label">Data</string>
+    <string name="currency_hint">Waluta</string>
+    <string name="comment_label">Komentarz</string>
+    <string name="comment_hint">Wpisz komentarz</string>
+    <string name="tag_label">Tag</string>
+    <string name="tag_hint">Wpisz tag</string>
+    <string name="save_label">Zapisz</string>
+    <string name="history_label">Historia wydatków</string>
+    <string name="new_record_label">Dodaj wydatek</string>
+    <string name="close">Zamknij</string>
+    <string name="price_warning">Proszę wpisać sumę</string>
+
+    <color name="col_price_val">#725998</color>
+    <color name="col_price_list_item_back">#FFFF66</color>
+    <color name="col_date_val">#808080</color>
+    <color name="col_price_list_item_split_line">#E5E5E5</color>
+    <color name="col_tag_text">#3B5958</color>
+    <color name="col_tag_back">#EDEFF4</color>
+    <color name="col_count_val">#686868</color>
+    <color name="col_white">#FFFFFF</color>
+    <color name="col_black">#000000</color>
+    <color name="col_yellow">#f3ae1b</color>
+    <color name="col_light_gray">#AAAAAA</color>
+
+    <string name="s_history_of_expenses">Historia wydatków</string>
+
+    <color name="col_list_view_header_back">#3B5998</color>
+    <color name="col_list_view_header_text">#FFFFFF</color>
+
+    <string name="title_activity_statistic_report">Statystyka wydatków</string>
+    <string name="s_daily_expenses">Dzienne wydatki</string>
+    <string name="s_monthly_expenses">Miesięczne wydatki</string>
+    <string name="s_title_activity_backup">Kopia zapasowa danych</string>
+    <string name="s_backup_intro">Aby umożliwić utworzenie zapasowej kopii danych należy utworzyć konto na stronie www.dropbox.com i zalogować się tutaj</string>
+    <string name="s_btn_login_dropbox">Zaloguj się w Dropbox</string>
+    <string name="s_btn_logout_dropbox">Zamknij Dropbox</string>
+    <string name="s_btn_backup_into_dropbox">Kopiuj dane w Dropbox</string>
+    <string name="s_btn_restore_from_dropbox">Przywróć dane z Dropbox</string>
+    <string name="s_msg_dropbox_backup_ok">Kopiowanie danych zakończono sukcesem</string>
+    <string name="s_msg_dropbox_download_ok">Pobieranie danych zakończyło się sukcesem </string>
+    <string name="s_msg_dropbox_restore_ok">Przywrócenie danych zakończyło się sukcesem</string>
+    <string name="s_msg_uploading">Przesyłanie danych&#8230;</string>
+    <string name="s_msg_downloading">Pobieranie danych&#8230;</string>
+    <string name="s_msg_importing">Import&#8230;</string>
+    <string name="s_msg_no_data_for_backuping">Brak danych do pobrania</string>
+    <string name="s_msg_no_backup_files_in_dropbox">W koncie Dropbox brakuje zapasowych kopii danych</string>
+    <string name="s_dropbox_file_list">Lista plików w Dropbox</string>
+    <string name="s_msg_confirm_restore">Czy na pewno chcesz przywrócić dane z pliku </string>
+    <string name="s_msg_list_available_backups">Pobieranie listy zapasowych kopii danych</string>
+    <string name="s_err_unknown_error">Nieznany błąd. Próbuj ponownie.</string>
+    <string name="tv_placeholder">placeholder</string>
+
+    <color name="col_blue">#0000FF</color>
+
+    <string name="delete">Usunąć</string>
+    <string name="edit">Edytować</string>
+    <string name="change_category">Edytować kategorię</string>
+    <string name="warning_del_category">Czy na pewno chcesz usunąć %s?</string>
+    <string name="warning">Uwaga</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="bytes">bajtów</string>
+    <string name="move">Przenieść</string>
+    <string name="s_move_to">Przenieść wydatki z %s w:</string>
+    <string name="s_move_item_to">Przenieść %s w:</string>
+    <string name="warning_move_category">Przenieść wydatki z %1$s w %2$s ?</string>
+    <string name="warning_move_item">Przenieść %1$s w %2$s ?</string>
+    <string name="stat_report">Statystyka</string>
+    <string name="stat_ci_total">Razem kategorii</string>
+    <string name="stat_ci_error">Błędów (kategorii)</string>
+    <string name="stat_ci_ignored">Znaleziono kategorii</string>
+    <string name="stat_ci_new">Nowych kategorii</string>
+    <string name="stat_ci_overwritten">Aktualizowano kategorii</string>
+    <string name="stat_cir_total">Razem wydatków</string>
+    <string name="stat_cir_error">Błędów (wydatków)</string>
+    <string name="stat_cir_ignored">Znaleziono wydatków</string>
+    <string name="stat_cir_new">Nowych wydatków</string>
+    <string name="stat_cir_overwritten">Aktualizowano wydatków</string>
+    <string name="ok">OK</string>
+
+    <color name="col_red">#FF0000</color>
+
+    <string name="hour">godzin</string>
+    <string name="hour_disable">(0 - wyłącz kopię zapasową)</string>
+    <string name="title_activity_backup_configuration">Ustawienia zapasowej kopii danych</string>
+	<string name="backup_config_text">Wykonaj zapasową kopię danych w Dropbox automatycznie co:</string>
+</resources>
