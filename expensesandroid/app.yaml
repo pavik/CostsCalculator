@@ -1,5 +1,5 @@
 application: expensesandroid
-version: 4
+version: 5
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -12,11 +12,23 @@ handlers:
 - url: /css
   static_dir: css
   
+- url: /en/css
+  static_dir: css
+  
 - url: /img
   static_dir: img
 
+- url: /en/img
+  static_dir: img
+  
 - url: /js
   static_dir: js
 
+- url: /en/js
+  static_dir: js
+  
+- url: /en/.*
+  script: main_en.app
+  
 - url: /.*
   script: main.app
