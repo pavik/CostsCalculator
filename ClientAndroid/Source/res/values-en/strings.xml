@@ -96,4 +96,8 @@
     <string name="stat_cir_new">Added expenses</string>
     <string name="stat_cir_overwritten">Updated expenses</string>
     <string name="ok">OK</string>
+    <string name="hour">hour(s)</string>
+    <string name="hour_disable">(0 - disable backup copy)</string>
+    <string name="title_activity_backup_configuration">Backup copy configuration</string>
+    <string name="backup_config_text">Perform backup copy of data into Dropbox automatically every:</string>
 </resources>

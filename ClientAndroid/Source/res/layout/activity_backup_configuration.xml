@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/col_activity_background"
+    android:padding="3dp"
+    tools:context=".BackupConfigurationActivity" >
+
+    <TextView
+        android:id="@+id/tv_backup_intro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/backup_config_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/et_hours"
+        android:layout_alignBottom="@+id/et_hours"
+        android:layout_toRightOf="@+id/et_hours"
+        android:text="@string/hour"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/et_hours"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_backup_intro"
+        android:layout_centerHorizontal="true"
+        android:inputType="numberDecimal" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_save"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_hour_disable"
+        android:background="@drawable/green_gradient"
+        android:text="@string/save_label" />
+
+    <TextView
+        android:id="@+id/tv_hour_disable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_hours"
+        android:layout_centerHorizontal="true"
+        android:text="@string/hour_disable" />
+
+</RelativeLayout>

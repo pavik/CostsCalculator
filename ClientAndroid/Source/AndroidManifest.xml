@@ -51,7 +51,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="net.costcalculator.activity.ActivityEditPrice"></activity>
+        <activity android:name="net.costcalculator.activity.ActivityEditPrice" >
+        </activity>
+        <activity
+            android:name="net.costcalculator.activity.BackupConfigurationActivity"
+            android:label="@string/title_activity_backup_configuration" >
+        </activity>
+        <receiver android:name="net.costcalculator.service.BackupAlarmBroadcastReceiver"></receiver>
     </application>
 
 </manifest>

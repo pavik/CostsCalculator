@@ -82,7 +82,9 @@
     <string name="s_msg_list_available_backups">Загрузка списка резервных копий</string>
     <string name="s_err_unknown_error">Произошла неизвестная ошибка. Попробуйте снова.</string>
     <string name="tv_placeholder">placeholder</string>
+
     <color name="col_blue">#0000FF</color>
+
     <string name="delete">Удалить</string>
     <string name="edit">Изменить</string>
     <string name="change_category">Изменить категорию</string>
@@ -107,5 +109,11 @@
     <string name="stat_cir_new">Добавлено расходов</string>
     <string name="stat_cir_overwritten">Обновлено расходов</string>
     <string name="ok">OK</string>
+
     <color name="col_red">#FF0000</color>
+
+    <string name="hour">часа(ов)</string>
+    <string name="hour_disable">(0 - не выполнять копирование)</string>
+    <string name="title_activity_backup_configuration">Настройка резервного копирования данных</string>
+	<string name="backup_config_text">Выполнять резервное копирование данных в Dropbox автоматичеки каждые:</string>
 </resources>
