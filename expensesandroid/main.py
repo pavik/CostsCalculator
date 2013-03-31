@@ -33,7 +33,8 @@ class MainPage(webapp2.RequestHandler):
     template_values = {
       'class_active_main' : 'class="active"',
       'page_header': u'Расходы для Android - приложение для ведения семейных расходов',
-      'page_content': page_content
+      'page_content': page_content,
+      'lang_ref': u'<p><a href="en/main">English</a> | <a href="main">Русский</a></p>'
     }
     template = jinja_environment.get_template('index.html')
     self.response.out.write(template.render(template_values))
@@ -42,15 +43,19 @@ class AboutPage(webapp2.RequestHandler):
   def get(self):
     page_content = u'<p></p>'
     page_content += u'<blockquote><p>'
+    page_content += u'Создание резервных копий данных в Dropbox аккаунте пользователя будет реализовано к середине апреля 2013 года в связи с работами по локализации приложения'
+    page_content += u'</p></blockquote>'
+    page_content += u'<blockquote><p>'
     page_content += u'Создание резервных копий данных в Dropbox аккаунте пользователя будет реализовано к середине марта 2013 года'
     page_content += u'</p></blockquote>'
     page_content += u'<blockquote><p>'
-    page_content += u'24 февраля 2013 года вышел релиз очередной версии "Расходы" для Android, были реализованы следующие функции:'
+    page_content += u'24 февраля 2013 года вышел релиз очередной версии "Расходы" для Android, были реализованы следующие функции:</p>'
+    page_content += u'<ul>'
     page_content += u'<li>Возможность удаления и изменения категорий расходов через контекстное меню доступное по длинному нажатию на папку соответствующей категории расходов</li>'
     page_content += u'<li>Возможность редактирования записей в истории расходов через контекстное меню доступное по длинному нажатию на соответствующую запись в истории расходов</li>'
     page_content += u'<li>Автозаполнение комментариев, тегов, валюты расходов на основе ранее введенных данных</li>'
     page_content += u'<li>Автоподстановка последней использованной валюты расходов в рамках каждой категории</li>'
-    page_content += u'</p></blockquote>'
+    page_content += u'</ul></blockquote>'
     page_content += u'<blockquote><p>'
     page_content += u'В связи со стремительным ростом интереса пользователей к приложению, команда разработчиков постарается реализовать новые функции раньше 1 марта 2013 года'
     page_content += u'</p></blockquote>'
