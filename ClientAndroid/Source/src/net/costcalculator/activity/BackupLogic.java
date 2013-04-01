@@ -27,12 +27,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,9 +66,14 @@ public class BackupLogic
     {
         context_ = a;
         tvIntro_ = (TextView) context_.findViewById(R.id.tv_backup_intro);
-        btnLinkUnlink = (Button) context_.findViewById(R.id.btn_link_dropbox);
-        btnBackup = (Button) context_.findViewById(R.id.btn_backup_dropbox);
-        btnRestore = (Button) context_.findViewById(R.id.btn_restore_dropbox);
+        btnLink = (Button) context_.findViewById(R.id.btn_link_dropbox);
+        btnUnlink = (ImageButton) context_
+                .findViewById(R.id.btn_logout_dropbox);
+        btnBackup = (ImageButton) context_
+                .findViewById(R.id.btn_backup_dropbox);
+        btnSettings = (ImageButton) context_
+                .findViewById(R.id.btn_backup_settings);
+        vSeparator = (View) context_.findViewById(R.id.v_separator);
         lvDropbox = (ListView) context_.findViewById(R.id.lv_drop_box_list);
         lvDropbox.setOnItemClickListener(new OnItemClickListener()
         {
@@ -79,12 +86,20 @@ public class BackupLogic
             }
         });
 
-        btnLinkUnlink.setOnClickListener(new OnClickListener()
+        btnLink.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View arg0)
             {
-                linkUnlinkRequest();
+                linkRequest();
+            }
+        });
+        btnUnlink.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                unlinkRequest();
             }
         });
         btnBackup.setOnClickListener(new OnClickListener()
@@ -95,12 +110,13 @@ public class BackupLogic
                 backupRequest();
             }
         });
-        btnRestore.setOnClickListener(new OnClickListener()
+        btnSettings.setOnClickListener(new OnClickListener()
         {
             @Override
-            public void onClick(View v)
+            public void onClick(View arg0)
             {
-                readDirRequest();
+                context_.startActivity(new Intent(context_,
+                        BackupConfigurationActivity.class));
             }
         });
 
@@ -175,7 +191,7 @@ public class BackupLogic
         }
     }
 
-    private void linkUnlinkRequest()
+    private void linkRequest()
     {
         if (DropBoxService.instance().getDropboxAPI().getSession().isLinked())
         {
@@ -183,14 +199,23 @@ public class BackupLogic
 
             // Clear our stored keys
             DropBoxService.instance().clearKeys();
-            updateView(false);
         }
-        else
+
+        // Start the remote authentication
+        DropBoxService.instance().getDropboxAPI().getSession()
+                .startAuthentication(context_);
+    }
+
+    private void unlinkRequest()
+    {
+        if (DropBoxService.instance().getDropboxAPI().getSession().isLinked())
         {
-            // Start the remote authentication
-            DropBoxService.instance().getDropboxAPI().getSession()
-                    .startAuthentication(context_);
+            DropBoxService.instance().getDropboxAPI().getSession().unlink();
+
+            // Clear our stored keys
+            DropBoxService.instance().clearKeys();
         }
+        updateView(false);
     }
 
     private void backupRequest()
@@ -410,12 +435,12 @@ public class BackupLogic
     private void updateView(boolean isLinked)
     {
         tvIntro_.setVisibility(isLinked ? View.GONE : View.VISIBLE);
-        btnBackup.setVisibility(isLinked ? View.GONE : View.GONE);
-        btnRestore.setVisibility(isLinked ? View.GONE : View.GONE);
+        btnLink.setVisibility(isLinked ? View.GONE : View.VISIBLE);
+        btnBackup.setVisibility(isLinked ? View.VISIBLE : View.GONE);
+        btnSettings.setVisibility(isLinked ? View.VISIBLE : View.GONE);
+        btnUnlink.setVisibility(isLinked ? View.VISIBLE : View.GONE);
         lvDropbox.setVisibility(isLinked ? View.VISIBLE : View.GONE);
-
-        btnLinkUnlink.setText(isLinked ? R.string.s_btn_logout_dropbox
-                : R.string.s_btn_login_dropbox);
+        vSeparator.setVisibility(isLinked ? View.VISIBLE : View.GONE);
     }
 
     private void showImportStatistic(ImportStatistic stat)
@@ -451,9 +476,11 @@ public class BackupLogic
 
     private Activity       context_;
     private TextView       tvIntro_;
-    private Button         btnLinkUnlink;
-    private Button         btnBackup;
-    private Button         btnRestore;
+    private Button         btnLink;
+    private ImageButton    btnUnlink;
+    private ImageButton    btnBackup;
+    private ImageButton    btnSettings;
     private ListView       lvDropbox;
+    private View           vSeparator;
     private DropboxAdapter drobboxAdapter_;
 }

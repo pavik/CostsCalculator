@@ -10,11 +10,13 @@ package net.costcalculator.activity;
 
 import net.costcalculator.service.BackupAlarmBroadcastReceiver;
 import net.costcalculator.service.PreferencesService;
+import net.costcalculator.util.LOG;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -76,7 +78,10 @@ public class BackupConfigurationLogic
         if (shour.length() > 0)
             hour = Integer.parseInt(shour);
         if (hour > 0)
+        {
+            deleteAlarm();
             setupAlarm(hour);
+        }
         else
             deleteAlarm();
         activity_.finish();
@@ -84,19 +89,23 @@ public class BackupConfigurationLogic
 
     private void setupAlarm(int hours)
     {
+        LOG.T("BackupConfigurationLogic::setupAlarm");
         AlarmManager am = (AlarmManager) activity_
                 .getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(activity_,
                 BackupAlarmBroadcastReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(activity_, 0,
                 intent, 0);
-        int repeatingms = hours * 3600 * 1000;
-        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()
-                + repeatingms, repeatingms, pending);
+        long repeatingms = hours * 3600 * 1000;
+        LOG.D("repeatingms = " + repeatingms);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + repeatingms, repeatingms,
+                pending);
     }
 
     private void deleteAlarm()
     {
+        LOG.T("BackupConfigurationLogic::deleteAlarm");
         AlarmManager am = (AlarmManager) activity_
                 .getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(activity_,
