@@ -63,6 +63,14 @@
         android:orientation="horizontal" >
 
         <ImageButton
+            android:id="@+id/btn_refresh_dropbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/tv_placeholder"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_refresh" />
+
+        <ImageButton
             android:id="@+id/btn_backup_dropbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

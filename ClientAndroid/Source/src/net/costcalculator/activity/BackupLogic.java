@@ -73,6 +73,8 @@ public class BackupLogic
                 .findViewById(R.id.btn_backup_dropbox);
         btnSettings = (ImageButton) context_
                 .findViewById(R.id.btn_backup_settings);
+        btnRefresh = (ImageButton) context_
+                .findViewById(R.id.btn_refresh_dropbox);
         vSeparator = (View) context_.findViewById(R.id.v_separator);
         lvDropbox = (ListView) context_.findViewById(R.id.lv_drop_box_list);
         lvDropbox.setOnItemClickListener(new OnItemClickListener()
@@ -119,11 +121,23 @@ public class BackupLogic
                         BackupConfigurationActivity.class));
             }
         });
-
+        btnRefresh.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                readDirRequest();
+            }
+        });
+        
         DropBoxService.create(context_);
         boolean isLinked = DropBoxService.instance().getDropboxAPI()
                 .getSession().isLinked();
-        updateView(isLinked);
+        if (isLinked)
+        {
+            updateView(true);
+            readDirRequest();
+        }
     }
 
     public void release()
@@ -156,12 +170,7 @@ public class BackupLogic
                 LOG.E("Error authenticating: " + e.getLocalizedMessage());
             }
         }
-
-        boolean isLinked = DropBoxService.instance().getDropboxAPI()
-                .getSession().isLinked();
-        updateView(isLinked);
-        if (isLinked)
-            readDirRequest();
+        updateView(session.isLinked());
     }
 
     public void selectEntryRequest(long id)
@@ -436,6 +445,7 @@ public class BackupLogic
     {
         tvIntro_.setVisibility(isLinked ? View.GONE : View.VISIBLE);
         btnLink.setVisibility(isLinked ? View.GONE : View.VISIBLE);
+        btnRefresh.setVisibility(isLinked ? View.VISIBLE : View.GONE);
         btnBackup.setVisibility(isLinked ? View.VISIBLE : View.GONE);
         btnSettings.setVisibility(isLinked ? View.VISIBLE : View.GONE);
         btnUnlink.setVisibility(isLinked ? View.VISIBLE : View.GONE);
@@ -480,6 +490,7 @@ public class BackupLogic
     private ImageButton    btnUnlink;
     private ImageButton    btnBackup;
     private ImageButton    btnSettings;
+    private ImageButton    btnRefresh;
     private ListView       lvDropbox;
     private View           vSeparator;
     private DropboxAdapter drobboxAdapter_;

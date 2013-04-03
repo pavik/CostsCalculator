@@ -3,13 +3,24 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/col_activity_background"
-    android:padding="3dp"
     tools:context=".BackupConfigurationActivity" >
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_gradient_list_header"
+        android:gravity="center"
+        android:text="@string/dropbox"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/col_list_view_header_text"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_backup_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_header"
         android:gravity="center"
         android:text="@string/backup_config_text"
         android:textAppearance="?android:attr/textAppearanceMedium" />

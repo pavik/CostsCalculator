@@ -13,9 +13,9 @@
 
     <string name="confirm">Zatwierdź</string>
     <string name="cancel">Anuluj</string>
-    <string name="ci_food">Zakupy</string>
+    <string name="ci_food">Jedzenie</string>
     <string name="ci_household">Dom</string>
-    <string name="ci_clothes">Ubrania</string>
+    <string name="ci_clothes">Zakupy</string>
     <string name="ci_accommodation">Rachunki</string>
     <string name="ci_credit">Kredyty</string>
     <string name="ci_car">Samochód</string>
