@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import net.costcalculator.service.DropBoxService;
 import net.costcalculator.service.ProgressCallback;
+import net.costcalculator.util.LOG;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -91,6 +92,7 @@ public class UploadFileTask extends AsyncTask<Void, Long, Boolean> implements
     @Override
     public void publishProgress(long x, long total)
     {
+        LOG.D("Upload progress: " + x + " of " + total);
         publishProgress(x);
     }
 

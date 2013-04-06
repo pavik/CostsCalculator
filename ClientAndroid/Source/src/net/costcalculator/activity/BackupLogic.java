@@ -129,7 +129,7 @@ public class BackupLogic
                 readDirRequest();
             }
         });
-        
+
         DropBoxService.create(context_);
         boolean isLinked = DropBoxService.instance().getDropboxAPI()
                 .getSession().isLinked();
@@ -331,7 +331,7 @@ public class BackupLogic
                 // import
                 final String json = task.getFile();
                 ImportExpensesTask imTask = new ImportExpensesTask(context_,
-                        ImportService.IMPORT_SIMPLE,
+                        task.getPath(), ImportService.IMPORT_SIMPLE,
                         new AsyncTaskCompletionHandler<ImportExpensesTask>()
                         {
                             @Override

@@ -35,10 +35,11 @@ import android.os.AsyncTask;
 public class ImportExpensesTask extends
         AsyncTask<String, Long, ImportStatistic> implements ProgressCallback
 {
-    public ImportExpensesTask(Context c, int importMode,
+    public ImportExpensesTask(Context c, String path, int importMode,
             AsyncTaskCompletionHandler<ImportExpensesTask> handler)
     {
         context_ = c;
+        path_ = path;
         errors_ = new ArrayList<String>();
         handler_ = handler;
     }
@@ -53,7 +54,7 @@ public class ImportExpensesTask extends
     {
         pd_ = new ProgressDialog(context_);
         pd_.setMax(100);
-        pd_.setMessage("Dropbox");
+        pd_.setMessage(path_);
         pd_.setTitle(context_.getResources()
                 .getString(R.string.s_msg_importing));
         pd_.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -114,6 +115,7 @@ public class ImportExpensesTask extends
 
     private int                                    importMode_;
     private Context                                context_;
+    private String                                 path_;
     private ProgressDialog                         pd_;
     private ArrayList<String>                      errors_;
     AsyncTaskCompletionHandler<ImportExpensesTask> handler_;

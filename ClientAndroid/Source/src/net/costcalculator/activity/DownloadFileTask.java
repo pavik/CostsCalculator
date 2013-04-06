@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import net.costcalculator.service.DropBoxService;
 import net.costcalculator.service.ProgressCallback;
+import net.costcalculator.util.LOG;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -58,12 +59,17 @@ public class DownloadFileTask extends AsyncTask<Void, Long, Boolean> implements
         pd_ = new ProgressDialog(context_);
         pd_.setMax(100);
         pd_.setMessage(path_);
-        pd_.setTitle(context_.getResources()
-                .getString(R.string.s_msg_downloading));
+        pd_.setTitle(context_.getResources().getString(
+                R.string.s_msg_downloading));
         pd_.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd_.setProgress(0);
         pd_.setCancelable(false);
         pd_.show();
+    }
+
+    public String getPath()
+    {
+        return path_;
     }
 
     public String getFile()
@@ -119,6 +125,7 @@ public class DownloadFileTask extends AsyncTask<Void, Long, Boolean> implements
     @Override
     public void publishProgress(long x, long total)
     {
+        LOG.D("Download progress: " + x + " of " + total);
         publishProgress((long) (100.0 * (double) x / total));
     }
 

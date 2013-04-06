@@ -168,7 +168,7 @@ public class DropBoxService
         if (path.length() == 0)
             throw new Exception("invalid argument: path");
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(8192);
         api_.getFile(path, null, bos, new ProgressListener()
         {
             @Override
