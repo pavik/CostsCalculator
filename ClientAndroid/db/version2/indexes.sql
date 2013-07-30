@@ -1,1 +1,0 @@
-CREATE  INDEX cir_index_datetime ON cost_item_records (cir_datetime ASC);
