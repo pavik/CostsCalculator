@@ -8,6 +8,11 @@
 
 package net.costcalculator.db;
 
+import net.costcalculator.util.ErrorHandler;
+import net.costcalculator.util.LOG;
+import net.costcalculator.util.RawResources;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -19,15 +24,54 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class SQLiteDbUpdate
 {
-    public SQLiteDbUpdate(SQLiteDatabase db, int from, int to)
+    public SQLiteDbUpdate(SQLiteDatabase db, Context c, int from, int to)
     {
         db_ = db;
+        context_ = c;
+        from_ = from;
+        to_ = to;
     }
 
+    @SuppressLint("DefaultLocale")
     public void update()
     {
-        // TODO Selet latest version 'to' class, add table with version info
+        LOG.T("SQLiteDbUpdate::update");
+
+        db_.beginTransaction();
+        try
+        {
+            for (int i = from_; i < to_; ++i)
+            {
+                final String updatescript = String.format("updatedb_%d_%d.sql",
+                        i, i + 1);
+                final String sql = RawResources.getFileAsString(context_,
+                        updatescript);
+                final String[] queries = sql.split("\n");
+                for (String q : queries)
+                {
+                    final String qtrimed = q.trim();
+                    if (qtrimed.length() != 0)
+                    {
+                        LOG.D(qtrimed);
+                        db_.execSQL(qtrimed);
+                    }
+                }
+                db_.execSQL(SQLiteDbQueries.INSERT_VERSION,
+                        new Object[] { i + 1 });
+            }
+            db_.setTransactionSuccessful();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
+        }
+        finally
+        {
+            db_.endTransaction();
+        }
     }
 
+    private Context        context_;
     private SQLiteDatabase db_;
+    private int            from_, to_;
 }

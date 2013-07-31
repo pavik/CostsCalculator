@@ -28,12 +28,14 @@ public class SQLiteDbProvider extends SQLiteOpenHelper
     public SQLiteDbProvider(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        context_ = context;
     }
 
     public SQLiteDbProvider(Context context, String name,
             CursorFactory factory, int version)
     {
         super(context, name, factory, version);
+        context_ = context;
     }
 
     @Override
@@ -41,8 +43,8 @@ public class SQLiteDbProvider extends SQLiteOpenHelper
     {
         LOG.T("SQLiteDbProvider::onCreate");
 
-        SQLiteDbSetup s = new SQLiteDbSetup(db);
-        s.setup();
+        SQLiteDbSetup s = new SQLiteDbSetup(db, context_);
+        s.setup(DATABASE_VERSION);
     }
 
     @Override
@@ -50,9 +52,10 @@ public class SQLiteDbProvider extends SQLiteOpenHelper
     {
         LOG.T("SQLiteDbProvider::onUpgrade");
 
-        SQLiteDbUpdate u = new SQLiteDbUpdate(db, verFrom, verTo);
+        SQLiteDbUpdate u = new SQLiteDbUpdate(db, context_, verFrom, verTo);
         u.update();
     }
 
+    private Context             context_;
     private static final String DATABASE_NAME = "cost_calculator.db";
 }

@@ -8,8 +8,11 @@
 
 package net.costcalculator.db;
 
+import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
+import net.costcalculator.util.RawResources;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -20,28 +23,38 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class SQLiteDbSetup
 {
-    public SQLiteDbSetup(SQLiteDatabase db)
+    public SQLiteDbSetup(SQLiteDatabase db, Context c)
     {
         db_ = db;
+        context_ = c;
     }
 
-    public void setup()
+    public void setup(int version)
     {
         LOG.T("SQLiteDbSetup::setup");
 
         db_.beginTransaction();
         try
         {
-            db_.execSQL(SQLiteDbQueries.TABLE_COST_ITEMS);
-            db_.execSQL(SQLiteDbQueries.TRIG_COST_ITEMS_AFTER_UPDATE);
-
-            db_.execSQL(SQLiteDbQueries.TABLE_COST_ITEM_RECORDS);
-
-            db_.execSQL(SQLiteDbQueries.TABLE_VERSIONS);
+            final String sql = RawResources.getFileAsString(context_,
+                    "createdb.sql");
+            String[] queries = sql.split("\n");
+            for (String q : queries)
+            {
+                final String qtrimed = q.trim();
+                if (qtrimed.length() != 0)
+                {
+                    LOG.D(qtrimed);
+                    db_.execSQL(qtrimed);
+                }
+            }
             db_.execSQL(SQLiteDbQueries.INSERT_VERSION,
-                    new Object[] { SQLiteDbProvider.DATABASE_VERSION });
-
+                    new Object[] { version });
             db_.setTransactionSuccessful();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, context_);
         }
         finally
         {
@@ -49,5 +62,6 @@ public class SQLiteDbSetup
         }
     }
 
+    private Context        context_;
     private SQLiteDatabase db_;
 }
