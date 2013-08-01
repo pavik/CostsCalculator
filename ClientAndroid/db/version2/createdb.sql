@@ -11,3 +11,4 @@ CREATE  INDEX cir_index_datetime_asc ON cost_item_records (cir_datetime ASC);
 CREATE  INDEX cir_index_datetime_desc ON cost_item_records (cir_datetime DESC);
 CREATE  INDEX cir_index_currency_asc ON cost_item_records (cir_currency ASC);
 CREATE  INDEX cir_index_tag_asc ON cost_item_records (cir_tag ASC);
+CREATE  INDEX cir_index_audit_mt_asc ON cost_item_records (cir_audit_mt ASC);

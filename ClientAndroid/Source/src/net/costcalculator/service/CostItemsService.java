@@ -925,6 +925,44 @@ public class CostItemsService
         return result > 0;
     }
 
+    public long getLatestModificationTime()
+    {
+        LOG.T("CostItemsService::getLatestModificationTime");
+
+        long result = 0;
+        SQLiteDatabase db = null;
+        Cursor row = null;
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            row = db.rawQuery(SQLiteDbQueries.GET_LATEST_MODIFICATION_TIME,
+                    null);
+            if (row.moveToFirst())
+                result = row.getLong(row
+                        .getColumnIndex(SQLiteDbQueries.EXPR_CI_MT));
+
+            row.close();
+            row = db.rawQuery(SQLiteDbQueries.CIR_GET_LATEST_MODIFICATION_TIME,
+                    null);
+            long cir_mt = 0;
+            if (row.moveToFirst())
+                cir_mt = row.getLong(row
+                        .getColumnIndex(SQLiteDbQueries.EXPR_CIR_MT));
+
+            if (cir_mt > result)
+                result = cir_mt;
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (row != null)
+                row.close();
+        }
+
+        return result;
+    }
+
     public CostItemsService(Context context)
     {
         LOG.T("CostItemsService::CostItemsService");

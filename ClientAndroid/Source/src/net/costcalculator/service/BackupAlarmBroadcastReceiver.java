@@ -8,10 +8,8 @@
 
 package net.costcalculator.service;
 
-import net.costcalculator.util.ErrorHandler;
+import net.costcalculator.activity.BackupService;
 import net.costcalculator.util.LOG;
-
-import org.json.simple.JSONArray;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,29 +28,14 @@ public class BackupAlarmBroadcastReceiver extends BroadcastReceiver
     {
         LOG.T("BackupAlarmBroadcastReceiver::onReceive");
 
-        boolean release = false;
-        if (DropBoxService.instance() == null)
-        {
-            DropBoxService.create(context);
-            release = true;
-        }
-
         try
         {
-            String path = "/" + DataFormatService.getBackupFileNameNow();
-            JSONArray list = JSONSerializerService
-                    .getAllExpensesAsJSON(context);
-            DropBoxService.instance().uploadFile(path, list.toJSONString(),
-                    null);
+            BackupService.backupExpensesDropbox(context);
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, context);
-        }
-        finally
-        {
-            if (release)
-                DropBoxService.release();
+            LOG.E(e.getMessage());
+            // TODO ErrorHandler.handleException(e, context);
         }
     }
 
