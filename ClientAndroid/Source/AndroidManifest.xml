@@ -29,7 +29,7 @@
             android:label="@string/title_activity_price_list" >
         </activity>
         <activity
-            android:name="net.costcalculator.activity.StatisticReportActivity"
+            android:name="net.costcalculator.activity.StatisticActivity"
             android:label="@string/title_activity_statistic_report" >
         </activity>
         <activity

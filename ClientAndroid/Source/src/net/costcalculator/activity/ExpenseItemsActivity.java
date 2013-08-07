@@ -102,7 +102,20 @@ public class ExpenseItemsActivity extends Activity implements
             break;
 
         case R.id.expense_statistic:
-            startActivity(new Intent(this, StatisticReportActivity.class));
+            Intent intent = new Intent(this, StatisticActivity.class);
+            String[] fragments = {
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_DAILY),
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_WEEKLY),
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_MONTHLY),
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_YEARLY),
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_FOREVER) };
+            intent.putExtra(SliderActivity.EXTRA_FRAGMENTS, fragments);
+            startActivity(intent);
             break;
 
         case R.id.backup_expenses:

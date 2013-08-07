@@ -91,7 +91,7 @@ public class SQLiteDbQueries
 
     public static final String GET_COUNT_COST_ITEM_RECORDS        = "SELECT cir_ci_guid, COUNT(cir_ci_guid) AS cir_count FROM  cost_item_records GROUP BY (cir_ci_guid) ORDER BY cir_count DESC";
 
-    public static final String GET_EXPENSES_DATES                 = "SELECT DISTINCT cir_datetime FROM cost_item_records ORDER BY cir_datetime DESC";
+    public static final String GET_DISTINCT_EXPENSES_DATES        = "SELECT DISTINCT cir_datetime FROM cost_item_records ORDER BY cir_datetime DESC";
 
     public static final String GET_EXPENSES_STAT_FOR_PERIOD       = "SELECT cir_ci_guid, cir_currency, COUNT(*) AS cir_count, SUM(cir_sum) AS cir_sum FROM cost_item_records WHERE cir_datetime >= ? AND cir_datetime <= ? GROUP BY cir_ci_guid, cir_currency ORDER BY cir_sum DESC";
 
@@ -106,4 +106,8 @@ public class SQLiteDbQueries
     public static final String CIR_MOVE_COST_ITEM_RECORDS         = "UPDATE cost_item_records SET cir_ci_guid = ? WHERE cir_ci_guid = ?";
 
     public static final String CIR_GET_LATEST_MODIFICATION_TIME   = "SELECT MAX(strftime('%s', cir_audit_mt) * 1000) AS cir_mt FROM cost_item_records";
+
+    public static final String CIR_GET_MIN_EXPENSES_DATE          = "SELECT MIN(cir_datetime) AS cir_datetime FROM cost_item_records";
+
+    public static final String CIR_GET_MAX_EXPENSES_DATE          = "SELECT MAX(cir_datetime) AS cir_datetime FROM cost_item_records";
 }

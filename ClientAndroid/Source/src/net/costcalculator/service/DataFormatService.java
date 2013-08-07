@@ -102,4 +102,27 @@ public class DataFormatService
 
         return s;
     }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String formatWeek(Date first, Date second)
+    {
+        String week = new SimpleDateFormat("w").format(first);
+        return String.format("%s (%s - %s)", week, formatDate(first),
+                formatDate(second));
+    }
+
+    public static String formatMonth(Date first, Date second)
+    {
+        return formatMonth(first);
+    }
+
+    public static String formatYear(Date first, Date second)
+    {
+        return Integer.toString(first.getYear() + 1900);
+    }
+
+    public static String formatCustom(Date first, Date second)
+    {
+        return String.format("%s - %s", formatDate(first), formatDate(second));
+    }
 }

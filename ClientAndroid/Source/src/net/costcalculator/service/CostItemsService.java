@@ -614,37 +614,7 @@ public class CostItemsService
         return cirCountCache;
     }
 
-    public ArrayList<Date> getExpensesMonths()
-    {
-        LOG.T("CostItemsService::getExpensesMonths");
-
-        ArrayList<Date> dates = getExpensesDates();
-        ArrayList<Date> months = new ArrayList<Date>();
-
-        int n = 0;
-        for (int i = 0; i < dates.size(); ++i)
-        {
-            Date d = dates.get(i);
-            d.setDate(1);
-            d.setHours(0);
-            d.setMinutes(0);
-            d.setSeconds(0);
-            if (i == 0)
-            {
-                months.add(d);
-                ++n;
-            }
-            else if (!monthsAreEqual(months.get(n - 1), d))
-            {
-                months.add(d);
-                ++n;
-            }
-        }
-
-        return months;
-    }
-
-    public ArrayList<Date> getExpensesDates()
+    public ArrayList<Date> getDistinctExpensesDates()
     {
         LOG.T("CostItemsService::getExpensesDates");
 
@@ -655,7 +625,7 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteDbQueries.GET_EXPENSES_DATES, null);
+            ds = db.rawQuery(SQLiteDbQueries.GET_DISTINCT_EXPENSES_DATES, null);
 
             if (ds.moveToFirst())
             {
@@ -693,11 +663,6 @@ public class CostItemsService
     {
         return l.getYear() == r.getYear() && l.getMonth() == r.getMonth()
                 && l.getDate() == r.getDate();
-    }
-
-    private boolean monthsAreEqual(Date l, Date r)
-    {
-        return l.getYear() == r.getYear() && l.getMonth() == r.getMonth();
     }
 
     public ArrayList<StatisticReportItem> getStatisticReport(Date from, Date to)
@@ -960,6 +925,64 @@ public class CostItemsService
                 row.close();
         }
 
+        return result;
+    }
+
+    public Date getMinExpensesDate()
+    {
+        LOG.T("CostItemsService::getMinExpensesDate");
+
+        Date result = new Date();
+        SQLiteDatabase db = null;
+        Cursor row = null;
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            row = db.rawQuery(SQLiteDbQueries.CIR_GET_MIN_EXPENSES_DATE, null);
+            if (row.moveToFirst())
+                result = new Date(row.getLong(row
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME)));
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (row != null)
+                row.close();
+        }
+
+        result.setHours(0);
+        result.setMinutes(0);
+        result.setSeconds(0);
+        return result;
+    }
+
+    public Date getMaxExpensesDate()
+    {
+        LOG.T("CostItemsService::getMaxExpensesDate");
+
+        Date result = new Date();
+        SQLiteDatabase db = null;
+        Cursor row = null;
+        try
+        {
+            db = dbprovider_.getReadableDatabase();
+            row = db.rawQuery(SQLiteDbQueries.CIR_GET_MAX_EXPENSES_DATE, null);
+            if (row.moveToFirst())
+                result = new Date(row.getLong(row
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_DATETIME)));
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (row != null)
+                row.close();
+        }
+
+        result.setHours(23);
+        result.setMinutes(59);
+        result.setSeconds(59);
         return result;
     }
 
