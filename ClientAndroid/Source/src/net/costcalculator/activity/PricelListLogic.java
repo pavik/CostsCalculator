@@ -140,6 +140,7 @@ public class PricelListLogic
                 + cir.getCurrency());
 
         final Dialog d = new Dialog(activity_);
+        d.setCanceledOnTouchOutside(true);
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
         d.setContentView(menu);
 
