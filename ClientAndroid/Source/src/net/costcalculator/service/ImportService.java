@@ -47,22 +47,18 @@ public class ImportService
         ArrayList<CostItemRecord> cirList = new ArrayList<CostItemRecord>();
 
         JSONSerializerService.getAllExpensesFromJSON(json, ciList, cirList);
-        if (pc != null)
-            pc.publishProgress(1, 3);
+        final int total = ciList.size() + cirList.size();
 
-        importCostItems(c, ciList, importMode, stat);
-        if (pc != null)
-            pc.publishProgress(2, 3);
-
-        importCostItemRecords(c, cirList, importMode, stat);
-        if (pc != null)
-            pc.publishProgress(3, 3);
+        importCostItems(c, ciList, importMode, stat, pc, 0, total);
+        importCostItemRecords(c, cirList, importMode, stat, pc, ciList.size(),
+                total);
 
         return stat;
     }
 
     private static void importCostItems(Context c, ArrayList<CostItem> ciList,
-            int importMode, ImportStatistic stat)
+            int importMode, ImportStatistic stat, ProgressCallback pc, int cur,
+            int total)
     {
         LOG.T("ImportService::importCostItems");
         if (ciList == null)
@@ -112,13 +108,15 @@ public class ImportService
                 stat.ci_errors++;
                 LOG.E("Exception: " + e.getMessage());
             }
+            if (pc != null)
+                pc.publishProgress(cur + i + 1, total);
         }
         cis.release();
     }
 
     private static void importCostItemRecords(Context c,
             ArrayList<CostItemRecord> cirList, int importMode,
-            ImportStatistic stat)
+            ImportStatistic stat, ProgressCallback pc, int cur, int total)
     {
         LOG.T("ImportService::importCostItemRecords");
         if (cirList == null)
@@ -183,6 +181,8 @@ public class ImportService
                 stat.cir_errors++;
                 LOG.E("Exception: " + e.getMessage());
             }
+            if (pc != null)
+                pc.publishProgress(cur + i + 1, total);
         }
         cis.release();
     }
