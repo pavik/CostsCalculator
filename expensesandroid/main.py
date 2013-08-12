@@ -43,6 +43,9 @@ class AboutPage(webapp2.RequestHandler):
   def get(self):
     page_content = u'<p></p>'
     page_content += u'<blockquote><p>'
+    page_content += u'С 12 августа 2013 года новости и актуальная информация о развитии проекта доступна в twitter <a href="https://twitter.com/expenses_" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @expenses_</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\'://platform.twitter.com/widgets.js\';fjs.parentNode.insertBefore(js,fjs);}}(document, \'script\', \'twitter-wjs\');</script>'
+    page_content += u'</p></blockquote>'
+    page_content += u'<blockquote><p>'
     page_content += u'Создание резервных копий данных в Dropbox аккаунте пользователя будет реализовано к середине апреля 2013 года в связи с работами по локализации приложения'
     page_content += u'</p></blockquote>'
     page_content += u'<blockquote><p>'
@@ -131,70 +134,10 @@ class SendEmail(webapp2.RequestHandler):
 
 class FeedbackPage(webapp2.RequestHandler):
   def get(self):
-    feedbacklist = db.GqlQuery("SELECT * FROM FeedbackMessage")
-
     template_values = {
       'class_active_feedback' : 'class="active"',
-      'page_header': u'На этой странице можно оставить отзыв о приложении',
-      'page_content': u'<form action="/sendfeedback" method="POST">\
-        <label>Ваше имя</label>\
-        <input type="text" name="author" placeholder="Напишите имя">\
-        <label>Ваш отзыв</label>\
-        <textarea rows="7" name="message" placeholder="Напишите отзыв"></textarea>\
-        <br><button type="submit" class="btn btn-primary">Отправить</button>\
-        </form>',
-      'feedbacklist' : feedbacklist
-    }
-
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
-
-class FeedbackMessage(db.Model):
-  user = db.StringProperty(required=True)
-  text = db.StringProperty(required=True)
-  postdate = db.DateProperty()
-
-class SendFeedback(webapp2.RequestHandler):
-  def post(self):
-    page_header = u'Спасибо за отзыв'
-    page_content = u'<a href="http://expensesandroid.appspot.com/feedback">Назад</a>'
-
-    author = self.request.get('author')
-    message = self.request.get('message')
-
-    if len(author) == 0:
-      page_header = u'Напишите пожалуйста имя'
-    elif len(message) == 0:
-      page_header = u'Напишите пожалуйста текст отзыва'
-    else:
-      msg = FeedbackMessage(user = author, text = message)
-      msg.postdate = datetime.datetime.now().date()
-      msg.put()
-
-    template_values = {
-      'page_header': page_header,
-      'page_content': page_content
-    }
-
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
-
-class DeleteFeedback(webapp2.RequestHandler):
-  def get(self):
-    page_header = u'Отзыв удален'
-    page_content = u'<a href="http://expensesandroid.appspot.com/feedback">Назад</a>'
-
-    id = self.request.get('id')
-
-    if len(id) == 0:
-      page_header = u'Не указан идентификатор отзыва'
-    else:
-      msg = db.get(id)
-      msg.delete()
-
-    template_values = {
-      'page_header': page_header,
-      'page_content': page_content
+      'page_header': u'Отзывы пользователей находятся на странице приложения в google play',
+      'page_content': u'<a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>'
     }
 
     template = jinja_environment.get_template('index.html')
@@ -203,5 +146,4 @@ class DeleteFeedback(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([('/', MainPage), ('/main', MainPage),
                                ('/about', AboutPage), ('/download', DownloadPage),
                                ('/contact', ContactPage), ('/sendemail', SendEmail),
-                               ('/feedback', FeedbackPage), ('/sendfeedback', SendFeedback),
-                               ('/delete', DeleteFeedback)], debug=True)
+                               ('/feedback', FeedbackPage)], debug=True)

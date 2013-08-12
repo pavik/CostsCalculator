@@ -124,70 +124,10 @@ class SendEmail(webapp2.RequestHandler):
 
 class FeedbackPage(webapp2.RequestHandler):
   def get(self):
-    feedbacklist = db.GqlQuery("SELECT * FROM FeedbackMessage")
-
     template_values = {
       'class_active_feedback' : 'class="active"',
-      'page_header': u'Here you can post your feedback about application Expenses for Android',
-      'page_content': u'<form action="/sendfeedback" method="POST">\
-        <label>Name</label>\
-        <input type="text" name="author" placeholder="Type name here">\
-        <label>Message</label>\
-        <textarea rows="7" name="message" placeholder="Type message here"></textarea>\
-        <br><button type="submit" class="btn btn-primary">Send</button>\
-        </form>',
-      'feedbacklist' : feedbacklist
-    }
-
-    template = jinja_environment.get_template('index_en.html')
-    self.response.out.write(template.render(template_values))
-
-class FeedbackMessage(db.Model):
-  user = db.StringProperty(required=True)
-  text = db.StringProperty(required=True)
-  postdate = db.DateProperty()
-
-class SendFeedback(webapp2.RequestHandler):
-  def post(self):
-    page_header = u'Thank you'
-    page_content = u'<a href="http://expensesandroid.appspot.com/feedback">Back</a>'
-
-    author = self.request.get('author')
-    message = self.request.get('message')
-
-    if len(author) == 0:
-      page_header = u'Enter your name please'
-    elif len(message) == 0:
-      page_header = u'Enter message please'
-    else:
-      msg = FeedbackMessage(user = author, text = message)
-      msg.postdate = datetime.datetime.now().date()
-      msg.put()
-
-    template_values = {
-      'page_header': page_header,
-      'page_content': page_content
-    }
-
-    template = jinja_environment.get_template('index_en.html')
-    self.response.out.write(template.render(template_values))
-
-class DeleteFeedback(webapp2.RequestHandler):
-  def get(self):
-    page_header = u'Feedback has removed'
-    page_content = u'<a href="http://expensesandroid.appspot.com/feedback">Back</a>'
-
-    id = self.request.get('id')
-
-    if len(id) == 0:
-      page_header = u'Feedback identifier is not specified'
-    else:
-      msg = db.get(id)
-      msg.delete()
-
-    template_values = {
-      'page_header': page_header,
-      'page_content': page_content
+      'page_header': u'Feedback of users you can see in google play',
+      'page_content': u'<a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>'
     }
 
     template = jinja_environment.get_template('index_en.html')
@@ -196,5 +136,4 @@ class DeleteFeedback(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([('/en/', MainPage), ('/en/main', MainPage),
                                ('/en/about', AboutPage), ('/en/download', DownloadPage),
                                ('/en/contact', ContactPage), ('/en/sendemail', SendEmail),
-                               ('/en/feedback', FeedbackPage), ('/en/sendfeedback', SendFeedback),
-                               ('/en/delete', DeleteFeedback)], debug=True)
+                               ('/en/feedback', FeedbackPage)], debug=True)
