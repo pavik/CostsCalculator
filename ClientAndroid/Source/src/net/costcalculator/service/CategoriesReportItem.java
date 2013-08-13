@@ -16,7 +16,7 @@ import java.util.Date;
  * @author Aliaksei Plashchanski
  * 
  */
-public class StatisticReportItem
+public class CategoriesReportItem
 {
     public Date dateFrom;
     public Date dateTo;

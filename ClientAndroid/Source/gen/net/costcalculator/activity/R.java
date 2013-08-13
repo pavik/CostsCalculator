@@ -90,6 +90,7 @@ public final class R {
         public static final int cell_text=0x7f080032;
         public static final int et_comment=0x7f08002d;
         public static final int et_currency=0x7f080028;
+        public static final int et_days_count=0x7f08004c;
         public static final int et_expense_item_name=0x7f080021;
         public static final int et_hours=0x7f080009;
         public static final int et_price=0x7f080027;
@@ -115,7 +116,7 @@ public final class R {
         public static final int menu_edit_layout=0x7f080015;
         public static final int menu_move_img=0x7f080019;
         public static final int menu_move_layout=0x7f080018;
-        public static final int menu_settings=0x7f080048;
+        public static final int menu_settings=0x7f08004e;
         public static final int new_expense_item=0x7f08000e;
         public static final int quit_application=0x7f080011;
         public static final int sliderfragment=0x7f080036;
@@ -123,20 +124,25 @@ public final class R {
         public static final int tvDlgExpenseCatMenu=0x7f080014;
         public static final int tvDlgNewExpenseCat=0x7f080020;
         public static final int tv_backup_intro=0x7f080001;
-        public static final int tv_cat_val=0x7f080047;
+        public static final int tv_cat_val=0x7f08004d;
         public static final int tv_comment=0x7f080041;
         public static final int tv_count=0x7f08003c;
         public static final int tv_date=0x7f080029;
+        public static final int tv_date_from=0x7f080048;
         public static final int tv_date_string=0x7f08002a;
+        public static final int tv_date_to=0x7f08004a;
         public static final int tv_date_val=0x7f08003f;
+        public static final int tv_days_count=0x7f08004b;
         public static final int tv_folder_name=0x7f08003b;
         public static final int tv_header=0x7f080000;
         public static final int tv_hour_disable=0x7f08000b;
         public static final int tv_menu_del=0x7f08001d;
         public static final int tv_menu_edit=0x7f080017;
         public static final int tv_menu_move=0x7f08001a;
+        public static final int tv_minus=0x7f080049;
         public static final int tv_move_to=0x7f080024;
         public static final int tv_name=0x7f080038;
+        public static final int tv_period_label=0x7f080047;
         public static final int tv_price=0x7f080026;
         public static final int tv_price_val=0x7f08003e;
         public static final int tv_size=0x7f080039;
@@ -168,7 +174,8 @@ public final class R {
         public static final int view_report_header=0x7f030012;
         public static final int view_report_item=0x7f030013;
         public static final int view_statistic_report=0x7f030014;
-        public static final int view_sub_report_item=0x7f030015;
+        public static final int view_statistic_report_custom=0x7f030015;
+        public static final int view_sub_report_item=0x7f030016;
     }
     public static final class menu {
         public static final int activity_backup=0x7f070000;
@@ -178,7 +185,7 @@ public final class R {
         public static final int activity_statistic_report=0x7f070004;
     }
     public static final class string {
-        public static final int app_loading=0x7f040056;
+        public static final int app_loading=0x7f040059;
         public static final int app_name=0x7f040000;
         public static final int backup_config_text=0x7f040054;
         public static final int bytes=0x7f04003f;
@@ -206,10 +213,13 @@ public final class R {
         public static final int edit=0x7f04003a;
         public static final int et_expense_item_name_hint=0x7f040006;
         public static final int expense_statistic=0x7f040004;
-        public static final int get_shared_expense_item=0x7f040055;
+        public static final int get_shared_expense_item=0x7f040058;
         public static final int history_label=0x7f04001e;
         public static final int hour=0x7f040051;
         public static final int hour_disable=0x7f040052;
+        public static final int label_days_interval=0x7f040056;
+        public static final int label_period=0x7f040055;
+        public static final int label_period_whole=0x7f040057;
         public static final int menu_settings=0x7f040001;
         public static final int move=0x7f040040;
         public static final int new_expense_item=0x7f040003;

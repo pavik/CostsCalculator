@@ -113,7 +113,9 @@ public class ExpenseItemsActivity extends Activity implements
                     SliderFragmentFactory
                             .getStatPath(SliderFragmentFactory.PATH_STAT_YEARLY),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_FOREVER) };
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_FOREVER),
+                    SliderFragmentFactory
+                            .getStatPath(SliderFragmentFactory.PATH_STAT_CUSTOM) };
             intent.putExtra(SliderActivity.EXTRA_FRAGMENTS, fragments);
             startActivity(intent);
             break;

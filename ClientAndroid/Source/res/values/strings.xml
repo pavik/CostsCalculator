@@ -115,5 +115,9 @@
     <string name="hour">часа(ов)</string>
     <string name="hour_disable">(0 - не выполнять копирование)</string>
     <string name="title_activity_backup_configuration">Настройка резервного копирования данных</string>
-	<string name="backup_config_text">Выполнять резервное копирование данных в Dropbox автоматичеки каждые:</string>
+    <string name="backup_config_text">Выполнять резервное копирование данных в Dropbox автоматичеки каждые:</string>
+    <string name="label_period">За период</string>
+    <string name="label_days_interval">Разделить по дням</string>
+    <string name="label_period_whole">(0 - за весь период)</string>
+
 </resources>

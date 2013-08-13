@@ -38,8 +38,6 @@ public class SliderFragmentFactory
 
         final String name = el[1];
         StatisticFragment f = new StatisticFragment();
-        f.setCostItems(costitems);
-        f.setExpensesDates(expensesdates);
         if (name.equals(PATH_STAT_DAILY))
             f.setPeriod(AdvancedStatisticAdapter.StatisticPeriod.DAY);
         else if (name.equals(PATH_STAT_WEEKLY))
@@ -52,9 +50,11 @@ public class SliderFragmentFactory
             f.setPeriod(AdvancedStatisticAdapter.StatisticPeriod.FOREVER);
         else if (name.equals(PATH_STAT_CUSTOM))
         {
-            // TODO create custom fragment
+            f = new StatisticFragmentCustom();
             f.setPeriod(AdvancedStatisticAdapter.StatisticPeriod.CUSTOM);
         }
+        f.setCostItems(costitems);
+        f.setExpensesDates(expensesdates);
         f.initialize(c);
         return f;
     }

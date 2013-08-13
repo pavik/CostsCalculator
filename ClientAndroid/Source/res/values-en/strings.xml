@@ -70,8 +70,8 @@
     <string name="s_msg_dropbox_download_ok">Download file successfully completed</string>
     <string name="s_msg_confirm_restore">Do you really want to restore data from file </string>
     <string name="s_msg_list_available_backups">Downloading list of available backups</string>
-	<string name="s_err_unknown_error">Unknown error. Please try again.</string>    
-	<string name="delete">Delete</string>
+    <string name="s_err_unknown_error">Unknown error. Please try again.</string>
+    <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="change_category">Change category</string>
     <string name="warning_del_category">Do you really want to delete %s?</string>
@@ -100,4 +100,8 @@
     <string name="hour_disable">(0 - disable backup copy)</string>
     <string name="title_activity_backup_configuration">Backup copy configuration</string>
     <string name="backup_config_text">Perform backup copy of data into Dropbox automatically every:</string>
+    <string name="label_period">Period</string>
+    <string name="label_days_interval">Divide by days</string>
+    <string name="label_period_whole">(0 - whole period)</string>
+
 </resources>

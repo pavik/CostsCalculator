@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.service.DataFormatService;
-import net.costcalculator.service.StatisticReportItem;
+import net.costcalculator.service.CategoriesReportItem;
 import net.costcalculator.util.DateUtil;
 import net.costcalculator.util.ErrorHandler;
 import android.content.Context;
@@ -72,6 +72,13 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
+    public void setCustomInterval(Date from, Date to, StatisticPeriod type,
+            int interval, ArrayList<Date> expensesdates)
+    {
+        period_ = getStatisticPeriods(expensesdates, from, to, type, interval);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount()
     {
@@ -118,7 +125,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         }
 
         ViewHolder vh = (ViewHolder) item.getTag();
-        ArrayList<StatisticReportItem> report = getReportItem(position);
+        ArrayList<CategoriesReportItem> report = getReportItem(position);
         vh.tvDate.setText(getReportPeriod(position));
         vh.tvPrice.setText(getReportPrice(report));
 
@@ -127,7 +134,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
 
         for (int i = 0; i < report.size(); ++i)
         {
-            StatisticReportItem repItem = report.get(i);
+            CategoriesReportItem repItem = report.get(i);
             View repItemView = inflater_.inflate(R.layout.view_sub_report_item,
                     parent, false);
             TextView tvSubPrice = (TextView) repItemView
@@ -216,7 +223,12 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             ArrayList<Date> expensesdates, Date from, Date to, int interval)
     {
         ArrayList<Pair<Date, Date>> periods = new ArrayList<Pair<Date, Date>>();
-        if (interval < 1)
+        if (interval == 0 && to != null && from != null)
+        {
+            periods.add(new Pair<Date, Date>(from, to));
+            return periods;
+        }
+        else if (interval < 0)
             return periods;
 
         ArrayList<Date> dates = new ArrayList<Date>();
@@ -260,21 +272,22 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         return periods;
     }
 
-    private ArrayList<StatisticReportItem> getReportItem(int pos)
+    private ArrayList<CategoriesReportItem> getReportItem(int pos)
     {
-        ArrayList<StatisticReportItem> report = new ArrayList<StatisticReportItem>();
+        ArrayList<CategoriesReportItem> report = new ArrayList<CategoriesReportItem>();
         Pair<Date, Date> period = period_.get(pos);
         try
         {
             // there is no caching to prevent consuming of memory
-            report = service_.getStatisticReport(period.first, period.second);
+            report = service_.getStatisticReportByCategories(period.first,
+                    period.second);
         }
         catch (Exception e)
         {
             ErrorHandler.handleException(e, context_);
         }
 
-        ArrayList<StatisticReportItem> filteredreport = new ArrayList<StatisticReportItem>();
+        ArrayList<CategoriesReportItem> filteredreport = new ArrayList<CategoriesReportItem>();
         for (int i = 0; i < report.size(); ++i)
         {
             if (guid2name_.containsKey(report.get(i).guid))
@@ -303,7 +316,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             return "undefined";
     }
 
-    private String getReportPrice(ArrayList<StatisticReportItem> report)
+    private String getReportPrice(ArrayList<CategoriesReportItem> report)
     {
         TreeMap<String, Double> totals = new TreeMap<String, Double>();
         for (int i = 0; i < report.size(); ++i)

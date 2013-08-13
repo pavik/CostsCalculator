@@ -17,6 +17,7 @@ public class StatisticFragment extends SliderFragment
 {
     public StatisticFragment()
     {
+        layoutid_ = R.layout.view_statistic_report;
         adapter_ = new AdvancedStatisticAdapter();
     }
 
@@ -24,8 +25,7 @@ public class StatisticFragment extends SliderFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.view_statistic_report, container,
-                false);
+        View view = inflater.inflate(layoutid_, container, false);
         ListView lv = (ListView) view.findViewById(R.id.lv_stat_report);
         lv.setAdapter(adapter_);
         if (pagelistener_ != null)
@@ -54,8 +54,9 @@ public class StatisticFragment extends SliderFragment
         period_ = p;
     }
 
-    private AdvancedStatisticAdapter adapter_;
-    private ArrayList<CostItem>      costitems_;
-    private ArrayList<Date>          expensesdates_;
-    private StatisticPeriod          period_;
+    protected int                      layoutid_;
+    protected AdvancedStatisticAdapter adapter_;
+    protected ArrayList<CostItem>      costitems_;
+    protected ArrayList<Date>          expensesdates_;
+    protected StatisticPeriod          period_;
 }
