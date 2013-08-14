@@ -119,5 +119,5 @@
     <string name="label_period">Okres</string>
     <string name="label_days_interval">Ilość dni</string>
     <string name="label_period_whole">(0 - cały okres)</string>
-
+    <string name="label_select_category">Wybierz kategorii</string>
 </resources>

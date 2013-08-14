@@ -5,12 +5,19 @@
     android:background="@color/col_activity_background"
     tools:context=".StatisticReportActivity" >
 
+    <Button
+        android:id="@+id/btn_select_items"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_gradient"
+        android:text="@string/label_select_category" />
+
     <ListView
         android:id="@+id/lv_stat_report"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@id/btn_select_items"
         android:divider="@color/col_activity_background"
         android:dividerHeight="3dp"
         android:listSelector="@android:color/transparent" >

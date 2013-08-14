@@ -119,5 +119,6 @@
     <string name="label_period">За период</string>
     <string name="label_days_interval">Разделить по дням</string>
     <string name="label_period_whole">(0 - за весь период)</string>
+    <string name="label_select_category">Выберите категории</string>
 
 </resources>

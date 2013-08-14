@@ -230,7 +230,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         }
         else if (interval < 0)
             return periods;
-
+        // TODO fix algorithm, divide by periods independently of expenses
         ArrayList<Date> dates = new ArrayList<Date>();
         for (int i = 0; i < expensesdates.size(); ++i)
         {

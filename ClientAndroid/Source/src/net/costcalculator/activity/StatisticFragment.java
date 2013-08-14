@@ -6,11 +6,15 @@ import java.util.Date;
 
 import net.costcalculator.activity.AdvancedStatisticAdapter.StatisticPeriod;
 import net.costcalculator.service.CostItem;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class StatisticFragment extends SliderFragment
@@ -19,6 +23,8 @@ public class StatisticFragment extends SliderFragment
     {
         layoutid_ = R.layout.view_statistic_report;
         adapter_ = new AdvancedStatisticAdapter();
+        items_ = new String[0];
+        selectedItems_ = new ArrayList<Integer>();
     }
 
     @Override
@@ -27,6 +33,16 @@ public class StatisticFragment extends SliderFragment
     {
         View view = inflater.inflate(layoutid_, container, false);
         ListView lv = (ListView) view.findViewById(R.id.lv_stat_report);
+        Button filter = (Button) view.findViewById(R.id.btn_select_items);
+        filter.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSelectionDialog();
+            }
+        });
+
         lv.setAdapter(adapter_);
         if (pagelistener_ != null)
             lv.setOnTouchListener(pagelistener_);
@@ -42,6 +58,12 @@ public class StatisticFragment extends SliderFragment
     public void setCostItems(ArrayList<CostItem> costitems)
     {
         costitems_ = costitems;
+        items_ = new String[costitems_.size()];
+        for (int i = 0; i < costitems_.size(); ++i)
+        {
+            items_[i] = costitems_.get(i).getName();
+            selectedItems_.add(i);
+        }
     }
 
     public void setExpensesDates(ArrayList<Date> expensesdates)
@@ -54,9 +76,70 @@ public class StatisticFragment extends SliderFragment
         period_ = p;
     }
 
+    private void showSelectionDialog()
+    {
+        boolean[] selected = new boolean[items_.length];
+        for (int i = 0; i < selected.length; ++i)
+            selected[i] = selectedItems_.contains(i);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.label_select_category)
+                .setMultiChoiceItems(items_, selected,
+                        new DialogInterface.OnMultiChoiceClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which, boolean isChecked)
+                            {
+                                if (isChecked)
+                                {
+                                    selectedItems_.add(which);
+                                }
+                                else if (selectedItems_.contains(which))
+                                {
+                                    selectedItems_.remove(Integer
+                                            .valueOf(which));
+                                }
+                            }
+                        })
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                ArrayList<CostItem> costitems = new ArrayList<CostItem>();
+                                for (int i = 0; i < selectedItems_.size(); ++i)
+                                    costitems.add(costitems_.get(selectedItems_
+                                            .get(i)));
+                                adapter_.setFilter(costitems);
+                            }
+                        })
+                .setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                            }
+                        });
+
+        AlertDialog d = builder.create();
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+
+        Button bok = d.getButton(AlertDialog.BUTTON_POSITIVE);
+        bok.setBackgroundResource(R.drawable.green_gradient);
+        bok.setTextAppearance(d.getContext(), R.style.GradientButtonText);
+        Button bcancel = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+        bcancel.setBackgroundResource(R.drawable.green_gradient);
+        bcancel.setTextAppearance(d.getContext(), R.style.GradientButtonText);
+    }
+
     protected int                      layoutid_;
     protected AdvancedStatisticAdapter adapter_;
     protected ArrayList<CostItem>      costitems_;
     protected ArrayList<Date>          expensesdates_;
     protected StatisticPeriod          period_;
+    private String[]                   items_;
+    private ArrayList<Integer>         selectedItems_;
 }
