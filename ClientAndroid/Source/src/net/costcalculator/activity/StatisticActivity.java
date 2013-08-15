@@ -17,7 +17,9 @@ public class StatisticActivity extends SliderActivity
 
         CostItemsService s = new CostItemsService(this);
         costitems_ = s.getAllCostItems();
-        expensesdates_ = s.getDistinctExpensesDates();
+        expensesdates_ = s.getDistinctExpensesDates(false);
+        expensestagdates_ = s.getDistinctExpensesDates(true);
+        tags_ = s.getAllDistinctTags();
         s.release();
 
         showfragment();
@@ -27,7 +29,8 @@ public class StatisticActivity extends SliderActivity
     protected SliderFragment getFragment(int index)
     {
         StatisticFragment f = SliderFragmentFactory.createStatisticFragment(
-                this, fragments_[index], costitems_, expensesdates_);
+                this, fragments_[index], costitems_, expensesdates_,
+                expensestagdates_, tags_);
         return f;
     }
 
@@ -38,5 +41,7 @@ public class StatisticActivity extends SliderActivity
     }
 
     private ArrayList<Date>     expensesdates_;
+    private ArrayList<Date>     expensestagdates_;
     private ArrayList<CostItem> costitems_;
+    private ArrayList<String>   tags_;
 }

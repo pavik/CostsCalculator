@@ -105,17 +105,29 @@ public class ExpenseItemsActivity extends Activity implements
             Intent intent = new Intent(this, StatisticActivity.class);
             String[] fragments = {
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_DAILY),
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_DAILY),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_WEEKLY),
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_WEEKLY),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_MONTHLY),
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_MONTHLY),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_YEARLY),
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_YEARLY),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_FOREVER),
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_FOREVER),
                     SliderFragmentFactory
-                            .getStatPath(SliderFragmentFactory.PATH_STAT_CUSTOM) };
+                            .getCatPath(SliderFragmentFactory.PATH_STAT_CUSTOM),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_DAILY),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_WEEKLY),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_MONTHLY),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_YEARLY),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_FOREVER),
+                    SliderFragmentFactory
+                            .getTagPath(SliderFragmentFactory.PATH_STAT_CUSTOM) };
             intent.putExtra(SliderActivity.EXTRA_FRAGMENTS, fragments);
             startActivity(intent);
             break;

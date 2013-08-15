@@ -110,10 +110,13 @@ public class StatisticFragmentCustom extends StatisticFragment
     }
 
     @Override
-    public void initialize(Context c)
+    public void initialize(Context c, boolean cat)
     {
+        cat_ = cat;
         adapter_ = new AdvancedStatisticAdapter(c, from_, to_, period_, days_,
-                costitems_, expensesdates_);
+                costitems_, expensesdates_,
+                cat ? AdvancedStatisticAdapter.REPORT_CAT
+                        : AdvancedStatisticAdapter.REPORT_TAG);
     }
 
     private void setDate(TextView tv, Date d)

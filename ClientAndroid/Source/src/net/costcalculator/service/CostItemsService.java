@@ -614,7 +614,7 @@ public class CostItemsService
         return cirCountCache;
     }
 
-    public ArrayList<Date> getDistinctExpensesDates()
+    public ArrayList<Date> getDistinctExpensesDates(boolean bytag)
     {
         LOG.T("CostItemsService::getExpensesDates");
 
@@ -625,7 +625,9 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteDbQueries.GET_DISTINCT_EXPENSES_DATES, null);
+            ds = db.rawQuery(
+                    bytag ? SQLiteDbQueries.GET_DISTINCT_EXPENSES_TAG_DATES
+                            : SQLiteDbQueries.GET_DISTINCT_EXPENSES_DATES, null);
 
             if (ds.moveToFirst())
             {
@@ -703,12 +705,12 @@ public class CostItemsService
                 do
                 {
                     CategoriesReportItem item = new CategoriesReportItem();
-                    item.dateFrom = from;
-                    item.dateTo = to;
-                    item.guid = ds.getString(colGuid);
-                    item.currency = ds.getString(colCurrency);
-                    item.sum = ds.getDouble(colSum);
-                    item.count = ds.getInt(colCount);
+                    item.setDateFrom(from);
+                    item.setDateTo(to);
+                    item.setGuid(ds.getString(colGuid));
+                    item.setCurrency(ds.getString(colCurrency));
+                    item.setSum(ds.getDouble(colSum));
+                    item.setCount(ds.getInt(colCount));
                     result.add(item);
                 } while (ds.moveToNext());
             }
@@ -761,12 +763,12 @@ public class CostItemsService
                 do
                 {
                     TagsReportItem item = new TagsReportItem();
-                    item.dateFrom = from;
-                    item.dateTo = to;
-                    item.tag = ds.getString(colTag);
-                    item.currency = ds.getString(colCurrency);
-                    item.sum = ds.getDouble(colSum);
-                    item.count = ds.getInt(colCount);
+                    item.setDateFrom(from);
+                    item.setDateTo(to);
+                    item.setTitle(ds.getString(colTag));
+                    item.setCurrency(ds.getString(colCurrency));
+                    item.setSum(ds.getDouble(colSum));
+                    item.setCount(ds.getInt(colCount));
                     result.add(item);
                 } while (ds.moveToNext());
             }

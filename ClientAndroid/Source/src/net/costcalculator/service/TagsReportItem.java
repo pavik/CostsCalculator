@@ -8,20 +8,12 @@
 
 package net.costcalculator.service;
 
-import java.util.Date;
-
 /**
  * Class contains attributes of one item of statistic report
  * 
  * @author Aliaksei Plashchanski
  * 
  */
-public class TagsReportItem
+public class TagsReportItem extends ReportItem
 {
-    public Date   dateFrom;
-    public Date   dateTo;
-    public String tag;
-    public int    count;
-    public double sum;
-    public String currency;
 }
