@@ -246,36 +246,23 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             periods.add(new Pair<Date, Date>(from, to));
             return periods;
         }
-        else if (interval < 0)
+        else if (interval < 0 || from == null || to == null)
             return periods;
-        // TODO fix algorithm, divide by periods independently of expenses
-        ArrayList<Date> dates = new ArrayList<Date>();
-        for (int i = 0; i < expensesdates.size(); ++i)
+
+        from.setHours(0);
+        from.setMinutes(0);
+        from.setSeconds(0);
+        to.setHours(23);
+        to.setMinutes(59);
+        to.setSeconds(59);
+        while (from.getTime() < to.getTime())
         {
-            if (to != null && expensesdates.get(i).getTime() > to.getTime())
-                continue;
-            if (from != null && expensesdates.get(i).getTime() < from.getTime())
-                continue;
-
-            if (dates.isEmpty())
-                dates.add(expensesdates.get(i));
-            else
-            {
-                if (DateUtil.getDaysCount(expensesdates.get(i), dates.get(0)) >= interval)
-                {
-                    periods.add(new Pair<Date, Date>(
-                            dates.get(dates.size() - 1), dates.get(0)));
-                    dates.clear();
-                    dates.add(expensesdates.get(i));
-                }
-                else
-                    dates.add(expensesdates.get(i));
-            }
+            Date middle = new Date(to.getTime() - (interval - 1) * 86400000);
+            if (middle.getTime() < from.getTime())
+                middle = from;
+            periods.add(new Pair<Date, Date>(middle, to));
+            to = new Date(middle.getTime() - 86400000);
         }
-
-        if (!dates.isEmpty())
-            periods.add(new Pair<Date, Date>(dates.get(dates.size() - 1), dates
-                    .get(0)));
 
         return periods;
     }
