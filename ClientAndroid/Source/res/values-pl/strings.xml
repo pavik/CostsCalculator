@@ -63,6 +63,16 @@
     <string name="title_activity_statistic_report">Statystyka wydatków</string>
     <string name="s_daily_expenses">Dzienne wydatki</string>
     <string name="s_monthly_expenses">Miesięczne wydatki</string>
+    <string name="s_weekly_expenses">Tygodniowe wydatki</string>
+    <string name="s_yearly_expenses">Roczne wydatki</string>
+    <string name="s_whole_expenses">Wszystkie wydatki</string>
+    <string name="s_period_expenses">Za okres</string>
+    <string name="s_daily_expenses_tag">Dzienne wydatki (tag)</string>
+    <string name="s_monthly_expenses_tag">Miesięczne wydatki (tag)</string>
+    <string name="s_weekly_expenses_tag">Tygodniowe wydatki (tag)</string>
+    <string name="s_yearly_expenses_tag">Roczne wydatki (tag)</string>
+    <string name="s_whole_expenses_tag">Wszystkie wydatki (tag)</string>
+    <string name="s_period_expenses_tag">Za okres (tag)</string>
     <string name="s_title_activity_backup">Kopia zapasowa danych</string>
     <string name="s_backup_intro">Aby umożliwić utworzenie zapasowej kopii danych należy utworzyć konto na stronie www.dropbox.com i zalogować się tutaj</string>
     <string name="s_btn_login_dropbox">Zaloguj się w Dropbox</string>
@@ -120,4 +130,6 @@
     <string name="label_days_interval">Ilość dni</string>
     <string name="label_period_whole">(0 - cały okres)</string>
     <string name="label_select_category">Wybierz kategorii</string>
-</resources>
+    <string name="label_select_statistic">Wybierz statystykę</string>
+    <string name="label_select_all">Zaznacz wszystko</string>
+</resources>

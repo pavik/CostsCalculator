@@ -6,7 +6,6 @@ import java.util.Date;
 
 import net.costcalculator.activity.AdvancedStatisticAdapter.StatisticPeriod;
 import net.costcalculator.service.CostItem;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -101,72 +100,30 @@ public class StatisticFragment extends SliderFragment
 
     private void showSelectionDialog()
     {
-        boolean[] selected = new boolean[items_.length];
-        for (int i = 0; i < selected.length; ++i)
-            selected[i] = selectedItems_.contains(i);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.label_select_category)
-                .setMultiChoiceItems(items_, selected,
-                        new DialogInterface.OnMultiChoiceClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which, boolean isChecked)
-                            {
-                                if (isChecked)
-                                {
-                                    selectedItems_.add(which);
-                                }
-                                else if (selectedItems_.contains(which))
-                                {
-                                    selectedItems_.remove(Integer
-                                            .valueOf(which));
-                                }
-                            }
-                        })
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                                if (cat_)
-                                {
-                                    ArrayList<CostItem> costitems = new ArrayList<CostItem>();
-                                    for (int i = 0; i < selectedItems_.size(); ++i)
-                                        costitems.add(costitems_
-                                                .get(selectedItems_.get(i)));
-                                    adapter_.setFilter(costitems);
-                                }
-                                else
-                                {
-                                    ArrayList<String> tags = new ArrayList<String>();
-                                    for (int i = 0; i < selectedItems_.size(); ++i)
-                                        tags.add(tags_.get(selectedItems_
-                                                .get(i)));
-                                    adapter_.setTagFilter(tags);
-                                }
-                            }
-                        })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                            }
-                        });
-
-        AlertDialog d = builder.create();
-        d.setCanceledOnTouchOutside(true);
+        MultiSelectionDialog d = new MultiSelectionDialog(getActivity(),
+                R.string.label_select_category, items_, selectedItems_);
+        d.setOnConfirmListener(new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                if (cat_)
+                {
+                    ArrayList<CostItem> costitems = new ArrayList<CostItem>();
+                    for (int i = 0; i < selectedItems_.size(); ++i)
+                        costitems.add(costitems_.get(selectedItems_.get(i)));
+                    adapter_.setFilter(costitems);
+                }
+                else
+                {
+                    ArrayList<String> tags = new ArrayList<String>();
+                    for (int i = 0; i < selectedItems_.size(); ++i)
+                        tags.add(tags_.get(selectedItems_.get(i)));
+                    adapter_.setTagFilter(tags);
+                }
+            }
+        });
         d.show();
-
-        Button bok = d.getButton(AlertDialog.BUTTON_POSITIVE);
-        bok.setBackgroundResource(R.drawable.green_gradient);
-        bok.setTextAppearance(d.getContext(), R.style.GradientButtonText);
-        Button bcancel = d.getButton(AlertDialog.BUTTON_NEGATIVE);
-        bcancel.setBackgroundResource(R.drawable.green_gradient);
-        bcancel.setTextAppearance(d.getContext(), R.style.GradientButtonText);
     }
 
     protected boolean                  cat_;

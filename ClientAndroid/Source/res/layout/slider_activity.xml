@@ -10,7 +10,7 @@
         android:background="@drawable/blue_gradient_list_header"
         android:gravity="center"
         android:text="@string/tv_placeholder"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/col_list_view_header_text"
         android:textStyle="bold" />
 

@@ -1,12 +1,16 @@
 
 package net.costcalculator.activity;
 
+import java.util.ArrayList;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +42,15 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
                 showfragment();
             }
         });
+        btnLeft.setOnLongClickListener(new OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View arg0)
+            {
+                showSliderMenu();
+                return false;
+            }
+        });
 
         ImageView btnRight = (ImageView) findViewById(R.id.img_header_arrow_right);
         btnRight.setOnClickListener(new OnClickListener()
@@ -47,6 +60,15 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
             {
                 current_ += 1;
                 showfragment();
+            }
+        });
+        btnRight.setOnLongClickListener(new OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View arg0)
+            {
+                showSliderMenu();
+                return false;
             }
         });
     }
@@ -79,6 +101,11 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
     protected String getHeaderTitle(int index)
     {
         return "title"; // should be overridden by derived class
+    }
+
+    protected String[] getFragmentTitles()
+    {
+        return null; // should be overridden by derived class
     }
 
     protected void showfragment()
@@ -128,7 +155,35 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
         }
     }
 
+    private void showSliderMenu()
+    {
+        final String[] titles = getFragmentTitles();
+        if (titles != null)
+        {
+            selectedFragment_ = new ArrayList<Integer>();
+            selectedFragment_.add(current_);
+            MultiSelectionDialog d = new MultiSelectionDialog(this,
+                    R.string.label_select_statistic, titles, selectedFragment_);
+            d.setSingleSelection();
+            d.setOnConfirmListener(new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    if (selectedFragment_.size() > 0
+                            && selectedFragment_.get(0) != current_)
+                    {
+                        current_ = selectedFragment_.get(0);
+                        showfragment();
+                    }
+                }
+            });
+            d.show();
+        }
+    }
+
     protected String[]          fragments_;
+    private ArrayList<Integer>  selectedFragment_;
     private TextView            tvHeader_;
     private int                 current_ = 0;
     private float               touchDownX_;

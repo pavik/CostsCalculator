@@ -53,6 +53,16 @@
     <string name="title_activity_statistic_report">Expenses statistic</string>
     <string name="s_daily_expenses">Daily expenses</string>
     <string name="s_monthly_expenses">Monthly expenses</string>
+    <string name="s_weekly_expenses">Weekly expenses</string>
+    <string name="s_yearly_expenses">Yearly expenses</string>
+    <string name="s_whole_expenses">All expenses</string>
+    <string name="s_period_expenses">For period</string>
+    <string name="s_daily_expenses_tag">Daily expenses (tag)</string>
+    <string name="s_monthly_expenses_tag">Monthly expenses (tag)</string>
+    <string name="s_weekly_expenses_tag">Weekly expenses (tag)</string>
+    <string name="s_yearly_expenses_tag">Yearly expenses (tag)</string>
+    <string name="s_whole_expenses_tag">All expenses (tag)</string>
+    <string name="s_period_expenses_tag">For (tag)</string>
     <string name="s_title_activity_backup">Backup data</string>
     <string name="s_backup_intro">In order to be able to make backup copy of your data you should create account in www.dropbox.com and link your account here</string>
     <string name="s_btn_login_dropbox">Link Dropbox</string>
@@ -104,4 +114,6 @@
     <string name="label_days_interval">Divide by days</string>
     <string name="label_period_whole">(0 - whole period)</string>
     <string name="label_select_category">Select categories</string>
-</resources>
+    <string name="label_select_statistic">Select statistic</string>
+    <string name="label_select_all">Select all</string>
+</resources>
