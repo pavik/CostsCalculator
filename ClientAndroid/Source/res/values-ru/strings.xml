@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Расходы</string>
+    <string name="menu_settings">Конфигурация</string>
+    <string name="title_activity_expense_items">Категории расходов</string>
+    <string name="new_expense_item">Новая категория</string>
+    <string name="expense_statistic">Статистика расходов</string>
+    <string name="quit_application">Закрыть приложение</string>
+    <string name="et_expense_item_name_hint">Введите название</string>
+
+    <color name="col_expense_item">#555555</color>
+
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="ci_food">Продукты</string>
+    <string name="ci_household">Бытовые расходы</string>
+    <string name="ci_clothes">Вещи</string>
+    <string name="ci_accommodation">Коммунальные услуги</string>
+    <string name="ci_credit">Кредиты</string>
+    <string name="ci_car">Автомобиль</string>
+    <string name="ci_health">Медицинские услуги</string>
+    <string name="ci_restaurant">Кафе/Рестораны</string>
+    <string name="ci_mobile">Мобильная связь</string>
+    <string name="ci_entertainment">Отдых</string>
+    <string name="ci_other">Другие расходы</string>
+
+    <color name="col_activity_background">#E7EBF2</color>
+    <color name="col_expense_item_cell_background">#FFFFFF</color>
+
+    <string name="price_label">Сумма</string>
+    <string name="title_activity_price_list">Категория расходов: </string>
+    <string name="price_hint">Расходы</string>
+    <string name="date_label">Дата</string>
+    <string name="currency_hint">Валюта</string>
+    <string name="comment_label">Комментарий</string>
+    <string name="comment_hint">Напишите комментарий</string>
+    <string name="tag_label">Тег</string>
+    <string name="tag_hint">Добавьте тег</string>
+    <string name="save_label">Сохранить</string>
+    <string name="history_label">История операций</string>
+    <string name="new_record_label">Добавить новую запись</string>
+    <string name="close">Закрыть</string>
+    <string name="price_warning">Введите пожалуйста сумму</string>
+
+    <color name="col_price_val">#725998</color>
+    <color name="col_price_list_item_back">#FFFF66</color>
+    <color name="col_date_val">#808080</color>
+    <color name="col_price_list_item_split_line">#E5E5E5</color>
+    <color name="col_tag_text">#3B5958</color>
+    <color name="col_tag_back">#EDEFF4</color>
+    <color name="col_count_val">#686868</color>
+    <color name="col_white">#FFFFFF</color>
+    <color name="col_black">#000000</color>
+    <color name="col_yellow">#f3ae1b</color>
+    <color name="col_light_gray">#AAAAAA</color>
+
+    <string name="s_history_of_expenses">История расходов</string>
+
+    <color name="col_list_view_header_back">#3B5998</color>
+    <color name="col_list_view_header_text">#FFFFFF</color>
+
+    <string name="title_activity_statistic_report">Статистика расходов</string>
+    <string name="s_daily_expenses">Ежедневные расходы</string>
+    <string name="s_monthly_expenses">Ежемесячные расходы</string>
+    <string name="s_weekly_expenses">Еженедельные расходы</string>
+    <string name="s_yearly_expenses">Ежегодные расходы</string>
+    <string name="s_whole_expenses">За все время</string>
+    <string name="s_period_expenses">За период</string>
+    <string name="s_daily_expenses_tag">Ежедневные расходы (теги)</string>
+    <string name="s_monthly_expenses_tag">Ежемесячные расходы (теги)</string>
+    <string name="s_weekly_expenses_tag">Еженедельные расходы (теги)</string>
+    <string name="s_yearly_expenses_tag">Ежегодные расходы (теги)</string>
+    <string name="s_whole_expenses_tag">За все время (теги)</string>
+    <string name="s_period_expenses_tag">За период (теги)</string>
+    <string name="s_title_activity_backup">Резервное копирование данных</string>
+    <string name="s_backup_intro">Чтобы воспользоваться возможностью резервного копирования данных необходимо создать учетную запись в www.dropbox.com и выполнить вход в Dropbox здесь</string>
+    <string name="s_btn_login_dropbox">Войти в Dropbox</string>
+    <string name="s_btn_logout_dropbox">Выйти из Dropbox</string>
+    <string name="s_btn_backup_into_dropbox">Копировать данные в Dropbox</string>
+    <string name="s_btn_restore_from_dropbox">Восстановить данные из Dropbox</string>
+    <string name="s_msg_dropbox_backup_ok">Копирование данных завершено успешно</string>
+    <string name="s_msg_dropbox_download_ok">Загрузка данных завершена успешно</string>
+    <string name="s_msg_dropbox_restore_ok">Восстановление данных завершено успешно</string>
+    <string name="s_msg_uploading">Загрузка данных&#8230;</string>
+    <string name="s_msg_downloading">Загрузка данных&#8230;</string>
+    <string name="s_msg_importing">Импорт&#8230;</string>
+    <string name="s_msg_no_data_for_backuping">Нет данных для загрузки</string>
+    <string name="s_msg_no_backup_files_in_dropbox">В вашем Dropbox аккаунте нет резервных копий данных</string>
+    <string name="s_dropbox_file_list">Список файлов в Dropbox</string>
+    <string name="s_msg_confirm_restore">Вы действительно хотите восстановить данные из файла </string>
+    <string name="s_msg_list_available_backups">Загрузка списка резервных копий</string>
+    <string name="s_err_unknown_error">Произошла неизвестная ошибка. Попробуйте снова.</string>
+    <string name="tv_placeholder">placeholder</string>
+
+    <color name="col_blue">#0000FF</color>
+
+    <string name="delete">Удалить</string>
+    <string name="edit">Изменить</string>
+    <string name="change_category">Изменить категорию</string>
+    <string name="warning_del_category">Вы действительно хотите удалить %s?</string>
+    <string name="warning">Внимание</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="bytes">байт</string>
+    <string name="move">Переместить</string>
+    <string name="s_move_to">Переместить расходы из %s в:</string>
+    <string name="s_move_item_to">Переместить %s в:</string>
+    <string name="warning_move_category">Переместить все расходы из %1$s в %2$s ?</string>
+    <string name="warning_move_item">Переместить %1$s в %2$s ?</string>
+    <string name="stat_report">Статистика</string>
+    <string name="stat_ci_total">Всего категорий</string>
+    <string name="stat_ci_error">Ошибок (в категориях)</string>
+    <string name="stat_ci_ignored">Найдено категорий</string>
+    <string name="stat_ci_new">Добавлено категорий</string>
+    <string name="stat_ci_overwritten">Обновлено категорий</string>
+    <string name="stat_cir_total">Всего расходов</string>
+    <string name="stat_cir_error">Ошибок (в расходах)</string>
+    <string name="stat_cir_ignored">Найдено расходов</string>
+    <string name="stat_cir_new">Добавлено расходов</string>
+    <string name="stat_cir_overwritten">Обновлено расходов</string>
+    <string name="ok">OK</string>
+
+    <color name="col_red">#FF0000</color>
+
+    <string name="hour">часа(ов)</string>
+    <string name="hour_disable">(0 - не выполнять копирование)</string>
+    <string name="title_activity_backup_configuration">Настройка резервного копирования данных</string>
+    <string name="backup_config_text">Выполнять резервное копирование данных в Dropbox автоматичеки каждые:</string>
+    <string name="label_period">За период</string>
+    <string name="label_days_interval">Разделить по дням</string>
+    <string name="label_period_whole">(0 - за весь период)</string>
+    <string name="label_select_category">Выберите категории</string>
+    <string name="label_select_statistic">Выберите статистику</string>
+    <string name="label_select_all">Выбрать все</string>
+</resources>
