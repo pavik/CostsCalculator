@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/col_activity_background"
+    tools:context=".StatisticReportActivity" >
+
+    <Button
+        android:id="@+id/btn_select_items"
+        style="@style/GradientButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_gradient"
+        android:text="@string/label_select_category" />
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_select_items"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_period_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="4dp"
+            android:text="@string/label_period"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_date_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_pressed_yellow"
+            android:clickable="true"
+            android:text="@string/tv_placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/col_blue" />
+
+        <TextView
+            android:id="@+id/tv_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="-"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tv_date_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_pressed_yellow"
+            android:clickable="true"
+            android:text="@string/tv_placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/col_blue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout1"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_days_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="4dp"
+            android:text="@string/label_days_interval"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_days_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:width="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/label_period_whole"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_stat_report"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/layout2"
+        android:divider="@color/col_activity_background"
+        android:dividerHeight="3dp"
+        android:listSelector="@android:color/transparent" >
+    </ListView>
+
+</RelativeLayout>

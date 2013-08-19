@@ -4,6 +4,7 @@ package net.costcalculator.activity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,7 +12,9 @@ import java.util.TreeMap;
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.service.DataFormatService;
-import net.costcalculator.service.StatisticReportItem;
+import net.costcalculator.service.CategoriesReportItem;
+import net.costcalculator.service.ReportItem;
+import net.costcalculator.service.TagsReportItem;
 import net.costcalculator.util.DateUtil;
 import net.costcalculator.util.ErrorHandler;
 import android.content.Context;
@@ -26,6 +29,9 @@ import android.widget.TextView;
 
 public class AdvancedStatisticAdapter extends BaseAdapter
 {
+    public static final int REPORT_CAT = 1;
+    public static final int REPORT_TAG = 2;
+
     public enum StatisticPeriod
     {
         DAY, WEEK, MONTH, YEAR, FOREVER, CUSTOM
@@ -33,9 +39,10 @@ public class AdvancedStatisticAdapter extends BaseAdapter
 
     public AdvancedStatisticAdapter(Context c, Date from, Date to,
             StatisticPeriod type, int interval, ArrayList<CostItem> items,
-            ArrayList<Date> expensesdates)
+            ArrayList<Date> expensesdates, int reportType)
     {
         context_ = c;
+        reportType_ = reportType;
         periodType_ = type;
         service_ = new CostItemsService(context_);
         inflater_ = (LayoutInflater) context_
@@ -44,6 +51,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         guid2name_ = new Hashtable<String, String>();
         for (int i = 0; i < items.size(); ++i)
             guid2name_.put(items.get(i).getGuid(), items.get(i).getName());
+        tags_ = new HashSet<String>();
     }
 
     public AdvancedStatisticAdapter()
@@ -62,6 +70,8 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             period_ = null;
         if (guid2name_ != null)
             guid2name_ = null;
+        if (tags_ != null)
+            tags_ = null;
     }
 
     public void setFilter(ArrayList<CostItem> items)
@@ -69,6 +79,21 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         guid2name_ = new Hashtable<String, String>();
         for (int i = 0; i < items.size(); ++i)
             guid2name_.put(items.get(i).getGuid(), items.get(i).getName());
+        notifyDataSetChanged();
+    }
+
+    public void setTagFilter(ArrayList<String> tags)
+    {
+        tags_ = new HashSet<String>();
+        for (int i = 0; i < tags.size(); ++i)
+            tags_.add(tags.get(i));
+        notifyDataSetChanged();
+    }
+
+    public void setCustomInterval(Date from, Date to, StatisticPeriod type,
+            int interval, ArrayList<Date> expensesdates)
+    {
+        period_ = getStatisticPeriods(expensesdates, from, to, type, interval);
         notifyDataSetChanged();
     }
 
@@ -118,7 +143,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         }
 
         ViewHolder vh = (ViewHolder) item.getTag();
-        ArrayList<StatisticReportItem> report = getReportItem(position);
+        ArrayList<ReportItem> report = getReportItem(position);
         vh.tvDate.setText(getReportPeriod(position));
         vh.tvPrice.setText(getReportPrice(report));
 
@@ -127,17 +152,17 @@ public class AdvancedStatisticAdapter extends BaseAdapter
 
         for (int i = 0; i < report.size(); ++i)
         {
-            StatisticReportItem repItem = report.get(i);
+            ReportItem repItem = report.get(i);
             View repItemView = inflater_.inflate(R.layout.view_sub_report_item,
                     parent, false);
             TextView tvSubPrice = (TextView) repItemView
                     .findViewById(R.id.tv_price_val);
             TextView tvSubCat = (TextView) repItemView
                     .findViewById(R.id.tv_cat_val);
-            tvSubCat.setText(getNameByGUID(repItem.guid) + " (" + repItem.count
+            tvSubCat.setText(repItem.getTitle() + " (" + repItem.getCount()
                     + ")");
-            tvSubPrice.setText(DataFormatService.formatPrice(repItem.sum) + " "
-                    + repItem.currency);
+            tvSubPrice.setText(DataFormatService.formatPrice(repItem.getSum())
+                    + " " + repItem.getCurrency());
             ll.addView(repItemView);
         }
 
@@ -216,36 +241,28 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             ArrayList<Date> expensesdates, Date from, Date to, int interval)
     {
         ArrayList<Pair<Date, Date>> periods = new ArrayList<Pair<Date, Date>>();
-        if (interval < 1)
+        if (interval == 0 && to != null && from != null)
+        {
+            periods.add(new Pair<Date, Date>(from, to));
+            return periods;
+        }
+        else if (interval < 0 || from == null || to == null)
             return periods;
 
-        ArrayList<Date> dates = new ArrayList<Date>();
-        for (int i = 0; i < expensesdates.size(); ++i)
+        from.setHours(0);
+        from.setMinutes(0);
+        from.setSeconds(0);
+        to.setHours(23);
+        to.setMinutes(59);
+        to.setSeconds(59);
+        while (from.getTime() < to.getTime())
         {
-            if (to != null && expensesdates.get(i).getTime() > to.getTime())
-                continue;
-            if (from != null && expensesdates.get(i).getTime() < from.getTime())
-                continue;
-
-            if (dates.isEmpty())
-                dates.add(expensesdates.get(i));
-            else
-            {
-                if (DateUtil.getDaysCount(expensesdates.get(i), dates.get(0)) >= interval)
-                {
-                    periods.add(new Pair<Date, Date>(
-                            dates.get(dates.size() - 1), dates.get(0)));
-                    dates.clear();
-                    dates.add(expensesdates.get(i));
-                }
-                else
-                    dates.add(expensesdates.get(i));
-            }
+            Date middle = new Date(to.getTime() - (interval - 1) * 86400000);
+            if (middle.getTime() < from.getTime())
+                middle = from;
+            periods.add(new Pair<Date, Date>(middle, to));
+            to = new Date(middle.getTime() - 86400000);
         }
-
-        if (!dates.isEmpty())
-            periods.add(new Pair<Date, Date>(dates.get(dates.size() - 1), dates
-                    .get(0)));
 
         return periods;
     }
@@ -260,25 +277,53 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         return periods;
     }
 
-    private ArrayList<StatisticReportItem> getReportItem(int pos)
+    private ArrayList<ReportItem> getReportItem(int pos)
     {
-        ArrayList<StatisticReportItem> report = new ArrayList<StatisticReportItem>();
-        Pair<Date, Date> period = period_.get(pos);
-        try
-        {
-            // there is no caching to prevent consuming of memory
-            report = service_.getStatisticReport(period.first, period.second);
-        }
-        catch (Exception e)
-        {
-            ErrorHandler.handleException(e, context_);
-        }
+        ArrayList<ReportItem> filteredreport = new ArrayList<ReportItem>();
 
-        ArrayList<StatisticReportItem> filteredreport = new ArrayList<StatisticReportItem>();
-        for (int i = 0; i < report.size(); ++i)
+        if (reportType_ == REPORT_CAT)
         {
-            if (guid2name_.containsKey(report.get(i).guid))
-                filteredreport.add(report.get(i));
+            ArrayList<CategoriesReportItem> report = new ArrayList<CategoriesReportItem>();
+            Pair<Date, Date> period = period_.get(pos);
+            try
+            {
+                // there is no caching to prevent consuming of memory
+                report = service_.getStatisticReportByCategories(period.first,
+                        period.second);
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.handleException(e, context_);
+            }
+
+            for (int i = 0; i < report.size(); ++i)
+            {
+                if (guid2name_.containsKey(report.get(i).getGuid()))
+                {
+                    CategoriesReportItem item = report.get(i);
+                    item.setTitle(getNameByGUID(item.getGuid()));
+                    filteredreport.add(item);
+                }
+            }
+        }
+        else if (reportType_ == REPORT_TAG)
+        {
+            ArrayList<TagsReportItem> report = new ArrayList<TagsReportItem>();
+            Pair<Date, Date> period = period_.get(pos);
+            try
+            {
+                // there is no caching to prevent consuming of memory
+                report = service_.getStatisticReportByTags(period.first,
+                        period.second);
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.handleException(e, context_);
+            }
+
+            for (int i = 0; i < report.size(); ++i)
+                if (tags_.contains(report.get(i).getTitle()))
+                    filteredreport.add(report.get(i));
         }
 
         return filteredreport;
@@ -303,18 +348,18 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             return "undefined";
     }
 
-    private String getReportPrice(ArrayList<StatisticReportItem> report)
+    private String getReportPrice(ArrayList<ReportItem> report)
     {
         TreeMap<String, Double> totals = new TreeMap<String, Double>();
         for (int i = 0; i < report.size(); ++i)
         {
-            Double value = totals.get(report.get(i).currency);
+            Double value = totals.get(report.get(i).getCurrency());
             if (value == null)
-                value = report.get(i).sum;
+                value = report.get(i).getSum();
             else
-                value += report.get(i).sum;
+                value += report.get(i).getSum();
 
-            totals.put(report.get(i).currency, value);
+            totals.put(report.get(i).getCurrency(), value);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -342,9 +387,11 @@ public class AdvancedStatisticAdapter extends BaseAdapter
     }
 
     private Context                     context_;
+    private int                         reportType_;
     private StatisticPeriod             periodType_;
     private CostItemsService            service_;
     private LayoutInflater              inflater_;
     private ArrayList<Pair<Date, Date>> period_;
     private Hashtable<String, String>   guid2name_;
+    private HashSet<String>             tags_;
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/col_activity_background" >
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_gradient_dlg_header"
+        android:gravity="center"
+        android:text="@string/tv_placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/col_list_view_header_text"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/btn_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:paddingLeft="40dp"
+        android:text="@string/label_select_all" />
+
+    <ListView
+        android:id="@+id/lv_items"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_pane"
+        android:layout_below="@id/btn_checkbox"
+        android:layout_margin="2dp"
+        android:dividerHeight="0dp" />
+
+    <LinearLayout
+        android:id="@+id/btn_pane"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_confirm"
+            style="@style/GradientButtonText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:background="@drawable/green_gradient"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/GradientButtonText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="@drawable/green_gradient"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</RelativeLayout>

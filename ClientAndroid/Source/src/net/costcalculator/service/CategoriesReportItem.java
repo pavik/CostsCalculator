@@ -8,20 +8,23 @@
 
 package net.costcalculator.service;
 
-import java.util.Date;
-
 /**
  * Class contains attributes of one item of statistic report
  * 
  * @author Aliaksei Plashchanski
  * 
  */
-public class StatisticReportItem
+public class CategoriesReportItem extends ReportItem
 {
-    public Date dateFrom;
-    public Date dateTo;
-    public String guid;
-    public int count;
-    public double sum;
-    public String currency;
+    public void setGuid(String guid)
+    {
+        this.guid = guid;
+    }
+
+    public String getGuid()
+    {
+        return guid;
+    }
+
+    private String guid;
 }

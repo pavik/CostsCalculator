@@ -614,7 +614,7 @@ public class CostItemsService
         return cirCountCache;
     }
 
-    public ArrayList<Date> getDistinctExpensesDates()
+    public ArrayList<Date> getDistinctExpensesDates(boolean bytag)
     {
         LOG.T("CostItemsService::getExpensesDates");
 
@@ -625,7 +625,9 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteDbQueries.GET_DISTINCT_EXPENSES_DATES, null);
+            ds = db.rawQuery(
+                    bytag ? SQLiteDbQueries.GET_DISTINCT_EXPENSES_TAG_DATES
+                            : SQLiteDbQueries.GET_DISTINCT_EXPENSES_DATES, null);
 
             if (ds.moveToFirst())
             {
@@ -665,8 +667,8 @@ public class CostItemsService
                 && l.getDate() == r.getDate();
     }
 
-    public ArrayList<StatisticReportItem> getStatisticReport(Date from, Date to)
-            throws Exception
+    public ArrayList<CategoriesReportItem> getStatisticReportByCategories(
+            Date from, Date to) throws Exception
     {
         LOG.T("CostItemsService::getStatisticReport");
         if (from == null || to == null)
@@ -675,7 +677,7 @@ public class CostItemsService
 
         SQLiteDatabase db = null;
         Cursor ds = null;
-        ArrayList<StatisticReportItem> result = new ArrayList<StatisticReportItem>();
+        ArrayList<CategoriesReportItem> result = new ArrayList<CategoriesReportItem>();
 
         try
         {
@@ -702,13 +704,71 @@ public class CostItemsService
 
                 do
                 {
-                    StatisticReportItem item = new StatisticReportItem();
-                    item.dateFrom = from;
-                    item.dateTo = to;
-                    item.guid = ds.getString(colGuid);
-                    item.currency = ds.getString(colCurrency);
-                    item.sum = ds.getDouble(colSum);
-                    item.count = ds.getInt(colCount);
+                    CategoriesReportItem item = new CategoriesReportItem();
+                    item.setDateFrom(from);
+                    item.setDateTo(to);
+                    item.setGuid(ds.getString(colGuid));
+                    item.setCurrency(ds.getString(colCurrency));
+                    item.setSum(ds.getDouble(colSum));
+                    item.setCount(ds.getInt(colCount));
+                    result.add(item);
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (ds != null)
+                ds.close();
+            if (db != null)
+                db.close();
+        }
+
+        return result;
+    }
+
+    public ArrayList<TagsReportItem> getStatisticReportByTags(Date from, Date to)
+            throws Exception
+    {
+        LOG.T("CostItemsService::getStatisticReportByTag");
+        if (from == null || to == null)
+            throw new Exception("invalid argument: from = "
+                    + from.toLocaleString() + ", to = " + to.toLocaleString());
+
+        SQLiteDatabase db = null;
+        Cursor ds = null;
+        ArrayList<TagsReportItem> result = new ArrayList<TagsReportItem>();
+
+        try
+        {
+            Date dFrom = new Date(from.getYear(), from.getMonth(),
+                    from.getDate(), 0, 0, 0);
+            Date dTo = new Date(to.getYear(), to.getMonth(), to.getDate(), 23,
+                    59, 59);
+
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(
+                    SQLiteDbQueries.GET_EXPENSES_STAT_FOR_PERIOD_BY_TAG,
+                    new String[] { Long.toString(dFrom.getTime()),
+                            Long.toString(dTo.getTime()) });
+
+            if (ds.moveToFirst())
+            {
+                int colTag = ds.getColumnIndex(SQLiteDbQueries.COL_CIR_TAG);
+                int colCurrency = ds
+                        .getColumnIndex(SQLiteDbQueries.COL_CIR_CURRENCY);
+                int colCount = ds
+                        .getColumnIndex(SQLiteDbQueries.EXPR_CIR_COUNT);
+                int colSum = ds.getColumnIndex(SQLiteDbQueries.EXPR_CIR_SUM);
+
+                do
+                {
+                    TagsReportItem item = new TagsReportItem();
+                    item.setDateFrom(from);
+                    item.setDateTo(to);
+                    item.setTitle(ds.getString(colTag));
+                    item.setCurrency(ds.getString(colCurrency));
+                    item.setSum(ds.getDouble(colSum));
+                    item.setCount(ds.getInt(colCount));
                     result.add(item);
                 } while (ds.moveToNext());
             }
