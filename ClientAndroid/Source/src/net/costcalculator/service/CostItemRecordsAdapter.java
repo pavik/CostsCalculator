@@ -57,7 +57,8 @@ public class CostItemRecordsAdapter extends BaseAdapter
 
     public void release()
     {
-        cis_.release();
+        if (cis_ != null)
+            cis_.release();
         cis_ = null;
         ci_ = null;
         ids_ = null;
