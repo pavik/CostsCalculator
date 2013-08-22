@@ -83,6 +83,10 @@ public class SQLiteDbQueries
     // queries of 'cost_item_records'
     public static final String COST_ITEM_RECORDS_IDS               = "SELECT cir_id FROM cost_item_records WHERE cir_ci_guid = ? ORDER BY cir_datetime DESC";
 
+    public static final String COST_ITEM_RECORDS_IDS_BY_DATE       = "SELECT cir_id FROM cost_item_records WHERE cir_ci_guid = ? AND cir_datetime >= ? AND cir_datetime <= ? ORDER BY cir_datetime DESC";
+
+    public static final String COST_ITEM_RECORDS_IDS_BY_TAG        = "SELECT cir_id FROM cost_item_records WHERE cir_tag = ? AND cir_datetime >= ? AND cir_datetime <= ? ORDER BY cir_datetime DESC";
+
     public static final String GET_ALL_COST_ITEM_RECORDS           = "SELECT * FROM cost_item_records";
 
     public static final String GET_COST_ITEM_RECORD_BY_ID          = "SELECT * FROM cost_item_records WHERE cir_id = ?";

@@ -78,11 +78,11 @@ public class CostItemsService
         return result;
     }
 
-    public CostItem getCostItemByGUID(String guid) throws Exception
+    public CostItem getCostItemByGUID(String guid)
     {
         LOG.T("CostItemsService::getCostItemByGUID");
         if (guid.length() == 0)
-            throw new Exception("invalid argument: guid");
+            throw new IllegalArgumentException("invalid argument: guid");
 
         CostItem result = null;
         SQLiteDatabase db = null;
@@ -361,11 +361,14 @@ public class CostItemsService
         return cir;
     }
 
-    public ArrayList<Long> getCostItemRecordIds(CostItem ci) throws Exception
+    public ArrayList<Long> getCostItemRecordIds(CostItem ci, Date from, Date to)
     {
         LOG.T("CostItemsService::getCostItemRecordIds");
+        if (ci == null)
+            throw new NullPointerException("invalid argument ci");
         if (!ci.isValid())
-            throw new Exception("invalid argument: ci = " + ci.toString());
+            throw new IllegalArgumentException("invalid argument: ci = "
+                    + ci.toString());
 
         ArrayList<Long> ids = new ArrayList<Long>();
         Cursor ds = null;
@@ -373,8 +376,21 @@ public class CostItemsService
         try
         {
             db = dbprovider_.getReadableDatabase();
-            ds = db.rawQuery(SQLiteDbQueries.COST_ITEM_RECORDS_IDS,
-                    new String[] { ci.getGuid() });
+            if (from != null && to != null)
+            {
+                Date dFrom = new Date(from.getYear(), from.getMonth(),
+                        from.getDate(), 0, 0, 0);
+                Date dTo = new Date(to.getYear(), to.getMonth(), to.getDate(),
+                        23, 59, 59);
+                ds = db.rawQuery(
+                        SQLiteDbQueries.COST_ITEM_RECORDS_IDS_BY_DATE,
+                        new String[] { ci.getGuid(),
+                                Long.toString(dFrom.getTime()),
+                                Long.toString(dTo.getTime()) });
+            }
+            else
+                ds = db.rawQuery(SQLiteDbQueries.COST_ITEM_RECORDS_IDS,
+                        new String[] { ci.getGuid() });
 
             if (ds.moveToFirst())
             {
@@ -397,6 +413,49 @@ public class CostItemsService
         return ids;
     }
 
+    public ArrayList<Long> getCostItemRecordIdsByTag(String tag, Date from, Date to)
+    {
+        LOG.T("CostItemsService::getCostItemRecordIdsByTag");
+        if (tag == null || from == null || to == null)
+            throw new NullPointerException("invalid argument");
+
+        ArrayList<Long> ids = new ArrayList<Long>();
+        Cursor ds = null;
+        SQLiteDatabase db = null;
+        try
+        {
+            Date dFrom = new Date(from.getYear(), from.getMonth(),
+                    from.getDate(), 0, 0, 0);
+            Date dTo = new Date(to.getYear(), to.getMonth(), to.getDate(),
+                    23, 59, 59);
+            db = dbprovider_.getReadableDatabase();
+            ds = db.rawQuery(
+                    SQLiteDbQueries.COST_ITEM_RECORDS_IDS_BY_TAG,
+                    new String[] { tag,
+                            Long.toString(dFrom.getTime()),
+                            Long.toString(dTo.getTime()) });
+
+            if (ds.moveToFirst())
+            {
+                ids = new ArrayList<Long>(ds.getCount());
+                final int col = ds.getColumnIndex(SQLiteDbQueries.COL_CIR_ID);
+                do
+                {
+                    ids.add(ds.getLong(col));
+                } while (ds.moveToNext());
+            }
+        }
+        finally
+        {
+            if (db != null)
+                db.close();
+            if (ds != null)
+                ds.close();
+        }
+
+        return ids;
+    }
+    
     public CostItemRecord createCostItemRecord(String groupGuid,
             Date creationTime, double sum)
     {
@@ -506,7 +565,7 @@ public class CostItemsService
             throw new Exception("invalid argument: ci");
 
         ArrayList<CostItemRecord> cirList = new ArrayList<CostItemRecord>();
-        ArrayList<Long> cirIds = getCostItemRecordIds(ci);
+        ArrayList<Long> cirIds = getCostItemRecordIds(ci, null, null);
         for (int i = 0; i < cirIds.size(); ++i)
             cirList.add(getCostItemRecord(cirIds.get(i)));
 

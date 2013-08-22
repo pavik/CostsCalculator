@@ -8,6 +8,8 @@
 
 package net.costcalculator.service;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +45,7 @@ import android.widget.TextView;
  * @author Aliaksei Plashchanski
  * 
  */
-public class CostItemRecordsAdapter extends BaseAdapter
+public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
 {
     public CostItemRecordsAdapter(Activity context, long costItemId)
             throws Exception
@@ -51,8 +53,31 @@ public class CostItemRecordsAdapter extends BaseAdapter
         context_ = context;
         cis_ = new CostItemsService(context_);
         ci_ = cis_.getCostItemById(costItemId);
-        ids_ = cis_.getCostItemRecordIds(ci_);
+        ids_ = cis_.getCostItemRecordIds(ci_, null, null);
         records_ = new HashMap<Long, CostItemRecord>();
+        higlightback_ = true;
+    }
+
+    public CostItemRecordsAdapter(Activity context, String guidtag, Date from,
+            Date to, boolean catortag)
+    {
+        context_ = context;
+        cis_ = new CostItemsService(context_);
+        if (catortag)
+        {
+            ci_ = cis_.getCostItemByGUID(guidtag);
+            ids_ = cis_.getCostItemRecordIds(ci_, from, to);
+        }
+        else
+            ids_ = cis_.getCostItemRecordIdsByTag(guidtag, from, to);
+        records_ = new HashMap<Long, CostItemRecord>();
+        higlightback_ = false;
+    }
+
+    @Override
+    public void close() throws IOException
+    {
+        release();
     }
 
     public void release()
@@ -220,6 +245,8 @@ public class CostItemRecordsAdapter extends BaseAdapter
             LayoutInflater inflater = context_.getLayoutInflater();
             item = inflater.inflate(R.layout.view_price_list_item, parent,
                     false);
+            if (!higlightback_)
+                item.setBackgroundResource(R.drawable.background_expense_item);
             ViewHolder vh = new ViewHolder();
             vh.tvPrice = (TextView) item.findViewById(R.id.tv_price_val);
             vh.tvDate = (TextView) item.findViewById(R.id.tv_date_val);
@@ -282,4 +309,5 @@ public class CostItemRecordsAdapter extends BaseAdapter
     private CostItemsService              cis_;
     private CostItem                      ci_;
     private Activity                      context_;
+    private boolean                       higlightback_;
 }

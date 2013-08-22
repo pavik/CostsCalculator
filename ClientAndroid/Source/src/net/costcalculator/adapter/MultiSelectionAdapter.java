@@ -95,6 +95,8 @@ public class MultiSelectionAdapter extends BaseAdapter
                         check.setChecked(true);
                         selectedItems_.add(position);
                     }
+                    if (selall_ != null)
+                        selall_.setChecked(selectedItems_.size() == items_.length);
                 }
             }
         });
@@ -102,9 +104,15 @@ public class MultiSelectionAdapter extends BaseAdapter
         return item;
     }
 
+    public void setSelAllButton(CheckBox selall)
+    {
+        selall_ = selall;
+    }
+
     private Activity           a_;
     private String[]           items_;
     private ArrayList<Integer> selectedItems_;
     private boolean            singlechoice_;
     private HashSet<CheckBox>  checkboxes_;
+    private CheckBox           selall_;
 }
