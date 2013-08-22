@@ -132,4 +132,6 @@
     <string name="label_select_category">Wybierz kategorii</string>
     <string name="label_select_statistic">Wybierz statystykę</string>
     <string name="label_select_all">Zaznacz wszystko</string>
-</resources>
+    <string name="title_activity_statistic_details">Szczegóły wydatków</string>
+    <string name="action_settings">Ustawienia</string>
+    </resources>

@@ -13,8 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,22 +81,23 @@ public class MultiSelectionDialog
                 items_, selectedItems_, singlechoice_);
         list.setAdapter(adapter);
 
-        CheckBox selall = (CheckBox) layout.findViewById(R.id.btn_checkbox);
+        final CheckBox selall = (CheckBox) layout
+                .findViewById(R.id.btn_checkbox);
         if (singlechoice_)
             selall.setVisibility(View.GONE);
         else
         {
             if (selectedItems_.size() == items_.length)
                 selall.setChecked(true);
-            selall.setOnCheckedChangeListener(new OnCheckedChangeListener()
+            selall.setOnClickListener(new OnClickListener()
             {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                        boolean isChecked)
+                public void onClick(View arg0)
                 {
-                    adapter.setAll(isChecked);
+                    adapter.setAll(selall.isChecked());
                 }
             });
+            adapter.setSelAllButton(selall);
         }
         d.show();
     }

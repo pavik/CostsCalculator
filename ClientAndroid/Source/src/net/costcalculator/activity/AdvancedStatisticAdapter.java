@@ -18,11 +18,16 @@ import net.costcalculator.service.TagsReportItem;
 import net.costcalculator.util.DateUtil;
 import net.costcalculator.util.ErrorHandler;
 import android.content.Context;
+import android.content.Intent;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -121,10 +126,11 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         public TextView     tvDate;
         public View         vDivider;
         public LinearLayout ll;
+        public ImageView    imgLink;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
         View item = null;
 
@@ -135,6 +141,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
             vh.tvPrice = (TextView) item.findViewById(R.id.tv_price_val);
             vh.tvDate = (TextView) item.findViewById(R.id.tv_date_val);
             vh.vDivider = (View) item.findViewById(R.id.v_divider);
+            vh.imgLink = (ImageView) item.findViewById(R.id.img_link);
             item.setTag(vh);
         }
         else
@@ -143,9 +150,45 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         }
 
         ViewHolder vh = (ViewHolder) item.getTag();
-        ArrayList<ReportItem> report = getReportItem(position);
-        vh.tvDate.setText(getReportPeriod(position));
+        final ArrayList<ReportItem> report = getReportItem(position);
+        final String periodstr = getReportPeriod(position);
+        SpannableString periodss = new SpannableString(periodstr);
+        periodss.setSpan(new UnderlineSpan(), 0, periodstr.length(), 0);
+        vh.tvDate.setText(periodss);
         vh.tvPrice.setText(getReportPrice(report));
+        OnClickListener listener = new OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                Intent intent = new Intent(context_,
+                        StatisticDetailsActivity.class);
+                Pair<Date, Date> period = period_.get(position);
+                intent.putExtra(StatisticDetailsActivity.EXTRA_DATE_FROM,
+                        period.first.getTime());
+                intent.putExtra(StatisticDetailsActivity.EXTRA_DATE_TO,
+                        period.second.getTime());
+
+                String[] guidtag = new String[report.size()];
+                String[] names = new String[report.size()];
+                for (int i = 0; i < report.size(); ++i)
+                {
+                    names[i] = report.get(i).getTitle();
+                    if (report.get(i) instanceof CategoriesReportItem)
+                        guidtag[i] = ((CategoriesReportItem) report.get(i))
+                                .getGuid();
+                    else
+                        guidtag[i] = report.get(i).getTitle();
+                }
+                intent.putExtra(StatisticDetailsActivity.EXTRA_GUIDTAG, guidtag);
+                intent.putExtra(StatisticDetailsActivity.EXTRA_CAT_OR_TAG,
+                        reportType_ == REPORT_CAT);
+                intent.putExtra(StatisticDetailsActivity.EXTRA_CATNAME, names);
+                context_.startActivity(intent);
+            }
+        };
+        vh.tvDate.setOnClickListener(listener);
+        vh.imgLink.setOnClickListener(listener);
 
         LinearLayout ll = new LinearLayout(context_);
         ll.setOrientation(LinearLayout.VERTICAL);

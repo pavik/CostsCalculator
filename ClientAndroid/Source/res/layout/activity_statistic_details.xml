@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/col_activity_background"
-    tools:context=".StatisticReportActivity" >
+    tools:context=".StatisticDetailsActivity" >
 
     <Button
         android:id="@+id/btn_select_items"
@@ -13,15 +13,26 @@
         android:background="@drawable/green_gradient"
         android:text="@string/label_select_category" />
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_select_items"
+        android:background="@drawable/blue_gradient_list_header"
+        android:gravity="center"
+        android:text="@string/tv_placeholder"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/col_list_view_header_text"
+        android:textStyle="bold" />
+
     <ListView
-        android:id="@+id/lv_stat_report"
+        android:id="@+id/lv_report"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/btn_select_items"
+        android:layout_below="@id/tv_title"
         android:divider="@color/col_activity_background"
         android:dividerHeight="3dp"
         android:listSelector="@android:color/transparent" >
-
     </ListView>
 
 </RelativeLayout>

@@ -7,7 +7,6 @@
     tools:context=".ExpenseItemsActivity" >
 
     <GridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridExpenseItems"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
@@ -27,8 +26,6 @@
         android:background="#FF555555" />
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginBottom="1dp"
@@ -47,7 +44,7 @@
             android:id="@+id/backup_expenses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/get_shared_expense_item"
+            android:contentDescription="@string/tv_placeholder"
             android:gravity="center_vertical"
             android:src="@drawable/ic_download" />
 
