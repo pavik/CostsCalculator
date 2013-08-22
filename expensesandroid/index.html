@@ -2,9 +2,9 @@
 <html lang="ru">
   <head>
     <meta charset="utf-8">
-    <title>Расходы - приложение для Android</title>
+    <title>{{ apptitle }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Страница приложения Расходы для Android">
+    <meta name="description" content="{{ headcontent }}">
     <meta name="author" content="Aliaksei Plashchanski">
 
     <!-- Le styles -->
@@ -27,30 +27,27 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="main">Расходы для Android</a>
+          <a class="brand" href="main?lang={{ lang }}">{{ headbrand }}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li {{ class_active_main }}><a href="main">Главная</a></li>
-              <li {{ class_active_about }}><a href="about">Новости</a></li>
-              <li {{ class_active_download }}><a href="download">Скачать</a></li>
-			  <li {{ class_active_contact }}><a href="contact">Контакты</a></li>
-			  <li {{ class_active_feedback }}><a href="feedback">Отзывы</a></li>
+              <li {{ class_active_main }}><a href="main?lang={{ lang }}">{{ nav_main }}</a></li>
+              <li {{ class_active_about }}><a href="about?lang={{ lang }}">{{ nav_about }}</a></li>
+              <li {{ class_active_download }}><a href="download?lang={{ lang }}">{{ nav_download }}</a></li>
+			  <li {{ class_active_contact }}><a href="contact?lang={{ lang }}">{{ nav_contact }}</a></li>
+			  <li {{ class_active_feedback }}><a href="feedback?lang={{ lang }}">{{ nav_feedback }}</a></li>
+			  <li {{ class_active_donate }}><a href="donate?lang={{ lang }}">{{ nav_donate }}</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
+	  <p align="right"><a href="main?lang=en">English</a> | <a href="main">Русский</a></p>
+	  <p align="right"><a href="donate?lang={{ lang }}"><img alt="donate" src="img/btn_donate.png"/></a></p>
     </div>
-
+	
     <div class="container">
-	{{ lang_ref }}
     <h3>{{ page_header }}</h3>
-	{{ page_content }}
-	{% for msg in feedbacklist %}
-	  <blockquote id="{{msg.key()}}">
-        <p><b>{{ msg.text }}</b></p>
-        <small>{{ msg.postdate }}, {{ msg.user }}</small>
-      </blockquote>
-    {% endfor %}
+	<p>{{ page_content }}</p>
+	<p>{{ page_content2 }}</p>
     </div> <!-- /container -->
 
 	<div class="navbar navbar-fixed-bottom">

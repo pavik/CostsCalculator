@@ -11,10 +11,7 @@ libraries:
 handlers:
 - url: /css
   static_dir: css
-  
-- url: /en/css
-  static_dir: css
-  
+   
 - url: /img
   static_dir: img
 
@@ -23,12 +20,6 @@ handlers:
   
 - url: /js
   static_dir: js
-
-- url: /en/js
-  static_dir: js
-  
-- url: /en/.*
-  script: main_en.app
-  
+ 
 - url: /.*
   script: main.app

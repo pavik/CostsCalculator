@@ -8,6 +8,9 @@ from google.appengine.ext import db
 jinja_environment = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+index_page = 'index_en.html'
+donation_link = u'<form class="form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="E8XCQADY5X94Q">%s<input type="image" src="https://www.paypalobjects.com/en_US/PL/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form>'
+
 class MainPage(webapp2.RequestHandler):
   def get(self):
     page_content = u'<p>Application manages your daily expenses in different categories and provides daily and monthly expenses reports in these categories.</p>'
@@ -36,7 +39,7 @@ class MainPage(webapp2.RequestHandler):
       'page_content': page_content,
       'lang_ref': u'<p><a href="main">English</a> | <a href="/../main">Русский</a></p>'
     }
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 class AboutPage(webapp2.RequestHandler):
@@ -70,7 +73,7 @@ class AboutPage(webapp2.RequestHandler):
       'page_header': u'What is new',
       'page_content': page_content
     }
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 class DownloadPage(webapp2.RequestHandler):
@@ -80,14 +83,14 @@ class DownloadPage(webapp2.RequestHandler):
       'page_header': u'Latest version of the application is avalaible in Google Play',
       'page_content': u'<p><a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity">Go to Google Play</a></p><p><a href="https://www.dropbox.com/s/ssu6fq57ndhhe62/Expenses.apk">Download application from Dropbox</a></p>'
     }
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 class ContactPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
       'class_active_contact' : 'class="active"',
-      'page_header': u'Here you can send message to application developers team',
+      'page_header': u'Here you can send message to the application developers team/post problem',
       'page_content': u'<form action="/sendemail" method="POST">\
         <label>Reply email</label>\
         <input type="text" name="reply_email" placeholder="Type email here">\
@@ -96,7 +99,7 @@ class ContactPage(webapp2.RequestHandler):
         <br><button type="submit" class="btn btn-primary">Send</button>\
         </form>'
     }
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 class SendEmail(webapp2.RequestHandler):
@@ -106,34 +109,67 @@ class SendEmail(webapp2.RequestHandler):
     page_header = u'Message has sent'
     page_content = ''
 
-    if not mail.is_email_valid(email):
-      page_header = u'Invalid reply email'
-    elif len(message) == 0:
-      page_header = u'Enter text of the message please'
+    if isdonation != 'true':
+      if not mail.is_email_valid(email):
+        page_header = u'Invalid reply email'
+      elif len(message) == 0:
+        page_header = u'Enter text of the message please'
+      else:
+        subject = "Expenses for Android feedback"
+        body = "Message from %s \n %s" %(email , message)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
     else:
-      subject = "Expenses for Android feedback"
-      body = "Message from %s \n %s" %(email , message)
-      mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
+        subject = "Donation - Expenses for Android"
+        body = "Message from %s \n %s" %(email , message)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
 
     template_values = {
       'page_header': page_header,
       'page_content': page_content
     }
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 class FeedbackPage(webapp2.RequestHandler):
   def get(self):
     template_values = {
       'class_active_feedback' : 'class="active"',
-      'page_header': u'Feedback of users you can see in google play',
+      'page_header': u'Feedback of users you can see and post in google play',
       'page_content': u'<a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>'
     }
 
-    template = jinja_environment.get_template('index_en.html')
+    template = jinja_environment.get_template(index_page)
+    self.response.out.write(template.render(template_values))
+
+class DonatePage(webapp2.RequestHandler):
+  def get(self):
+    template_values = {
+      'class_active_donate' : 'class="active"',
+      'page_header': u'Voluntary donations - it is your contribution in the future of Expenses',
+      'page_content': donation_link % u'<label>When you click the PayPal icon, you will be taken to the PayPal website where you will be able to donate any amount: </label>'
+    }
+
+    template = jinja_environment.get_template(index_page)
+    self.response.out.write(template.render(template_values))
+
+class DonateFinishPage(webapp2.RequestHandler):
+  def get(self):
+    template_values = {
+      'class_active_donate' : 'class="active"',
+      'page_header': u'Thank you for your contribution!',
+      'page_content': u'<form action="/sendemail?donation=true" method="POST">\
+        <label>Your name</label>\
+        <input type="text" name="reply_email" placeholder="Type name/email">\
+        <label>How we can improve application Expenses</label>\
+        <textarea rows="7" name="message"></textarea>\
+        <br><button type="submit" class="btn btn-primary">Send</button>\
+        </form>'
+    }
+    template = jinja_environment.get_template(index_page)
     self.response.out.write(template.render(template_values))
 
 app = webapp2.WSGIApplication([('/en/', MainPage), ('/en/main', MainPage),
                                ('/en/about', AboutPage), ('/en/download', DownloadPage),
                                ('/en/contact', ContactPage), ('/en/sendemail', SendEmail),
-                               ('/en/feedback', FeedbackPage)], debug=True)
+                               ('/en/feedback', FeedbackPage), ('/en/donate', DonatePage),
+                               ('/en/donatefinish', DonateFinishPage)], debug=True)
