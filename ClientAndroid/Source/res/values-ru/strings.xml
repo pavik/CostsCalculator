@@ -132,4 +132,6 @@
     <string name="label_select_category">Выберите категории</string>
     <string name="label_select_statistic">Выберите статистику</string>
     <string name="label_select_all">Выбрать все</string>
-</resources>
+    <string name="title_activity_statistic_details">Детализация расходов</string>
+    <string name="action_settings">Настройки</string>
+    </resources>

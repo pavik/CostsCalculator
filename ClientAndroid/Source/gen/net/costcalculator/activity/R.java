@@ -238,7 +238,6 @@ public final class R {
         public static final int edit=0x7f050043;
         public static final int et_expense_item_name_hint=0x7f050006;
         public static final int expense_statistic=0x7f050004;
-        public static final int hello_world=0x7f050067;
         public static final int history_label=0x7f05001e;
         public static final int hour=0x7f05005b;
         public static final int hour_disable=0x7f05005c;
