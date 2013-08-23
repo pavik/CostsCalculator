@@ -39,9 +39,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tv_date_val"
-        android:layout_marginLeft="3dp"
         android:layout_toRightOf="@id/tv_date_val"
+        android:background="@drawable/background_pressed_yellow"
         android:contentDescription="@string/app_name"
+        android:padding="2dp"
         android:src="@drawable/ic_link" />
 
 </RelativeLayout>
