@@ -42,6 +42,17 @@ feedback_content = 'Your feedback is important to us. We continuously read your 
 donate_header = 'Donate to Expenses'
 donate_content = 'We urgently need your help to fund the continued development of Expenses. On donating, you\'ll be granted access, which allows you to send us message and propose what features we work on next.'
 donate_content2 = common.donation_link % u'<label>Click here to donate: </label>'
+donate_finish_header = u'Thank you for your contribution!'
+donate_finish_name_label = u'Your name'
+donate_finish_name_hint = u'Enter name/email'
+donate_finish_msg_label = u'How we can improve application Expenses'
+donate_finish_btn_send = u'Send'
+
+mail_sent_ok = u'Message has been sent'
+mail_invalid_address = u'Enter valid reply email'
+mail_invalid_content = u'Enter text of the message'
+mail_subject_contact = u'Expenses for Android (contact)'
+mail_subject_donate = u'Expenses for Android (donation)'
 
 def main():
     pass

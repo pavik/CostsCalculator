@@ -129,13 +129,13 @@ class DownloadPage(webapp2.RequestHandler):
 class ContactPage(webapp2.RequestHandler):
   def get(self):
     loadlang(self.request)
-    form = u'<form action="/sendemail" method="POST">\
+    form = u'<form action="/sendemail?lang=%s" method="POST">\
         <label>%s</label>\
         <input type="text" name="reply_email" placeholder="%s">\
         <label>%s</label>\
         <textarea rows="7" name="message" placeholder="%s"></textarea>\
         <br><button type="submit" class="btn btn-primary">%s</button>\
-        </form>' % (S.contact_reply_label, S.contact_reply_hint, S.contact_message_label, S.contact_message_hint, S.contact_button_send)
+        </form>' % (S.lang, S.contact_reply_label, S.contact_reply_hint, S.contact_message_label, S.contact_message_hint, S.contact_button_send)
     template_values = {
       'class_active_contact' : 'class="active"',
       'page_header': S.contact_header,
@@ -152,22 +152,20 @@ class SendEmail(webapp2.RequestHandler):
     message = self.request.get('message')
     isdonation = self.request.get('donation')
 
-    page_header = u'Сообщение успешно отправлено'
+    page_header = S.mail_sent_ok
     page_content = ''
 
     if isdonation != 'true':
       if not mail.is_email_valid(email):
-        page_header = u'Неверный адрес для ответа'
+        page_header = S.mail_invalid_address
       elif len(message) == 0:
-        page_header = u'Напишите пожалуйста текст сообщения'
+        page_header = S.mail_invalid_content
       else:
-        subject = "Expenses for Android feedback"
         body = "Message from %s \n %s" %(email , message)
-        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', S.mail_subject_contact, body)
     else:
-        subject = "Donation - Expenses for Android"
         body = "Message from %s \n %s" %(email , message)
-        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', S.mail_subject_donate, body)
 
     template_values = {
       'page_header': page_header,
@@ -207,14 +205,14 @@ class DonateFinishPage(webapp2.RequestHandler):
     loadlang(self.request)
     template_values = {
       'class_active_donate' : 'class="active"',
-      'page_header': u'Спасибо за Ваш вклад в развитие приложения!',
-      'page_content': u'<form action="/sendemail?donation=true" method="POST">\
-        <label>Ваше имя</label>\
-        <input type="text" name="reply_email" placeholder="Напишите имя/email">\
-        <label>Как по-вашему можно улучшить приложение Расходы</label>\
+      'page_header': S.donate_finish_header,
+      'page_content': u'<form action="/sendemail?lang=%s&donation=true" method="POST">\
+        <label>%s</label>\
+        <input type="text" name="reply_email" placeholder="%s">\
+        <label>%s</label>\
         <textarea rows="7" name="message"></textarea>\
-        <br><button type="submit" class="btn btn-primary">Отправить</button>\
-        </form>'
+        <br><button type="submit" class="btn btn-primary">%s</button>\
+        </form>' % (S.lang, S.donate_finish_name_label, S.donate_finish_name_hint, S.donate_finish_msg_label, S.donate_finish_btn_send)
     }
     template = jinja_environment.get_template(common.index_page)
     self.response.out.write(template.render(loadindexpagevars(template_values)))

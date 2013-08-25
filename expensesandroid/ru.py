@@ -44,6 +44,17 @@ feedback_content = u'Ваши отзыва очень важны для нас. 
 donate_header = u'Пожертвования для развития приложения Расходы'
 donate_content = u'Нам необходима Ваша финансовая помощь для дальнейшего развития приложения Расходы. Сделав пожертвование, вы получите возможность отправить нам сообщение с Вашими предложениями о дальнейшем развитии приложения Расходы.'
 donate_content2 = common.donation_link % u'<label>Пожертвование можно сделать по ссылке: </label>'
+donate_finish_header = u'Спасибо за Ваш вклад в развитие приложения!'
+donate_finish_name_label = u'Ваше имя'
+donate_finish_name_hint = u'Напишите имя/email'
+donate_finish_msg_label = u'Как по-вашему можно улучшить приложение Расходы'
+donate_finish_btn_send = u'Отправить'
+
+mail_sent_ok = u'Сообщение успешно отправлено'
+mail_invalid_address = u'Неверный адрес для ответа'
+mail_invalid_content = u'Напишите пожалуйста текст сообщения'
+mail_subject_contact = u'Расходы для Android (контакт)'
+mail_subject_donate = u'Расходы для Android (пожертвование)'
 
 def main():
     pass
