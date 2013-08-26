@@ -2,14 +2,45 @@
 import os
 import webapp2
 import datetime
+import importlib
+import common
 from google.appengine.api import mail
 from google.appengine.ext import db
 
 jinja_environment = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+S = importlib.import_module('ru')
+
+def loadlang(request):
+  global S
+  if request.get('lang') == 'en':
+    S = importlib.import_module('en')
+  else:
+    S = importlib.import_module('ru')
+
+def loadindexpagevars(dictvars):
+  global S
+  index_page_vars = {
+  'lang' : S.lang,
+  'apptitle' : S.apptitle,
+  'headcontent' : S.headcontent,
+  'nav_main' : S.nav_main,
+  'nav_about' : S.nav_about,
+  'nav_download' : S.nav_download,
+  'nav_contact' : S.nav_contact,
+  'nav_feedback' : S.nav_feedback,
+  'nav_donate' : S.nav_donate,
+  'headbrand' : S.headbrand
+  }
+
+  for k, v in dictvars.iteritems():
+      index_page_vars[k] = v
+  return index_page_vars
+
 class MainPage(webapp2.RequestHandler):
   def get(self):
+    loadlang(self.request)
     page_content = u'<p>Приложение позволяет вести учет ежедневных семейных расходов по различным категориям, а также просматривать ежедневную и ежемесячную статистику расходов по этим категориям.</p>'
     page_content += u'<p><b>Доступные функции</b></p>'
     page_content += u'<ul>'
@@ -34,16 +65,16 @@ class MainPage(webapp2.RequestHandler):
       'class_active_main' : 'class="active"',
       'page_header': u'Расходы для Android - приложение для ведения семейных расходов',
       'page_content': page_content,
-      'lang_ref': u'<p><a href="en/main">English</a> | <a href="main">Русский</a></p>'
     }
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 class AboutPage(webapp2.RequestHandler):
   def get(self):
+    loadlang(self.request)
     page_content = u'<p></p>'
     page_content += u'<blockquote><p>'
-    page_content += u'С 12 августа 2013 года новости и актуальная информация о развитии проекта доступна в twitter <a href="https://twitter.com/expenses_" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @expenses_</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\'://platform.twitter.com/widgets.js\';fjs.parentNode.insertBefore(js,fjs);}}(document, \'script\', \'twitter-wjs\');</script>'
+    page_content += u'С 12 августа 2013 года новости и актуальная информация о развитии проекта доступна в twitter %s' %common.twitter_link
     page_content += u'</p></blockquote>'
     page_content += u'<blockquote><p>'
     page_content += u'Создание резервных копий данных в Dropbox аккаунте пользователя будет реализовано к середине апреля 2013 года в связи с работами по локализации приложения'
@@ -80,70 +111,116 @@ class AboutPage(webapp2.RequestHandler):
       'page_header': u'Актуальная информация о развитии проекта',
       'page_content': page_content
     }
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 class DownloadPage(webapp2.RequestHandler):
   def get(self):
+    loadlang(self.request)
     template_values = {
       'class_active_download' : 'class="active"',
-      'page_header': u'Последняя версия приложения доступна для загрузки в Google Play',
-      'page_content': u'<p><a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity">Перейти в Google Play</a></p><p><a href="https://www.dropbox.com/s/ssu6fq57ndhhe62/Expenses.apk">Загрузить приложение из Dropbox</a></p>'
+      'page_header': S.download_header,
+      'page_content': u'<a href="%s">%s</a>' % (common.googleplay_link, S.download_gotogoogleplay),
+      'page_content2': u'<a href="%s">%s</a>' % (common.dropbox_link, S.download_gotodropbox)
     }
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 class ContactPage(webapp2.RequestHandler):
   def get(self):
+    loadlang(self.request)
+    form = u'<form action="/sendemail" method="POST">\
+        <label>%s</label>\
+        <input type="text" name="reply_email" placeholder="%s">\
+        <label>%s</label>\
+        <textarea rows="7" name="message" placeholder="%s"></textarea>\
+        <br><button type="submit" class="btn btn-primary">%s</button>\
+        </form>' % (S.contact_reply_label, S.contact_reply_hint, S.contact_message_label, S.contact_message_hint, S.contact_button_send)
     template_values = {
       'class_active_contact' : 'class="active"',
-      'page_header': u'На этой странице можно отправить сообщение разработчикам',
-      'page_content': u'<form action="/sendemail" method="POST">\
-        <label>Адрес для ответа</label>\
-        <input type="text" name="reply_email" placeholder="Напишите email">\
-        <label>Текст сообщения</label>\
-        <textarea rows="7" name="message" placeholder="Напишите текст сообщения"></textarea>\
-        <br><button type="submit" class="btn btn-primary">Отправить</button>\
-        </form>'
+      'page_header': S.contact_header,
+      'page_content': S.contact_content,
+      'page_content2': form
     }
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 class SendEmail(webapp2.RequestHandler):
   def post(self):
+    loadlang(self.request)
     email = self.request.get('reply_email')
     message = self.request.get('message')
+    isdonation = self.request.get('donation')
+
     page_header = u'Сообщение успешно отправлено'
     page_content = ''
 
-    if not mail.is_email_valid(email):
-      page_header = u'Неверный адрес для ответа'
-    elif len(message) == 0:
-      page_header = u'Напишите пожалуйста текст сообщения'
+    if isdonation != 'true':
+      if not mail.is_email_valid(email):
+        page_header = u'Неверный адрес для ответа'
+      elif len(message) == 0:
+        page_header = u'Напишите пожалуйста текст сообщения'
+      else:
+        subject = "Expenses for Android feedback"
+        body = "Message from %s \n %s" %(email , message)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
     else:
-      subject = "Expenses for Android feedback"
-      body = "Message from %s \n %s" %(email , message)
-      mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
+        subject = "Donation - Expenses for Android"
+        body = "Message from %s \n %s" %(email , message)
+        mail.send_mail('aleksey.ploschanskiy@gmail.com', 'aleksey.ploschanskiy@gmail.com', subject, body)
 
     template_values = {
       'page_header': page_header,
       'page_content': page_content
     }
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 class FeedbackPage(webapp2.RequestHandler):
   def get(self):
+    loadlang(self.request)
     template_values = {
       'class_active_feedback' : 'class="active"',
-      'page_header': u'Отзывы пользователей находятся на странице приложения в google play',
-      'page_content': u'<a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>'
+      'page_header': S.feedback_header,
+      'page_content' : S.feedback_content,
+      'page_content2': common.market_link
     }
 
-    template = jinja_environment.get_template('index.html')
-    self.response.out.write(template.render(template_values))
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
+
+class DonatePage(webapp2.RequestHandler):
+  def get(self):
+    loadlang(self.request)
+    template_values = {
+      'class_active_donate' : 'class="active"',
+      'page_header': S.donate_header,
+      'page_content' : S.donate_content,
+      'page_content2': S.donate_content2
+    }
+
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
+
+class DonateFinishPage(webapp2.RequestHandler):
+  def get(self):
+    loadlang(self.request)
+    template_values = {
+      'class_active_donate' : 'class="active"',
+      'page_header': u'Спасибо за Ваш вклад в развитие приложения!',
+      'page_content': u'<form action="/sendemail?donation=true" method="POST">\
+        <label>Ваше имя</label>\
+        <input type="text" name="reply_email" placeholder="Напишите имя/email">\
+        <label>Как по-вашему можно улучшить приложение Расходы</label>\
+        <textarea rows="7" name="message"></textarea>\
+        <br><button type="submit" class="btn btn-primary">Отправить</button>\
+        </form>'
+    }
+    template = jinja_environment.get_template(common.index_page)
+    self.response.out.write(template.render(loadindexpagevars(template_values)))
 
 app = webapp2.WSGIApplication([('/', MainPage), ('/main', MainPage),
                                ('/about', AboutPage), ('/download', DownloadPage),
                                ('/contact', ContactPage), ('/sendemail', SendEmail),
-                               ('/feedback', FeedbackPage)], debug=True)
+                               ('/feedback', FeedbackPage), ('/donate', DonatePage),
+                               ('/donatefinish', DonateFinishPage)], debug=True)
