@@ -107,7 +107,7 @@
     <string name="s_move_item_to">Przenieść %s w:</string>
     <string name="warning_move_category">Przenieść wydatki z %1$s w %2$s ?</string>
     <string name="warning_move_item">Przenieść %1$s w %2$s ?</string>
-    <string name="stat_report">Statystyka</string>
+    <string name="stat_report">Statystyka importu</string>
     <string name="stat_ci_total">Razem kategorii</string>
     <string name="stat_ci_error">Błędów (kategorii)</string>
     <string name="stat_ci_ignored">Znaleziono kategorii</string>

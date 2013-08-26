@@ -107,7 +107,7 @@
     <string name="s_move_item_to">Переместить %s в:</string>
     <string name="warning_move_category">Переместить все расходы из %1$s в %2$s ?</string>
     <string name="warning_move_item">Переместить %1$s в %2$s ?</string>
-    <string name="stat_report">Статистика</string>
+    <string name="stat_report">Статистика импорта</string>
     <string name="stat_ci_total">Всего категорий</string>
     <string name="stat_ci_error">Ошибок (в категориях)</string>
     <string name="stat_ci_ignored">Найдено категорий</string>
