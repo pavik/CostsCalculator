@@ -24,8 +24,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/background_pressed_yellow"
         android:contentDescription="@string/app_name"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingRight="1dp"
         android:src="@drawable/ic_arrow_left" />
 
     <ImageView
@@ -37,8 +36,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/background_pressed_yellow"
         android:contentDescription="@string/app_name"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="1dp"
         android:src="@drawable/ic_arrow_right" />
 
     <FrameLayout
