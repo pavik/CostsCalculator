@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:gravity="center_vertical" >
 
     <TextView
         android:id="@+id/tv_header"
@@ -10,7 +11,7 @@
         android:background="@drawable/blue_gradient_list_header"
         android:gravity="center"
         android:text="@string/tv_placeholder"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/col_list_view_header_text"
         android:textStyle="bold" />
 
@@ -19,12 +20,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@id/tv_header"
+        android:layout_alignBottom="@id/tv_header"
         android:adjustViewBounds="true"
         android:background="@drawable/background_pressed_yellow"
         android:contentDescription="@string/app_name"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingRight="1dp"
         android:src="@drawable/ic_arrow_left" />
 
     <ImageView
@@ -32,12 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/tv_header"
+        android:layout_alignBottom="@id/tv_header"
         android:adjustViewBounds="true"
         android:background="@drawable/background_pressed_yellow"
         android:contentDescription="@string/app_name"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="1dp"
         android:src="@drawable/ic_arrow_right" />
 
     <FrameLayout

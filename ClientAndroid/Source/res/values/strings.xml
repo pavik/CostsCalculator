@@ -104,7 +104,7 @@
     <string name="s_move_item_to">Move %s to:</string>
     <string name="warning_move_category">Move all expenses from %1$s to %2$s ?</string>
     <string name="warning_move_item">Move %1$s to %2$s ?</string>
-    <string name="stat_report">Statistics</string>
+    <string name="stat_report">Statistics of import</string>
     <string name="stat_ci_total">All categories</string>
     <string name="stat_ci_error">Error (in categories)</string>
     <string name="stat_ci_ignored">Found categories</string>

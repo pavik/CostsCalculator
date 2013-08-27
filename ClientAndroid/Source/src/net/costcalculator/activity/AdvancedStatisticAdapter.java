@@ -298,16 +298,45 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         to.setHours(23);
         to.setMinutes(59);
         to.setSeconds(59);
+        final long daysms = (interval - 1) * 86400000L;
         while (from.getTime() < to.getTime())
         {
-            Date middle = new Date(to.getTime() - (interval - 1) * 86400000);
+            Date middle = new Date(to.getTime() - daysms);
+            middle.setHours(0);
+            middle.setMinutes(0);
+            middle.setSeconds(0);
             if (middle.getTime() < from.getTime())
                 middle = from;
-            periods.add(new Pair<Date, Date>(middle, to));
-            to = new Date(middle.getTime() - 86400000);
+            if (isThereExpensesInPeriod(expensesdates, middle, to))
+                periods.add(new Pair<Date, Date>(middle, to));
+            to = new Date(middle.getTime() - 1000);
         }
 
         return periods;
+    }
+
+    private boolean isThereExpensesInPeriod(ArrayList<Date> expensesdates,
+            Date from, Date to)
+    {
+        Date begin = expensesdates.get(expensesdates.size() - 1);
+        Date end = expensesdates.get(0);
+        if (!intersects(from, to, begin, end))
+            return false;
+
+        for (int i = 0; i < expensesdates.size(); ++i)
+        {
+            Date cur = expensesdates.get(i);
+            if (cur.getTime() >= from.getTime()
+                    && cur.getTime() <= to.getTime())
+                return true;
+        }
+        return false;
+    }
+
+    private boolean intersects(Date from, Date to, Date begin, Date end)
+    {
+        return !(to.getTime() < begin.getTime() || from.getTime() > end
+                .getTime());
     }
 
     private ArrayList<Pair<Date, Date>> divideByDays(
