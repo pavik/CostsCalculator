@@ -14,6 +14,10 @@ donation_link = u'<form class="form-inline" action="https://www.paypal.com/cgi-b
 market_link = u'<a href="https://play.google.com/store/apps/details?id=net.costcalculator.activity"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>'
 googleplay_link = u'https://play.google.com/store/apps/details?id=net.costcalculator.activity'
 dropbox_link = u'https://www.dropbox.com/s/ssu6fq57ndhhe62/Expenses.apk'
+main_images = ['main.png', 'new_category.png', 'category_menu.png', 'add_expense.png', 'expense_menu.png',
+  'dropbox_link.png', 'dropbox_list.png', 'dropbox_settings.png', 'dropbox_import.png', 'dropbox_import_stat.png',
+  'select_statistic.png', 'select_categories.png', 'cat_daily.png', 'cat_weekly.png', 'cat_monthly.png', 'cat_yearly.png',
+  'cat_all.png', 'cat_period.png', 'tag_daily.png', 'tag_weekly.png', 'tag_monthly.png', 'tag_yearly.png', 'tag_all.png', 'tag_period.png']
 
 def main():
     pass
