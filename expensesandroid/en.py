@@ -27,16 +27,31 @@ nav_donate = 'Donate'
 main_header = u'Expenses for Android - great application for managing family expenses'
 main_img_path = u'img/en/'
 main_printscreen = u'Screenshots'
-main_app_brief = u'Application manages your daily expenses in different categories and provides daily and monthly expenses reports in these categories.'
+main_app_brief = u'The application allows you to keep track of daily household expenditure on various categories and tags, create and modify existing categories of expenditure, as well as view statistics of expense (per day, week, month, year and any period) by categories and tags. In each category, see the full story of expenditure with the possibility of making changes. The application allows you to configure data backup to Dropbox folder on the user\'s schedule.'
 main_app_features = u'Available functions'
 main_app_features_list = [
   u'built-in categories of expenses, unlimited number of new categories;',
-  u''
+  u'add expenses in available categories (you can enter amount, date, comment and tag);',
+  u'view history of expense in every category, change records in history;',
+  u'make any changes in your expenses using context menu that is available on long click on proper record (category or expense);',
+  u'auto completion of comments, tags, currency of expense based on user experience;',
+  u'auto completion of currency used in previous transaction in category;',
+  u'view and filter statistic of expenses by categories and tags per year, month, week, day and any period of time;',
+  u'preview of expenses in the statistic for period;',
+  u'move expenses between categories;',
+  u'backup your expenses in Dropbox account.'
 ]
 
 news_header = u'What is new'
 news_list = [
-  u'24 february 2013 released next version of "Expenses" for Android, next functions are available:</p>\
+  u'31 of august 2013, released new version of "Expenses", what\'s new:\
+  <ul>\
+  <li>view and filter statistic of expenses by categories and tags per year, month, week, day and any period of time;</li>\
+  <li>preview of expenses in the statistic for period;</li>\
+  <li>installation on memory card;</li>\
+  <li>optimization of Dropbox scheduled backup.</li>\
+  </ul>',
+  u'24 of february 2013 released next version of "Expenses" for Android, next functions are available:\
     <ul>\
     <li>Possibility of removing and editing categories of expenses from context menu available on long click on folder</li>\
     <li>Possibility of editing history of expenses from context menu available on long click on item in history of expenses</li>\
