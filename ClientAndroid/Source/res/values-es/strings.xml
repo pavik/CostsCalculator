@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gastos</string>
+    <string name="menu_settings">Configuración</string>
+    <string name="title_activity_expense_items">Categorías de gasto</string>
+    <string name="new_expense_item">La nueva categoría</string>
+    <string name="expense_statistic">Estadísticas del gasto</string>
+    <string name="quit_application">Cerrar la aplicación</string>
+    <string name="et_expense_item_name_hint">Introduzca el nombre</string>
+
+    <color name="col_expense_item">#555555</color>
+
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ci_food">Gastos de alimentación</string>
+    <string name="ci_household">Gastos del hogar</string>
+    <string name="ci_clothes">Cosas</string>
+    <string name="ci_accommodation">Gastos generales de la vivienda</string>
+    <string name="ci_credit">Préstamos</string>
+    <string name="ci_car">Coche</string>
+    <string name="ci_health">Gastos sanitarios</string>
+    <string name="ci_restaurant">Cafeterías/Restaurantes</string>
+    <string name="ci_mobile">Telefonia móvil</string>
+    <string name="ci_entertainment">Vacaciones, ocio</string>
+    <string name="ci_other">Otros gastos</string>
+
+    <color name="col_activity_background">#E7EBF2</color>
+    <color name="col_expense_item_cell_background">#FFFFFF</color>
+
+    <string name="price_label">Cantidad</string>
+    <string name="title_activity_price_list">Categoría del gasto: </string>
+    <string name="price_hint">Gastos</string>
+    <string name="date_label">Fecha</string>
+    <string name="currency_hint">Divisa</string>
+    <string name="comment_label">Comentario</string>
+    <string name="comment_hint">Escribir un comentario</string>
+    <string name="tag_label">Etiqueta</string>
+    <string name="tag_hint">Anadir la etiqueta</string>
+    <string name="save_label">Guardar</string>
+    <string name="history_label">Historial de las operaciones</string>
+    <string name="new_record_label">Anadir nuevo registro</string>
+    <string name="close">Cerrar</string>
+    <string name="price_warning">Por favor, introduzca la cantidad</string>
+
+    <color name="col_price_val">#725998</color>
+    <color name="col_price_list_item_back">#FFFF66</color>
+    <color name="col_date_val">#808080</color>
+    <color name="col_price_list_item_split_line">#E5E5E5</color>
+    <color name="col_tag_text">#3B5958</color>
+    <color name="col_tag_back">#EDEFF4</color>
+    <color name="col_count_val">#686868</color>
+    <color name="col_white">#FFFFFF</color>
+    <color name="col_black">#000000</color>
+    <color name="col_yellow">#f3ae1b</color>
+    <color name="col_light_gray">#AAAAAA</color>
+
+    <string name="s_history_of_expenses">Historial de los gastos</string>
+
+    <color name="col_list_view_header_back">#3B5998</color>
+    <color name="col_list_view_header_text">#FFFFFF</color>
+
+    <string name="title_activity_statistic_report">Estadísticas del gasto</string>
+    <string name="s_daily_expenses">Los gastos diarios</string>
+    <string name="s_monthly_expenses">Gastos mensuales</string>
+    <string name="s_weekly_expenses">Gastos semanales</string>
+    <string name="s_yearly_expenses">Gastos anuales</string>
+    <string name="s_whole_expenses">Todos gastos</string>
+    <string name="s_period_expenses">Durante un período</string>
+    <string name="s_daily_expenses_tag">Los gastos diarios (etiqueta)</string>
+    <string name="s_monthly_expenses_tag">Gastos mensuales (etiqueta)</string>
+    <string name="s_weekly_expenses_tag">Gastos semanales (etiqueta)</string>
+    <string name="s_yearly_expenses_tag">Gastos anuales (etiqueta)</string>
+    <string name="s_whole_expenses_tag">Todos gastos (etiqueta)</string>
+    <string name="s_period_expenses_tag">Durante un período (etiqueta)</string>
+    <string name="s_title_activity_backup">Copia de seguridad de sus datos</string>
+    <string name="s_backup_intro">Para tener la oportunidad de hacer una copia de seguridad de los datos, debe crear una cuenta en www.dropbox.com e iniciar sesión en Dropbox aquí</string>
+    <string name="s_btn_login_dropbox">Iniciar sesión en Dropbox</string>
+    <string name="s_btn_logout_dropbox">Salir de Dropbox</string>
+    <string name="s_btn_backup_into_dropbox">Copiar datos a Dropbox</string>
+    <string name="s_btn_restore_from_dropbox">Recuperar los datos de Dropbox</string>
+    <string name="s_msg_dropbox_backup_ok">Copia de datos se ha completado con éxito</string>
+    <string name="s_msg_dropbox_download_ok">Descarga de datos se ha completado con éxito</string>
+    <string name="s_msg_dropbox_restore_ok">La recuperación de datos se ha realizado correctamente</string>
+    <string name="s_msg_uploading">Cargando datos&#8230;</string>
+    <string name="s_msg_downloading">Descargando datos&#8230;</string>
+    <string name="s_msg_importing">Importar&#8230;</string>
+    <string name="s_msg_no_data_for_backuping">No hay datos para descargar</string>
+    <string name="s_msg_no_backup_files_in_dropbox">En su cuenta de Dropbox no tiene copias de seguridad</string>
+    <string name="s_dropbox_file_list">Lista de archivos en Dropbox</string>
+    <string name="s_msg_confirm_restore">Realmente desea restaurar los datos desde el archivo </string>
+    <string name="s_msg_list_available_backups">Descargar la lista de copias de seguridad</string>
+    <string name="s_err_unknown_error">Se ha producido un error desconocido. Inténtelo de nuevo.</string>
+    <string name="tv_placeholder">placeholder</string>
+
+    <color name="col_blue">#0000FF</color>
+
+    <string name="delete">Eliminar</string>
+    <string name="edit">Cambiar</string>
+    <string name="change_category">Cambia la categoría</string>
+    <string name="warning_del_category">Estás seguro que quieres eliminar %s?</string>
+    <string name="warning">Atención</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="bytes">byte</string>
+    <string name="move">Mover</string>
+    <string name="s_move_to">Mover los gastos de %s a:</string>
+    <string name="s_move_item_to">Mover %s a:</string>
+    <string name="warning_move_category">Mover todos los gastos de %1$s a %2$s ?</string>
+    <string name="warning_move_item">Mover %1$s a %2$s ?</string>
+    <string name="stat_report">Estadística</string>
+    <string name="stat_ci_total">Todos los categorías</string>
+    <string name="stat_ci_error">Errores (categorías)</string>
+    <string name="stat_ci_ignored">Encontrado categorías</string>
+    <string name="stat_ci_new">Añadido categorías</string>
+    <string name="stat_ci_overwritten">Categorías actualizados</string>
+    <string name="stat_cir_total">Total gastos</string>
+    <string name="stat_cir_error">Errores (gastos)</string>
+    <string name="stat_cir_ignored">Gastos encontrados</string>
+    <string name="stat_cir_new">Añadido gastos</string>
+    <string name="stat_cir_overwritten">Gastos actualizados</string>
+    <string name="ok">Aceptar</string>
+
+    <color name="col_red">#FF0000</color>
+
+    <string name="hour">hora(s)</string>
+    <string name="hour_disable">(0 - no hacer copia)</string>
+    <string name="title_activity_backup_configuration">Configuración de copia de seguridad</string>
+    <string name="backup_config_text">Realizar copia de seguridad de datos para Dropbox automaticamente cada:</string>
+    <string name="label_period">Durante un período</string>
+    <string name="label_days_interval">Dividir por día</string>
+    <string name="label_period_whole">(0 - para todo el período)</string>
+    <string name="label_select_category">Selecciona categorías</string>
+    <string name="label_select_statistic">Selecciona estadísticas</string>
+    <string name="label_select_all">Selecciona todo</string>
+    <string name="title_activity_statistic_details">Detalles del gastos</string>
+    <string name="action_settings">Configuración</string>
+    </resources>

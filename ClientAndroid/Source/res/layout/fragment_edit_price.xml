@@ -20,7 +20,7 @@
             android:paddingRight="2dp"
             android:text="@string/price_label"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:width="70dp" />
+            android:width="75dp" />
 
         <EditText
             android:id="@+id/et_price"
