@@ -69,6 +69,7 @@ public class BackupService
                     .getAllExpensesAsJSON(context);
             String path = "/" + DataFormatService.getBackupFileNameNow();
 
+            final int BACKUP_SUCCESS = -1;
             int attempt = 3;
             while (attempt > 0)
             {
@@ -76,7 +77,7 @@ public class BackupService
                 {
                     DropBoxService.instance().uploadFile(path,
                             list.toJSONString(), null);
-                    attempt = 0;
+                    attempt = BACKUP_SUCCESS;
                 }
                 catch (DropboxIOException e)
                 {
@@ -85,8 +86,9 @@ public class BackupService
                     LOG.D("Trying to upload backup, attempt " + attempt);
                 }
             }
-            s.set(PreferencesService.LATEST_DROPBOX_BACKUP_TIME,
-                    Long.toString(currentTime));
+            if (attempt == BACKUP_SUCCESS)
+                s.set(PreferencesService.LATEST_DROPBOX_BACKUP_TIME,
+                        Long.toString(currentTime));
         }
         finally
         {

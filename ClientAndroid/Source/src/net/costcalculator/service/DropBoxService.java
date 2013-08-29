@@ -117,7 +117,12 @@ public class DropBoxService
             throw new Exception("invalid argument: path");
         if (file.length() == 0)
             throw new Exception("invalid argument: file");
-
+        if (!api_.getSession().isLinked())
+        {
+            LOG.D("Dropbox is not linked, cancelling upload");
+            return false;
+        }
+        
         ByteArrayInputStream bis;
         try
         {
@@ -157,7 +162,13 @@ public class DropBoxService
 
         if (request != null)
             request.upload();
+        else
+        {
+            LOG.D("UploadRequest is null");
+            return false;
+        }
 
+        LOG.T("DropBoxService::uploadFile -> finished");
         return true;
     }
 
