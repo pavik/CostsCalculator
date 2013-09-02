@@ -23,6 +23,10 @@ public class StatisticFragment extends SliderFragment
         cat_ = true;
         layoutid_ = R.layout.view_statistic_report;
         adapter_ = new AdvancedStatisticAdapter();
+        tags_ = new ArrayList<String>();
+        costitems_ = new ArrayList<CostItem>();
+        expensesdates_ = new ArrayList<Date>();
+        period_ = StatisticPeriod.DAY;
         items_ = new String[0];
         selectedItems_ = new ArrayList<Integer>();
     }
