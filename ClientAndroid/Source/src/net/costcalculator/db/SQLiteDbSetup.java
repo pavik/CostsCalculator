@@ -8,11 +8,15 @@
 
 package net.costcalculator.db;
 
+import java.util.UUID;
+
+import net.costcalculator.activity.R;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import net.costcalculator.util.RawResources;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -50,6 +54,27 @@ public class SQLiteDbSetup
             }
             db_.execSQL(SQLiteDbQueries.INSERT_VERSION,
                     new Object[] { version });
+
+            // insert default categories
+            final String query = "INSERT INTO cost_items(ci_guid, ci_name) VALUES('%s', '%s')";
+            Resources r = context_.getResources();
+            final String[] categories = new String[] {
+                    r.getString(R.string.ci_food),
+                    r.getString(R.string.ci_household),
+                    r.getString(R.string.ci_clothes),
+                    r.getString(R.string.ci_accommodation),
+                    r.getString(R.string.ci_credit),
+                    r.getString(R.string.ci_car),
+                    r.getString(R.string.ci_health),
+                    r.getString(R.string.ci_restaurant),
+                    r.getString(R.string.ci_mobile),
+                    r.getString(R.string.ci_entertainment),
+                    r.getString(R.string.ci_other) };
+
+            for (String cat : categories)
+                db_.execSQL(String.format(query, UUID.randomUUID().toString(),
+                        cat));
+
             db_.setTransactionSuccessful();
         }
         catch (Exception e)
