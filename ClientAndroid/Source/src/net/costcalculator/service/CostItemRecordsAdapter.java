@@ -90,6 +90,13 @@ public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
         records_ = null;
     }
 
+    public ArrayList<CostItem> getAllCostItems()
+    {
+        if (costitems_ == null)
+            costitems_ = cis_.getAllCostItems();
+        return costitems_;
+    }
+
     public CostItemRecord addNewCostItemRecord(Date creationTime, double sum,
             String comment, String currency, String tag) throws Exception
     {
@@ -138,29 +145,27 @@ public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
         }
     }
 
-    public void moveExpenses(long id, long catId) throws Exception
+    public void moveExpense(CostItemRecord item, CostItem cat) throws Exception
     {
-        if (cis_.moveCostItemRecord(getCostItemRecord(id), getCostItem(catId)))
+        if (item != null && cat != null)
         {
-            for (int i = 0; i < ids_.size(); ++i)
-                if (ids_.get(i) == id)
-                {
-                    ids_.remove(i);
-                    records_.remove(id);
-                    break;
-                }
-            notifyDataSetChanged();
+            if (cis_.moveCostItemRecord(item, cat))
+            {
+                for (int i = 0; i < ids_.size(); ++i)
+                    if (ids_.get(i) == item.getId())
+                    {
+                        ids_.remove(i);
+                        records_.remove(item.getId());
+                        break;
+                    }
+                notifyDataSetChanged();
+            }
         }
     }
 
     public String getCostItemName()
     {
         return ci_.getName();
-    }
-
-    public CostItem getCostItem(long id) throws Exception
-    {
-        return cis_.getCostItemById(id);
     }
 
     /*
@@ -198,18 +203,15 @@ public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
             return fetchCostItemRecordById(key);
     }
 
-    public void deletePosition(long id) throws Exception
+    public void deletePosition(int pos) throws Exception
     {
-        for (int i = 0; i < ids_.size(); ++i)
+        if (pos >= 0 && pos < ids_.size())
         {
-            if (ids_.get(i) == id)
-            {
-                CostItemRecord cir = getCostItemRecord(id);
-                cis_.deleteCostItemRecord(cir);
-                ids_.remove(i);
-                records_.remove(id);
-                notifyDataSetChanged();
-            }
+            CostItemRecord cir = getCostItemRecord(pos);
+            ids_.remove(cir.getId());
+            records_.remove(cir.getId());
+            cis_.deleteCostItemRecord(cir);
+            notifyDataSetChanged();
         }
     }
 
@@ -308,6 +310,7 @@ public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
     private HashMap<Long, CostItemRecord> records_;
     private CostItemsService              cis_;
     private CostItem                      ci_;
+    private ArrayList<CostItem>           costitems_;
     private Activity                      context_;
     private boolean                       higlightback_;
 }
