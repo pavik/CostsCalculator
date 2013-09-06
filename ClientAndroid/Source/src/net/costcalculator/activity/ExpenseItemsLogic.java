@@ -9,29 +9,25 @@
 package net.costcalculator.activity;
 
 import net.costcalculator.activity.R;
+import net.costcalculator.dialog.AlertDialog;
+import net.costcalculator.dialog.DialogConfirmListener;
+import net.costcalculator.dialog.MenuItemClickedListener;
+import net.costcalculator.dialog.EditTextDialog;
+import net.costcalculator.dialog.MenuDialog;
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemAdapter;
 import net.costcalculator.service.CostItemAdapterMainView;
-import net.costcalculator.service.CostItemAdapterSimpleView;
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.TextView;
 
 /**
  * Logic is responsible for setup data on the view and handling user requests
@@ -53,9 +49,14 @@ import android.widget.TextView;
  * @author Aliaksei Plashchanski
  * 
  */
-public class ExpenseItemsLogic
+public class ExpenseItemsLogic implements DialogConfirmListener,
+        MenuItemClickedListener
 {
-    public ExpenseItemsLogic(Activity a) throws Exception
+    public static final String TAG_EDIT_DLG     = "fragment_edit_dialog";
+    public static final String TAG_MENU_DIALOG  = "fragment_menu_dialog";
+    public static final String TAG_ALERT_DIALOG = "fragment_alert_dialog";
+
+    public ExpenseItemsLogic(FragmentActivity a) throws Exception
     {
         LOG.T("ExpenseItemsLogic::ExpenseItemsLogic");
 
@@ -96,6 +97,9 @@ public class ExpenseItemsLogic
                             return false;
                     }
                 });
+
+        // support screen rotation when dialog is visible
+        rebindListenersForActiveFragments();
     }
 
     public void release()
@@ -113,216 +117,154 @@ public class ExpenseItemsLogic
         viewbuilder_ = null;
     }
 
-    public void onActivityRestart()
+    public void refreshView()
     {
         viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
         adapter_.reload();
     }
 
-    public void newExpenseCategoryRequest()
+    public EditTextDialog createEditTextDialog(boolean newcategory)
     {
-        final RelativeLayout newItemView = (RelativeLayout) activity_
-                .getLayoutInflater().inflate(R.layout.dialog_new_expense_item,
-                        null);
-        final Dialog d = new Dialog(activity_);
-        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        d.setContentView(newItemView);
-
-        Button confirm = (Button) newItemView.findViewById(R.id.btn_confirm);
-        Button cancel = (Button) newItemView.findViewById(R.id.btn_cancel);
-        confirm.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View arg0)
-            {
-                d.dismiss();
-                EditText editName = (EditText) newItemView
-                        .findViewById(R.id.et_expense_item_name);
-                addExpenseCategory(editName.getText().toString().trim());
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                d.dismiss();
-            }
-        });
-        d.show();
+        EditTextDialog etd = new EditTextDialog();
+        etd.setDialogId(newcategory ? DIALOG_ID_NEW : DIALOG_ID_EDIT);
+        etd.setHeaderId(newcategory ? R.string.new_expense_item
+                : R.string.change_category);
+        etd.setHint(R.string.et_expense_item_name_hint);
+        etd.setMaxLen(30);
+        etd.setConfirmListener(this);
+        return etd;
     }
 
-    private void addExpenseCategory(String name)
+    @Override
+    public void onMenuItemClicked(int dialogid, String name, int pos, int param)
     {
-        try
+        if (DIALOG_ID_MENU_ACTION == dialogid)
         {
-            if (name.length() > 0)
-                adapter_.addNewCostItem(name);
+            switch (pos)
+            {
+            case 0:
+                editMenuRequest(param);
+                break;
+            case 1:
+                moveMenuRequest(param);
+                break;
+            case 2:
+                deleteMenuRequest(param);
+                break;
+            }
         }
-        catch (Exception e)
+        else if (DIALOG_ID_MENU_SELITEM == dialogid)
         {
-            ErrorHandler.handleException(e, activity_);
+            confirmMoveRequest(param, pos);
+        }
+    }
+
+    @Override
+    public void onConfirm(int dialogid, String param1, int param2)
+    {
+        if (DIALOG_ID_EDIT == dialogid)
+        {
+            if (param1 != null && param2 > 0)
+                editExpenseCategory(param1, param2);
+        }
+        else if (DIALOG_ID_NEW == dialogid)
+        {
+            if (param1 != null)
+                addExpenseCategory(param1);
+        }
+        else if (DIALOG_ID_ALERT_DEL == dialogid)
+        {
+            if (param2 >= 0)
+                deleteExpenseCategory(param2);
+        }
+        else if (DIALOG_ID_ALERT_MOVE == dialogid)
+        {
+            int from = (param2 & 0x0000FFFF);
+            int to = (param2 & 0xFFFF0000) >> 16;
+            if (from >= 0 && to >= 0)
+                moveExpensesRequest(from, to);
         }
     }
 
     private void categoryMenuRequest(final int pos)
     {
-        CostItem ci = adapter_.getCostItem(pos);
-        final RelativeLayout menu = (RelativeLayout) activity_
-                .getLayoutInflater().inflate(R.layout.dialog_expense_cat_menu,
-                        null);
-
-        TextView header = (TextView) menu
-                .findViewById(R.id.tvDlgExpenseCatMenu);
-        header.setText(ci.getName());
-
-        final Dialog d = new Dialog(activity_);
-        d.setCanceledOnTouchOutside(true);
-        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        d.setContentView(menu);
-
-        LinearLayout edit = (LinearLayout) menu
-                .findViewById(R.id.menu_edit_layout);
-        edit.setOnClickListener(new View.OnClickListener()
+        if (pos >= 0 && pos < adapter_.getCount())
         {
-            @Override
-            public void onClick(View arg0)
-            {
-                d.dismiss();
-                editMenuRequest(pos);
-            }
-        });
-
-        LinearLayout delete = (LinearLayout) menu
-                .findViewById(R.id.menu_del_layout);
-        delete.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                d.dismiss();
-                deleteMenuRequest(pos);
-            }
-        });
-
-        LinearLayout move = (LinearLayout) menu
-                .findViewById(R.id.menu_move_layout);
-        move.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                d.dismiss();
-                moveMenuRequest(pos);
-            }
-        });
-
-        d.show();
+            CostItem ci = adapter_.getCostItem(pos);
+            MenuDialog md = new MenuDialog();
+            md.setDialogId(DIALOG_ID_MENU_ACTION);
+            md.setParam(pos);
+            md.setHeader(ci.getName());
+            Resources r = activity_.getResources();
+            String[] items = new String[] { r.getString(R.string.edit),
+                    r.getString(R.string.move), r.getString(R.string.delete) };
+            int[] icons = new int[] { R.drawable.ic_edit_2, R.drawable.ic_move,
+                    R.drawable.ic_delete };
+            md.setItems(items);
+            md.setIcons(icons);
+            md.setItemClickedListener(this);
+            md.show(activity_.getSupportFragmentManager(), TAG_MENU_DIALOG);
+        }
     }
 
     private void editMenuRequest(final int pos)
     {
-        final RelativeLayout newItemView = (RelativeLayout) activity_
-                .getLayoutInflater().inflate(R.layout.dialog_new_expense_item,
-                        null);
-        final Dialog d = new Dialog(activity_);
-        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        d.setContentView(newItemView);
-
-        TextView tvHeader = (TextView) newItemView
-                .findViewById(R.id.tvDlgNewExpenseCat);
-        tvHeader.setText(R.string.change_category);
-
-        CostItem ci = adapter_.getCostItem(pos);
-        final EditText editName = (EditText) newItemView
-                .findViewById(R.id.et_expense_item_name);
-        editName.setText(ci.getName());
-        Button confirm = (Button) newItemView.findViewById(R.id.btn_confirm);
-        Button cancel = (Button) newItemView.findViewById(R.id.btn_cancel);
-        confirm.setOnClickListener(new View.OnClickListener()
+        if (pos >= 0 && pos < adapter_.getCount())
         {
-            @Override
-            public void onClick(View arg0)
-            {
-                d.dismiss();
-                try
-                {
-                    adapter_.changeName(editName.getText().toString().trim(),
-                            pos);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandler.handleException(e, activity_);
-                }
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                d.dismiss();
-            }
-        });
-        d.show();
+            EditTextDialog etd = createEditTextDialog(false);
+            etd.setParam(pos);
+            CostItem ci = adapter_.getCostItem(pos);
+            etd.setText(ci.getName());
+            etd.show(activity_.getSupportFragmentManager(), TAG_EDIT_DLG);
+        }
     }
 
     private void deleteMenuRequest(final int pos)
     {
-        CostItem ci = adapter_.getCostItem(pos);
-        final String rawWarn = activity_.getResources().getString(
-                R.string.warning_del_category);
-        final String formattedWarn = String.format(rawWarn, ci.getName());
+        if (pos >= 0 && pos < adapter_.getCount())
+        {
+            CostItem ci = adapter_.getCostItem(pos);
+            final String rawWarn = activity_.getResources().getString(
+                    R.string.warning_del_category);
+            final String formattedWarn = String.format(rawWarn, ci.getName());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
-        builder.setMessage(formattedWarn)
-                .setPositiveButton(R.string.confirm,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which)
-                            {
-                                deleteCategoryRequest(pos);
-                            }
-                        }).setNegativeButton(R.string.cancel, null)
-                .setIcon(R.drawable.ic_delete_large).setTitle(R.string.warning);
-
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog ad = new AlertDialog();
+            ad.setDialogId(DIALOG_ID_ALERT_DEL);
+            ad.setHeaderId(R.string.warning);
+            ad.setText(formattedWarn);
+            ad.setParam(pos);
+            ad.setIconId(R.drawable.ic_delete_large);
+            ad.setConfirmListener(this);
+            ad.show(activity_.getSupportFragmentManager(), TAG_ALERT_DIALOG);
+        }
     }
 
     private void moveMenuRequest(final int posFrom)
     {
         try
         {
-            CostItem ci = adapter_.getCostItem(posFrom);
-            final RelativeLayout rl = (RelativeLayout) activity_
-                    .getLayoutInflater().inflate(
-                            R.layout.dialog_select_expense_cat, null);
-
-            TextView header = (TextView) rl.findViewById(R.id.tv_move_to);
-            String s = activity_.getResources().getString(R.string.s_move_to);
-            header.setText(String.format(s, ci.getName()));
-
-            final Dialog d = new Dialog(activity_);
-            ListView lv = (ListView) rl.findViewById(R.id.lv_categories);
-            lv.setAdapter(new CostItemAdapter(activity_,
-                    new CostItemAdapterSimpleView(activity_)));
-            lv.setOnItemClickListener(new OnItemClickListener()
+            if (posFrom >= 0 && posFrom < adapter_.getCount())
             {
-                @Override
-                public void onItemClick(AdapterView<?> av, View v, int posTo,
-                        long id)
-                {
-                    if (id > 0)
-                        confirmMoveRequest(posFrom, id, d);
-                }
-            });
+                CostItem ci = adapter_.getCostItem(posFrom);
+                String s = activity_.getResources().getString(
+                        R.string.s_move_to);
 
-            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            d.setContentView(rl);
-            d.show();
+                MenuDialog md = new MenuDialog();
+                md.setDialogId(DIALOG_ID_MENU_SELITEM);
+                md.setParam(posFrom);
+                md.setHeader(String.format(s, ci.getName()));
+                String[] items = new String[adapter_.getCount()];
+                int[] icons = new int[adapter_.getCount()];
+                for (int i = 0; i < items.length; ++i)
+                {
+                    items[i] = adapter_.getCostItem(i).getName();
+                    icons[i] = R.drawable.ic_folder_small;
+                }
+                md.setItems(items);
+                md.setIcons(icons);
+                md.setItemClickedListener(this);
+                md.show(activity_.getSupportFragmentManager(), TAG_MENU_DIALOG);
+            }
         }
         catch (Exception e)
         {
@@ -330,7 +272,7 @@ public class ExpenseItemsLogic
         }
     }
 
-    private void deleteCategoryRequest(int pos)
+    private void deleteExpenseCategory(int pos)
     {
         try
         {
@@ -342,40 +284,34 @@ public class ExpenseItemsLogic
         }
     }
 
-    private void confirmMoveRequest(final int posFrom, final long id,
-            final Dialog d)
+    private void confirmMoveRequest(int posFrom, int posTo)
     {
-        CostItem ciFrom = adapter_.getCostItem(posFrom);
-        CostItem ciTo = adapter_.getCostItem(id);
-        final String rawWarn = activity_.getResources().getString(
-                R.string.warning_move_category);
-        final String formattedWarn = String.format(rawWarn, ciFrom.getName(),
-                ciTo.getName());
+        if (posFrom >= 0 && posTo >= 0 && posFrom < adapter_.getCount()
+                && posTo < adapter_.getCount())
+        {
+            CostItem ciFrom = adapter_.getCostItem(posFrom);
+            CostItem ciTo = adapter_.getCostItem(posTo);
+            final String rawWarn = activity_.getResources().getString(
+                    R.string.warning_move_category);
+            final String formattedWarn = String.format(rawWarn,
+                    ciFrom.getName(), ciTo.getName());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity_);
-        builder.setMessage(formattedWarn)
-                .setPositiveButton(R.string.confirm,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which)
-                            {
-                                d.dismiss();
-                                moveExpensesRequest(posFrom, id);
-                            }
-                        }).setNegativeButton(R.string.cancel, null)
-                .setIcon(R.drawable.ic_move_large).setTitle(R.string.warning);
-
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog ad = new AlertDialog();
+            ad.setDialogId(DIALOG_ID_ALERT_MOVE);
+            ad.setHeaderId(R.string.warning);
+            ad.setText(formattedWarn);
+            ad.setIconId(R.drawable.ic_move_large);
+            ad.setConfirmListener(this);
+            ad.setParam(posFrom | (posTo << 16));
+            ad.show(activity_.getSupportFragmentManager(), TAG_ALERT_DIALOG);
+        }
     }
 
-    private void moveExpensesRequest(int fromCat, long id)
+    private void moveExpensesRequest(int fromCat, int toCat)
     {
         try
         {
-            adapter_.moveExpenses(fromCat, id);
+            adapter_.moveExpenses(fromCat, toCat);
             viewbuilder_.setCounts(cis_.getCostItemRecordsCount());
             adapter_.refreshView();
         }
@@ -385,9 +321,64 @@ public class ExpenseItemsLogic
         }
     }
 
+    private void addExpenseCategory(String name)
+    {
+        try
+        {
+            adapter_.addNewCostItem(name);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+    }
+
+    private void editExpenseCategory(String name, int pos)
+    {
+        try
+        {
+            adapter_.changeName(name, pos);
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity_);
+        }
+    }
+
+    private void rebindListenersForActiveFragments()
+    {
+        Fragment f = activity_.getSupportFragmentManager().findFragmentByTag(
+                TAG_EDIT_DLG);
+        if (f != null && f instanceof EditTextDialog)
+        {
+            EditTextDialog etd = (EditTextDialog) f;
+            etd.setConfirmListener(this);
+        }
+        f = activity_.getSupportFragmentManager().findFragmentByTag(
+                TAG_MENU_DIALOG);
+        if (f != null && f instanceof MenuDialog)
+        {
+            MenuDialog md = (MenuDialog) f;
+            md.setItemClickedListener(this);
+        }
+        f = activity_.getSupportFragmentManager().findFragmentByTag(
+                TAG_ALERT_DIALOG);
+        if (f != null && f instanceof net.costcalculator.dialog.AlertDialog)
+        {
+            net.costcalculator.dialog.AlertDialog ad = (net.costcalculator.dialog.AlertDialog) f;
+            ad.setConfirmListener(this);
+        }
+    }
+
     private GridView                gridView_;
-    private Activity                activity_;
+    private FragmentActivity        activity_;
     private CostItemAdapter         adapter_;
     private CostItemAdapterMainView viewbuilder_;
     private CostItemsService        cis_;
+    private static final int        DIALOG_ID_EDIT         = 1;
+    private static final int        DIALOG_ID_NEW          = 2;
+    private static final int        DIALOG_ID_ALERT_DEL    = 3;
+    private static final int        DIALOG_ID_ALERT_MOVE   = 4;
+    private static final int        DIALOG_ID_MENU_ACTION  = 5;
+    private static final int        DIALOG_ID_MENU_SELITEM = 6;
 }

@@ -6,31 +6,28 @@
     android:gravity="center_horizontal" >
 
     <TextView
-        android:id="@+id/tvDlgNewExpenseCat"
+        android:id="@+id/tv_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/blue_gradient_dlg_header"
         android:gravity="center"
-        android:text="@string/new_expense_item"
+        android:text="@string/tv_placeholder"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/col_list_view_header_text"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/et_expense_item_name"
+        android:id="@+id/et_editbox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvDlgNewExpenseCat"
+        android:layout_below="@id/tv_header"
         android:layout_marginTop="5dp"
-        android:hint="@string/et_expense_item_name_hint"
-        android:maxLength="30" />
+        android:hint="@string/tv_placeholder" />
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_expense_item_name"
+        android:layout_below="@id/et_editbox"
         android:orientation="horizontal" >
 
         <Button

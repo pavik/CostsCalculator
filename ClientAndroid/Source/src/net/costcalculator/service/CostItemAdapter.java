@@ -67,14 +67,18 @@ public class CostItemAdapter extends BaseAdapter
 
     public void addNewCostItem(String name) throws Exception
     {
-        CostItem item = cis_.createCostItem(name);
-        costItems_.add(item);
-        notifyDataSetChanged();
+        if (name != null && name.length() > 0)
+        {
+            CostItem item = cis_.createCostItem(name);
+            costItems_.add(item);
+            notifyDataSetChanged();
+        }
     }
 
     public void changeName(String name, int pos) throws Exception
     {
-        if (name.length() > 0 && pos >= 0 && pos < costItems_.size())
+        if (name != null && name.length() > 0 && pos >= 0
+                && pos < costItems_.size())
         {
             CostItem ci = costItems_.get(pos);
             ci.setName(name);
@@ -95,9 +99,11 @@ public class CostItemAdapter extends BaseAdapter
         }
     }
 
-    public void moveExpenses(int fromCat, long id)
+    public void moveExpenses(int fromCat, int toCat)
     {
-        CostItem from = null, to = getCostItem(id);
+        CostItem from = null, to = null;
+        if (toCat >= 0 && toCat < costItems_.size())
+            to = costItems_.get(toCat);
         if (fromCat >= 0 && fromCat < costItems_.size())
             from = costItems_.get(fromCat);
         if (from != null && to != null)

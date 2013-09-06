@@ -9,11 +9,12 @@
 package net.costcalculator.activity;
 
 import net.costcalculator.activity.R;
+import net.costcalculator.dialog.EditTextDialog;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -23,7 +24,7 @@ import android.widget.ImageButton;
  * @author Aliaksei Plashchanski
  * 
  */
-public class ExpenseItemsActivity extends Activity implements
+public class ExpenseItemsActivity extends FragmentActivity implements
         View.OnClickListener
 {
     @Override
@@ -39,6 +40,7 @@ public class ExpenseItemsActivity extends Activity implements
         try
         {
             logic_ = new ExpenseItemsLogic(this);
+            final EditTextDialog etd = logic_.createEditTextDialog(true);
 
             ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
             newButton.setOnClickListener(new View.OnClickListener()
@@ -46,8 +48,8 @@ public class ExpenseItemsActivity extends Activity implements
                 @Override
                 public void onClick(View v)
                 {
-                    if (logic_ != null)
-                        logic_.newExpenseCategoryRequest();
+                    etd.show(getSupportFragmentManager(),
+                            ExpenseItemsLogic.TAG_EDIT_DLG);
                 }
             });
 
@@ -72,7 +74,7 @@ public class ExpenseItemsActivity extends Activity implements
         super.onRestart();
         LOG.T("ExpenseItemsActivity::onRestart");
 
-        logic_.onActivityRestart();
+        logic_.refreshView();
     }
 
     @Override
