@@ -13,6 +13,7 @@ import net.costcalculator.service.OkCallback;
 import net.costcalculator.util.LOG;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 /**
@@ -24,7 +25,7 @@ import android.support.v4.app.FragmentActivity;
 public class ActivityEditPrice extends FragmentActivity
 {
     public final static String EXTRA_COST_ITEM_RECORD_ID = "cir_id";
-    public final static String EXTRA_COST_ITEM_ID = "ci_id";
+    public final static String EXTRA_COST_ITEM_ID        = "ci_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -33,13 +34,24 @@ public class ActivityEditPrice extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_price);
 
-        Intent intent = getIntent();
-        long cirid = intent.getLongExtra(EXTRA_COST_ITEM_RECORD_ID, 0);
-        long ciid = intent.getLongExtra(EXTRA_COST_ITEM_ID, 0);
+        FragmentEditPrice fragment = null;
+        final String FTAG = "fragment_edit_price";
+        Fragment f = getSupportFragmentManager().findFragmentByTag(FTAG);
+        if (f != null && f instanceof FragmentEditPrice)
+            fragment = (FragmentEditPrice) f;
 
-        FragmentEditPrice fragment = new FragmentEditPrice();
-        fragment.setCostItemRecordId(cirid);
-        fragment.setCostItemId(ciid);
+        if (fragment == null)
+        {
+            fragment = new FragmentEditPrice();
+            Intent intent = getIntent();
+            long cirid = intent.getLongExtra(EXTRA_COST_ITEM_RECORD_ID, 0);
+            long ciid = intent.getLongExtra(EXTRA_COST_ITEM_ID, 0);
+            fragment.setCostItemRecordId(cirid);
+            fragment.setCostItemId(ciid);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_edit_price, fragment, FTAG).commit();
+        }
+
         fragment.setOkCallback(new OkCallback()
         {
             @Override
@@ -56,9 +68,6 @@ public class ActivityEditPrice extends FragmentActivity
                 finishActivity();
             }
         });
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_edit_price, fragment).commit();
     }
 
     public void finishActivityWithResult(long result)

@@ -13,6 +13,7 @@ import net.costcalculator.service.OkCallback;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.content.Intent;
 
@@ -35,10 +36,22 @@ public class PriceListActivity extends FragmentActivity
         try
         {
             setContentView(R.layout.activity_price_list);
+            final long ciId = getIntent().getLongExtra(COST_ITEM_ID, 0);
 
-            long ciId = getIntent().getLongExtra(COST_ITEM_ID, 0);
-            final FragmentEditPrice fragment = new FragmentEditPrice();
-            fragment.setCostItemId(ciId);
+            final String FTAG = "fragment_edit_price";
+            Fragment f = getSupportFragmentManager().findFragmentByTag(FTAG);
+            if (f != null && f instanceof FragmentEditPrice)
+                fragment = (FragmentEditPrice) f;
+
+            if (fragment == null)
+            {
+                fragment = new FragmentEditPrice();
+                fragment.setCostItemId(ciId);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_edit_price, fragment, FTAG)
+                        .commit();
+            }
+
             fragment.setOkCallback(new OkCallback()
             {
                 @Override
@@ -57,8 +70,7 @@ public class PriceListActivity extends FragmentActivity
                     fragment.hideFragment();
                 }
             });
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_edit_price, fragment).commit();
+
             logic_ = new PricelListLogic(this, ciId);
         }
         catch (Exception e)
@@ -99,5 +111,6 @@ public class PriceListActivity extends FragmentActivity
             logic_.cancelRequest();
     }
 
-    private PricelListLogic logic_;
+    private PricelListLogic   logic_;
+    private FragmentEditPrice fragment;
 }

@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
@@ -61,7 +62,8 @@ import android.widget.TextView.OnEditorActionListener;
  */
 public class LogicEditPrice
 {
-    public LogicEditPrice(FragmentEditPrice f, View v, long cirId, long ciId)
+    public LogicEditPrice(FragmentEditPrice f, View v, long cirId, long ciId,
+            Bundle inState)
     {
         fragment_ = f;
         view_ = v;
@@ -179,6 +181,15 @@ public class LogicEditPrice
         else
             etCurrency_.setText(currency_);
 
+        if (inState != null)
+        {
+            etPrice_.setText(inState.getString("l1"));
+            etCurrency_.setText(inState.getString("l2"));
+            etComment_.setText(inState.getString("l4"));
+            etTag_.setText(inState.getString("l3"));
+            priceRecordDate_.setTime(inState.getLong("l5"));
+        }
+
         updateDateOnView();
         updateTimeOnView();
 
@@ -265,6 +276,8 @@ public class LogicEditPrice
             }
         });
         showViews();
+        if (inState != null && !inState.getBoolean("l6"))
+            hideViews();
     }
 
     public void release()
@@ -310,6 +323,19 @@ public class LogicEditPrice
         etCurrency_.setVisibility(View.GONE);
         etPrice_.setVisibility(View.GONE);
         hideIME();
+    }
+
+    public void saveInstanceState(Bundle outState)
+    {
+        if (outState != null)
+        {
+            outState.putString("l1", etPrice_.getText().toString());
+            outState.putString("l2", etCurrency_.getText().toString());
+            outState.putString("l3", etTag_.getText().toString());
+            outState.putString("l4", etComment_.getText().toString());
+            outState.putLong("l5", priceRecordDate_.getTime());
+            outState.putBoolean("l6", btnSave_.getVisibility() == View.VISIBLE);
+        }
     }
 
     private void hideIME()

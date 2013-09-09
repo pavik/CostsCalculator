@@ -39,9 +39,11 @@ public class FragmentEditPrice extends Fragment
             Bundle savedInstanceState)
     {
         LOG.T("FragmentEditPrice::onCreateView");
+        restoreInstanceState(savedInstanceState);
+
         View v = inflater.inflate(R.layout.fragment_edit_price, container,
                 false);
-        logic_ = new LogicEditPrice(this, v, cirId_, ciId_);
+        logic_ = new LogicEditPrice(this, v, cirId_, ciId_, savedInstanceState);
         return v;
     }
 
@@ -54,6 +56,28 @@ public class FragmentEditPrice extends Fragment
         {
             logic_.release();
             logic_ = null;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        LOG.T("FragmentEditPrice::onSaveInstanceState");
+        if (outState != null)
+        {
+            outState.putLong("f1", ciId_);
+            outState.putLong("f2", cirId_);
+            if (logic_ != null)
+                logic_.saveInstanceState(outState);
+        }
+    }
+
+    public void restoreInstanceState(Bundle inState)
+    {
+        if (inState != null)
+        {
+            ciId_ = inState.getLong("f1");
+            cirId_ = inState.getLong("f2");
         }
     }
 
@@ -88,13 +112,13 @@ public class FragmentEditPrice extends Fragment
         if (cancel_ != null)
             cancel_.cancel();
     }
-    
+
     public void hideFragment()
     {
         if (logic_ != null)
             logic_.hideViews();
     }
-    
+
     public void showFragment()
     {
         if (logic_ != null)
