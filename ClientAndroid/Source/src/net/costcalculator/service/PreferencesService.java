@@ -30,10 +30,13 @@ import android.content.SharedPreferences.Editor;
 public class PreferencesService
 {
     // list of keys
-    final static public String ACCESS_KEY_NAME            = "ACCESS_KEY";
-    final static public String ACCESS_SECRET_NAME         = "ACCESS_SECRET";
-    final static public String BACKUP_INTERVAL            = "BACKUP_INTERVAL";
-    final static public String LATEST_DROPBOX_BACKUP_TIME = "LATEST_DROPBOX_BACKUP_TIME";
+    final static public String ACCESS_KEY_NAME             = "ACCESS_KEY";
+    final static public String ACCESS_SECRET_NAME          = "ACCESS_SECRET";
+    final static public String BACKUP_INTERVAL             = "BACKUP_INTERVAL";
+    final static public String LATEST_DROPBOX_BACKUP_TIME  = "LATEST_DROPBOX_BACKUP_TIME";
+    final static public String STATISTIC_CUSTOM_DATE_FROM  = "STATISTIC_CUSTOM_DATE_FROM";
+    final static public String STATISTIC_CUSTOM_DATE_TO    = "STATISTIC_CUSTOM_DATE_TO";
+    final static public String STATISTIC_CUSTOM_DAYS_COUNT = "STATISTIC_CUSTOM_DAYS_COUNT";
 
     // access methods
     public void set(String key, String val)

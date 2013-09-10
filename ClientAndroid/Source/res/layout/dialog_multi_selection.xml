@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
         android:paddingLeft="40dp"
-        android:text="@string/label_select_all" />
+        android:text="@string/label_select_all"
+        android:textColor="@color/col_black" />
 
     <ListView
         android:id="@+id/lv_items"
@@ -30,7 +31,9 @@
         android:layout_above="@+id/btn_pane"
         android:layout_below="@id/btn_checkbox"
         android:layout_margin="2dp"
-        android:dividerHeight="0dp" />
+        android:divider="@color/col_activity_background"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent" />
 
     <LinearLayout
         android:id="@+id/btn_pane"

@@ -3,8 +3,12 @@ package net.costcalculator.activity;
 
 import java.util.ArrayList;
 
-import android.content.DialogInterface;
+import net.costcalculator.dialog.MultiSelectionConfirmListener;
+import net.costcalculator.dialog.MultiSelectionDialog;
+import net.costcalculator.util.LOG;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -15,13 +19,15 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SliderActivity extends FragmentActivity implements OnTouchListener
+public class SliderActivity extends FragmentActivity implements
+        OnTouchListener, MultiSelectionConfirmListener
 {
     public static final String EXTRA_FRAGMENTS = "fragments";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        LOG.T("SliderActivity::onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.slider_activity);
 
@@ -71,6 +77,17 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
                 return false;
             }
         });
+        if (savedInstanceState != null)
+            current_ = savedInstanceState.getInt("SliderActivity1");
+
+        rebindListenersForActiveFragments();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        LOG.T("SliderActivity::onDestroy");
+        super.onDestroy();
     }
 
     @Override
@@ -91,6 +108,13 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
         else if (event.getAction() == MotionEvent.ACTION_UP)
             onTouchUp(event.getRawX(), event.getRawY());
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState != null)
+            outState.putInt("SliderActivity1", current_);
     }
 
     protected SliderFragment getFragment(int index)
@@ -144,13 +168,31 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
             else if (current_ >= fragments_.length)
                 current_ = 0;
 
-            SliderFragment f = getFragment(current_);
+            SliderFragment f = null;
+            final String FTAG = String.format("fragment_%d", current_);
+            Fragment retainfragment = getSupportFragmentManager()
+                    .findFragmentByTag(FTAG);
+
+            LOG.D("SliderActivity::replaceview - retainfragment: "
+                    + retainfragment);
+
+            if (retainfragment != null
+                    && retainfragment instanceof SliderFragment)
+                f = (SliderFragment) retainfragment;
+
+            LOG.D("SliderActivity::replaceview - fragment reusing: "
+                    + (f != null));
+
+            if (f == null)
+            {
+                f = getFragment(current_);
+                FragmentTransaction transaction = getSupportFragmentManager()
+                        .beginTransaction();
+                transaction.setCustomAnimations(android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right);
+                transaction.replace(R.id.sliderfragment, f, FTAG).commit();
+            }
             f.setPageListener(this);
-            FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            transaction.setCustomAnimations(android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right);
-            transaction.replace(R.id.sliderfragment, f).commit();
             tvHeader_.setText(getHeaderTitle(current_));
         }
     }
@@ -162,31 +204,49 @@ public class SliderActivity extends FragmentActivity implements OnTouchListener
         {
             selectedFragment_ = new ArrayList<Integer>();
             selectedFragment_.add(current_);
-            MultiSelectionDialog d = new MultiSelectionDialog(this,
-                    R.string.label_select_statistic, titles, selectedFragment_);
+            MultiSelectionDialog d = new MultiSelectionDialog();
+            d.setHeaderId(R.string.label_select_statistic);
+            d.setItems(titles);
+            d.setSelectedItems(selectedFragment_);
             d.setSingleSelection();
-            d.setOnConfirmListener(new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    if (selectedFragment_.size() > 0
-                            && selectedFragment_.get(0) != current_)
-                    {
-                        current_ = selectedFragment_.get(0);
-                        showfragment();
-                    }
-                }
-            });
-            d.show();
+            d.setConfirmListener(this);
+            d.show(getSupportFragmentManager(), TAG_MULTISEL_DLG);
+        }
+    }
+
+    @Override
+    public void onMultiSelectionConfirmed(int dialogid,
+            ArrayList<Integer> selectedItems, int param)
+    {
+        selectedFragment_.clear();
+        selectedFragment_.addAll(selectedItems);
+        if (selectedFragment_.size() > 0
+                && selectedFragment_.get(0) != current_)
+        {
+            current_ = selectedFragment_.get(0);
+            showfragment();
+        }
+    }
+
+    private void rebindListenersForActiveFragments()
+    {
+        Fragment f = null;
+
+        f = getSupportFragmentManager().findFragmentByTag(TAG_MULTISEL_DLG);
+        if (f != null && f instanceof MultiSelectionDialog)
+        {
+            MultiSelectionDialog md = (MultiSelectionDialog) f;
+            md.setConfirmListener(this);
         }
     }
 
     protected String[]          fragments_;
     private ArrayList<Integer>  selectedFragment_;
     private TextView            tvHeader_;
-    private int                 current_ = 0;
+    private int                 current_         = 0;
     private float               touchDownX_;
     private float               touchDownY_;
-    private static final double sin70_   = Math.sin(Math.toRadians(70.0));
+    private static final double sin70_           = Math.sin(Math
+                                                         .toRadians(70.0));
+    private static final String TAG_MULTISEL_DLG = "fragment_multi_selection";
 }

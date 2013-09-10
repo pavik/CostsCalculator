@@ -7,18 +7,21 @@ import java.util.Date;
 import java.util.HashSet;
 
 import net.costcalculator.adapter.StatisticDetailsAdapter;
+import net.costcalculator.dialog.MultiSelectionConfirmListener;
+import net.costcalculator.dialog.MultiSelectionDialog;
 import net.costcalculator.service.DataFormatService;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.Activity;
-import android.content.DialogInterface;
 
-public class StatisticDetailsActivity extends Activity
+public class StatisticDetailsActivity extends FragmentActivity implements
+        MultiSelectionConfirmListener
 {
     public static final String EXTRA_DATE_FROM  = "date_from"; // long
     public static final String EXTRA_DATE_TO    = "date_to";   // long
@@ -50,9 +53,14 @@ public class StatisticDetailsActivity extends Activity
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText(DataFormatService.formatCustom(from, to));
 
-        selectedItems_ = new ArrayList<Integer>();
-        for (int i = 0; i < guidtag_.length; ++i)
-            selectedItems_.add(i);
+        if (savedInstanceState != null)
+            selectedItems_ = savedInstanceState.getIntegerArrayList("a1");
+        else
+        {
+            selectedItems_ = new ArrayList<Integer>();
+            for (int i = 0; i < guidtag_.length; ++i)
+                selectedItems_.add(i);
+        }
 
         Button btn = (Button) findViewById(R.id.btn_select_items);
         btn.setOnClickListener(new OnClickListener()
@@ -60,28 +68,45 @@ public class StatisticDetailsActivity extends Activity
             @Override
             public void onClick(View arg0)
             {
-                MultiSelectionDialog d = new MultiSelectionDialog(
-                        StatisticDetailsActivity.this,
-                        R.string.label_select_category, titles, selectedItems_);
-                d.setOnConfirmListener(new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        String[] values = new String[selectedItems_.size()];
-                        for (int i = 0; i < selectedItems_.size(); ++i)
-                            values[i] = guidtag_[selectedItems_.get(i)];
-                        adapter_.setFilter(values);
-                    }
-                });
-                d.show();
+                MultiSelectionDialog d = new MultiSelectionDialog();
+                d.setHeaderId(R.string.label_select_category);
+                d.setItems(titles);
+                d.setSelectedItems(selectedItems_);
+                d.setConfirmListener(StatisticDetailsActivity.this);
+                d.show(getSupportFragmentManager(), TAG_MULTISEL_DLG);
             }
         });
 
-        ListView items = (ListView) findViewById(R.id.lv_report);
         adapter_ = new StatisticDetailsAdapter(this, from, to, guidtag_,
                 catortag);
+        String[] values = new String[selectedItems_.size()];
+        for (int i = 0; i < selectedItems_.size(); ++i)
+            values[i] = guidtag_[selectedItems_.get(i)];
+        adapter_.setFilter(values);
+
+        ListView items = (ListView) findViewById(R.id.lv_report);
         items.setAdapter(adapter_);
+
+        rebindListenersForActiveFragments();
+    }
+
+    @Override
+    public void onMultiSelectionConfirmed(int dialogid,
+            ArrayList<Integer> selectedItems, int param)
+    {
+        selectedItems_.clear();
+        selectedItems_.addAll(selectedItems);
+        String[] values = new String[selectedItems_.size()];
+        for (int i = 0; i < selectedItems_.size(); ++i)
+            values[i] = guidtag_[selectedItems_.get(i)];
+        adapter_.setFilter(values);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState != null && selectedItems_ != null)
+            outState.putIntegerArrayList("a1", selectedItems_);
     }
 
     @Override
@@ -113,7 +138,20 @@ public class StatisticDetailsActivity extends Activity
         return dest;
     }
 
+    private void rebindListenersForActiveFragments()
+    {
+        Fragment f = null;
+
+        f = getSupportFragmentManager().findFragmentByTag(TAG_MULTISEL_DLG);
+        if (f != null && f instanceof MultiSelectionDialog)
+        {
+            MultiSelectionDialog md = (MultiSelectionDialog) f;
+            md.setConfirmListener(this);
+        }
+    }
+
     private String[]                guidtag_;
     private ArrayList<Integer>      selectedItems_;
     private StatisticDetailsAdapter adapter_;
+    private static final String     TAG_MULTISEL_DLG = "fragment_multi_selection";
 }

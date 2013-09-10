@@ -43,6 +43,8 @@ public class PriceListActivity extends FragmentActivity
             if (f != null && f instanceof FragmentEditPrice)
                 fragment = (FragmentEditPrice) f;
 
+            LOG.D("ActivityEditPrice::onCreate - fragment reusing: "
+                    + (fragment != null));
             if (fragment == null)
             {
                 fragment = new FragmentEditPrice();

@@ -35,6 +35,20 @@ public class FragmentEditPrice extends Fragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        LOG.T("FragmentEditPrice::onCreate");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        LOG.T("FragmentEditPrice::onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {

@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import net.costcalculator.activity.AdvancedStatisticAdapter.StatisticPeriod;
+import net.costcalculator.dialog.MultiSelectionConfirmListener;
+import net.costcalculator.dialog.MultiSelectionDialog;
 import net.costcalculator.service.CostItem;
+import net.costcalculator.util.LOG;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class StatisticFragment extends SliderFragment
+public class StatisticFragment extends SliderFragment implements
+        MultiSelectionConfirmListener
 {
     public StatisticFragment()
     {
@@ -35,6 +39,8 @@ public class StatisticFragment extends SliderFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
+        LOG.T("StatisticFragment::onCreateView");
+
         View view = inflater.inflate(layoutid_, container, false);
         ListView lv = (ListView) view.findViewById(R.id.lv_stat_report);
         Button filter = (Button) view.findViewById(R.id.btn_select_items);
@@ -51,26 +57,28 @@ public class StatisticFragment extends SliderFragment
         {
             items_ = new String[costitems_.size()];
             for (int i = 0; i < costitems_.size(); ++i)
-            {
                 items_[i] = costitems_.get(i).getName();
-                selectedItems_.add(i);
-            }
         }
         else
         {
             items_ = new String[tags_.size()];
             for (int i = 0; i < tags_.size(); ++i)
-            {
                 items_[i] = tags_.get(i);
-                selectedItems_.add(i);
-            }
-            adapter_.setTagFilter(tags_);
         }
 
         lv.setAdapter(adapter_);
         if (pagelistener_ != null)
             lv.setOnTouchListener(pagelistener_);
+
+        rebindListenersForActiveFragments();
         return view;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        LOG.T("StatisticFragment::onDestroy");
+        super.onDestroy();
     }
 
     public void initialize(Context c, boolean cat)
@@ -80,6 +88,7 @@ public class StatisticFragment extends SliderFragment
                 costitems_, expensesdates_,
                 cat ? AdvancedStatisticAdapter.REPORT_CAT
                         : AdvancedStatisticAdapter.REPORT_TAG);
+        applyFilter();
     }
 
     public void setCostItems(ArrayList<CostItem> costitems)
@@ -102,32 +111,58 @@ public class StatisticFragment extends SliderFragment
         period_ = p;
     }
 
+    public void setSelectedItems(ArrayList<Integer> items)
+    {
+        selectedItems_ = items;
+    }
+
     private void showSelectionDialog()
     {
-        MultiSelectionDialog d = new MultiSelectionDialog(getActivity(),
-                R.string.label_select_category, items_, selectedItems_);
-        d.setOnConfirmListener(new DialogInterface.OnClickListener()
+        MultiSelectionDialog d = new MultiSelectionDialog();
+        d.setHeaderId(R.string.label_select_category);
+        d.setItems(items_);
+        d.setSelectedItems(selectedItems_);
+        d.setConfirmListener(this);
+        d.show(getFragmentManager(), TAG_MULTISEL_DLG);
+    }
+
+    protected void applyFilter()
+    {
+        if (cat_)
         {
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                if (cat_)
-                {
-                    ArrayList<CostItem> costitems = new ArrayList<CostItem>();
-                    for (int i = 0; i < selectedItems_.size(); ++i)
-                        costitems.add(costitems_.get(selectedItems_.get(i)));
-                    adapter_.setFilter(costitems);
-                }
-                else
-                {
-                    ArrayList<String> tags = new ArrayList<String>();
-                    for (int i = 0; i < selectedItems_.size(); ++i)
-                        tags.add(tags_.get(selectedItems_.get(i)));
-                    adapter_.setTagFilter(tags);
-                }
-            }
-        });
-        d.show();
+            ArrayList<CostItem> costitems = new ArrayList<CostItem>();
+            for (int i = 0; i < selectedItems_.size(); ++i)
+                costitems.add(costitems_.get(selectedItems_.get(i)));
+            adapter_.setFilter(costitems);
+        }
+        else
+        {
+            ArrayList<String> tags = new ArrayList<String>();
+            for (int i = 0; i < selectedItems_.size(); ++i)
+                tags.add(tags_.get(selectedItems_.get(i)));
+            adapter_.setTagFilter(tags);
+        }
+    }
+
+    @Override
+    public void onMultiSelectionConfirmed(int dialogid,
+            ArrayList<Integer> selectedItems, int param)
+    {
+        selectedItems_.clear();
+        selectedItems_.addAll(selectedItems);
+        applyFilter();
+    }
+
+    private void rebindListenersForActiveFragments()
+    {
+        Fragment f = null;
+
+        f = getFragmentManager().findFragmentByTag(TAG_MULTISEL_DLG);
+        if (f != null && f instanceof MultiSelectionDialog)
+        {
+            MultiSelectionDialog md = (MultiSelectionDialog) f;
+            md.setConfirmListener(this);
+        }
     }
 
     protected boolean                  cat_;
@@ -139,4 +174,5 @@ public class StatisticFragment extends SliderFragment
     protected StatisticPeriod          period_;
     private String[]                   items_;
     private ArrayList<Integer>         selectedItems_;
+    private static final String        TAG_MULTISEL_DLG = "fragment_multi_selection";
 }

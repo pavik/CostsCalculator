@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import net.costcalculator.service.DataFormatService;
+import net.costcalculator.service.PreferencesService;
+import net.costcalculator.util.ErrorHandler;
+import net.costcalculator.util.LOG;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -31,9 +35,37 @@ public class StatisticFragmentCustom extends StatisticFragment
     }
 
     @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+        try
+        {
+            PreferencesService pref = new PreferencesService(getActivity());
+            String from = pref
+                    .get(PreferencesService.STATISTIC_CUSTOM_DATE_FROM);
+            String to = pref.get(PreferencesService.STATISTIC_CUSTOM_DATE_TO);
+            String days = pref
+                    .get(PreferencesService.STATISTIC_CUSTOM_DAYS_COUNT);
+            if (from != null)
+                from_ = new Date(Long.parseLong(from));
+            if (to != null)
+                to_ = new Date(Long.parseLong(to));
+            if (days != null)
+                days_ = Integer.parseInt(days);
+            pref = null;
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, activity);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
+        LOG.T("StatisticFragmentCustom::onCreateView");
+
         layoutid_ = R.layout.view_statistic_report_custom;
         View view = super.onCreateView(inflater, container, savedInstanceState);
         dateFrom_ = (TextView) view.findViewById(R.id.tv_date_from);
@@ -110,6 +142,13 @@ public class StatisticFragmentCustom extends StatisticFragment
     }
 
     @Override
+    public void onDestroy()
+    {
+        LOG.T("StatisticFragmentCustom::onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
     public void initialize(Context c, boolean cat)
     {
         cat_ = cat;
@@ -117,6 +156,7 @@ public class StatisticFragmentCustom extends StatisticFragment
                 costitems_, expensesdates_,
                 cat ? AdvancedStatisticAdapter.REPORT_CAT
                         : AdvancedStatisticAdapter.REPORT_TAG);
+        applyFilter();
     }
 
     private void setDate(TextView tv, Date d)
@@ -137,6 +177,11 @@ public class StatisticFragmentCustom extends StatisticFragment
         from_ = c.getTime();
         setDate(dateFrom_, from_);
         adapter_.setCustomInterval(from_, to_, period_, days_, expensesdates_);
+
+        PreferencesService pref = new PreferencesService(getActivity());
+        pref.set(PreferencesService.STATISTIC_CUSTOM_DATE_FROM,
+                Long.toString(from_.getTime()));
+        pref = null;
     }
 
     private void dateToChanged(int year, int monthOfYear, int dayOfMonth)
@@ -149,6 +194,11 @@ public class StatisticFragmentCustom extends StatisticFragment
         to_ = c.getTime();
         setDate(dateTo_, to_);
         adapter_.setCustomInterval(from_, to_, period_, days_, expensesdates_);
+
+        PreferencesService pref = new PreferencesService(getActivity());
+        pref.set(PreferencesService.STATISTIC_CUSTOM_DATE_TO,
+                Long.toString(to_.getTime()));
+        pref = null;
     }
 
     private void daysCountEntered()
@@ -162,6 +212,11 @@ public class StatisticFragmentCustom extends StatisticFragment
                 adapter_.setCustomInterval(from_, to_, period_, days_,
                         expensesdates_);
             }
+
+            PreferencesService pref = new PreferencesService(getActivity());
+            pref.set(PreferencesService.STATISTIC_CUSTOM_DAYS_COUNT,
+                    Integer.toString(days_));
+            pref = null;
         }
         catch (Exception e)
         {

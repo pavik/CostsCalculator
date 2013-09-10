@@ -40,6 +40,8 @@ public class ActivityEditPrice extends FragmentActivity
         if (f != null && f instanceof FragmentEditPrice)
             fragment = (FragmentEditPrice) f;
 
+        LOG.D("ActivityEditPrice::onCreate - fragment reusing: "
+                + (fragment != null));
         if (fragment == null)
         {
             fragment = new FragmentEditPrice();
@@ -84,5 +86,12 @@ public class ActivityEditPrice extends FragmentActivity
         LOG.T("ActivityEditPrice::finishActivity");
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        LOG.T("ActivityEditPrice::onDestroy");
+        super.onDestroy();
     }
 }

@@ -32,7 +32,8 @@ public class SliderFragmentFactory
     public static StatisticFragment createStatisticFragment(Context c,
             String path, ArrayList<CostItem> costitems,
             ArrayList<Date> expensesdates, ArrayList<Date> expensestagdates,
-            ArrayList<String> tags)
+            ArrayList<String> tags, ArrayList<Integer> selCat,
+            ArrayList<Integer> selTag)
     {
         if (path == null || path.length() == 0)
             throw new IllegalArgumentException("path: " + path);
@@ -70,6 +71,10 @@ public class SliderFragmentFactory
 
         f.setTags(tags);
         f.setCostItems(costitems);
+        if (el[0].equals(PATH_CAT))
+            f.setSelectedItems(selCat);
+        else
+            f.setSelectedItems(selTag);
         f.initialize(c, el[0].equals(PATH_CAT));
         return f;
     }
