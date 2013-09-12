@@ -8,6 +8,8 @@
 
 package net.costcalculator.activity;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.service.CancelCallback;
 import net.costcalculator.service.OkCallback;
 import net.costcalculator.util.LOG;
@@ -93,5 +95,19 @@ public class ActivityEditPrice extends FragmentActivity
     {
         LOG.T("ActivityEditPrice::onDestroy");
         super.onDestroy();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 }

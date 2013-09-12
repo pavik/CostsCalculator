@@ -4,6 +4,8 @@ package net.costcalculator.activity;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.util.LOG;
@@ -112,6 +114,20 @@ public class StatisticActivity extends SliderActivity
     protected String[] getFragmentTitles()
     {
         return titles_;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private ArrayList<Date>     expensesdates_;

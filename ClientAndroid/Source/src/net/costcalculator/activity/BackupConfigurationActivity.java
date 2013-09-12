@@ -8,6 +8,8 @@
 
 package net.costcalculator.activity;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,7 +31,7 @@ public class BackupConfigurationActivity extends Activity
         LOG.T("BackupConfigurationActivity::onCreate");
         logic_ = new BackupConfigurationLogic(this);
     }
-    
+
     @Override
     protected void onDestroy()
     {
@@ -42,6 +44,20 @@ public class BackupConfigurationActivity extends Activity
         }
 
         LOG.T("BackupConfigurationActivity::onDestroy");
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private BackupConfigurationLogic logic_;

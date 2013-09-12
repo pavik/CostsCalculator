@@ -8,6 +8,8 @@
 
 package net.costcalculator.activity;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.service.CancelCallback;
 import net.costcalculator.service.OkCallback;
 import net.costcalculator.util.ErrorHandler;
@@ -111,6 +113,20 @@ public class PriceListActivity extends FragmentActivity
     {
         if (logic_ != null)
             logic_.cancelRequest();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private PricelListLogic   logic_;

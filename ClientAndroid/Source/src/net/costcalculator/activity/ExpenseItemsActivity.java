@@ -8,6 +8,8 @@
 
 package net.costcalculator.activity;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.activity.R;
 import net.costcalculator.dialog.EditTextDialog;
 import net.costcalculator.util.ErrorHandler;
@@ -138,6 +140,20 @@ public class ExpenseItemsActivity extends FragmentActivity implements
             startActivity(new Intent(this, BackupActivity.class));
             break;
         }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private ExpenseItemsLogic logic_;

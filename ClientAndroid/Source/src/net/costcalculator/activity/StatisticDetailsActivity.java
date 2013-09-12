@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import net.costcalculator.adapter.StatisticDetailsAdapter;
 import net.costcalculator.dialog.MultiSelectionConfirmListener;
 import net.costcalculator.dialog.MultiSelectionDialog;
@@ -148,6 +150,20 @@ public class StatisticDetailsActivity extends FragmentActivity implements
             MultiSelectionDialog md = (MultiSelectionDialog) f;
             md.setConfirmListener(this);
         }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private String[]                guidtag_;
