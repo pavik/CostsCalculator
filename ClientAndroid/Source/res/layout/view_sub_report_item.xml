@@ -7,12 +7,14 @@
         android:id="@+id/tv_cat_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_marginLeft="2dp"
+        android:layout_toLeftOf="@id/tv_price_val"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/col_black" />
 
     <TextView
-        android:id="@id/tv_price_val"
+        android:id="@+id/tv_price_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
