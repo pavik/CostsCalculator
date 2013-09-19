@@ -1,10 +1,12 @@
 
 package net.costcalculator.adapter;
 
+import java.io.IOException;
 import java.util.Date;
 
 import net.costcalculator.activity.R;
 import net.costcalculator.service.CostItemRecordsAdapter;
+import net.costcalculator.util.ErrorHandler;
 
 import android.app.Activity;
 import android.view.View;
@@ -71,7 +73,7 @@ public class StatisticDetailsAdapter extends BaseAdapter
             View item = adapter.getView(i, null, parent);
             item.setId(i + 1);
             RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.FILL_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             rlp.addRule(RelativeLayout.BELOW, below);
             rlp.topMargin = 2;
@@ -79,7 +81,15 @@ public class StatisticDetailsAdapter extends BaseAdapter
             rl.addView(item, rlp);
             below = i + 1;
         }
-        adapter.release();
+
+        try
+        {
+            adapter.close();
+        }
+        catch (IOException e)
+        {
+            ErrorHandler.handleException(e, a_);
+        }
         adapter = null;
         return view;
     }

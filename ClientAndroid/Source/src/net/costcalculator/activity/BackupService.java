@@ -2,7 +2,6 @@
 package net.costcalculator.activity;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import net.costcalculator.service.CostItemsService;
 import net.costcalculator.service.DataFormatService;
@@ -46,8 +45,7 @@ public class BackupService
                 LOG.D("Dropbox backup skipped - no expenses found");
                 return;
             }
-            LOG.D(new Date(latestBackupTime).toLocaleString());
-            LOG.D(new Date(latestModificationTime).toLocaleString());
+
             if (latestBackupTime >= latestModificationTime)
             {
                 LOG.D("Dropbox backup skipped - no modifications found since latest backup");

@@ -211,7 +211,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
 
         RelativeLayout rl = (RelativeLayout) item;
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.addRule(RelativeLayout.BELOW, vh.vDivider.getId());
 
@@ -280,6 +280,7 @@ public class AdvancedStatisticAdapter extends BaseAdapter
         return periods;
     }
 
+    @SuppressWarnings("deprecation")
     private ArrayList<Pair<Date, Date>> divideByIntervals(
             ArrayList<Date> expensesdates, Date from, Date to, int interval)
     {

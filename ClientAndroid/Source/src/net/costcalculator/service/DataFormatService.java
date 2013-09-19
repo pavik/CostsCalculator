@@ -53,7 +53,7 @@ public class DataFormatService
     }
 
     /**
-     * Format date to string
+     * Format date to string for the default locale
      */
     public static String formatDate(Date d)
     {
@@ -61,11 +61,19 @@ public class DataFormatService
     }
 
     /**
-     * Format time to string
+     * Format time to string for the default locale
      */
     public static String formatTime(Date d)
     {
         return SimpleDateFormat.getTimeInstance().format(d);
+    }
+
+    /**
+     * Format datetime to string for the default locale
+     */
+    public static String formatDateTime(Date d)
+    {
+        return SimpleDateFormat.getDateTimeInstance().format(d);
     }
 
     /**
@@ -116,6 +124,7 @@ public class DataFormatService
         return formatMonth(first);
     }
 
+    @SuppressWarnings("deprecation")
     public static String formatYear(Date first, Date second)
     {
         return Integer.toString(first.getYear() + 1900);

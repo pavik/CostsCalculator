@@ -42,6 +42,7 @@ import net.costcalculator.db.SQLiteDbQueries;
  * @author Aliaksei Plashchanski
  * 
  */
+@SuppressWarnings("deprecation")
 public class CostItemsService
 {
     public CostItem createCostItem(String name) throws Exception

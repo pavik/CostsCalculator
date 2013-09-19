@@ -266,7 +266,8 @@ public class CostItemRecordsAdapter extends BaseAdapter implements Closeable
         CostItemRecord cir = getCostItemRecord(position);
         vh.tvPrice.setText(DataFormatService.formatPrice(cir.getSum()) + " "
                 + cir.getCurrency());
-        vh.tvDate.setText(cir.getCreationTime().toLocaleString());
+        vh.tvDate.setText(DataFormatService.formatDateTime(cir
+                .getCreationTime()));
         vh.tvComment.setText(cir.getComment());
         vh.tvTag.setText(cir.getTag());
 
