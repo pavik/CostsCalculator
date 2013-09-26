@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:expenses="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_new"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/new_expense_item"
+        expenses:showAsAction="always"/>
+    <item
+        android:id="@+id/action_overflow"
+        android:icon="@drawable/ic_action_overflow"
+        android:title="@string/label_overflow"
+        expenses:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_statistic"
+                android:title="@string/expense_statistic"/>
+            <item
+                android:id="@+id/action_export"
+                android:title="@string/expense_export"/>
+            <item
+                android:id="@+id/action_quit"
+                android:title="@string/quit_application"/>
+        </menu>
+    </item>
+
+</menu>

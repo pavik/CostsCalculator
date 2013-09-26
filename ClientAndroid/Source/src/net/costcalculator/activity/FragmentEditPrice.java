@@ -38,7 +38,7 @@ public class FragmentEditPrice extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         LOG.T("FragmentEditPrice::onCreate");
-        super.onDestroy();
+        super.onCreate(savedInstanceState);
     }
 
     @Override

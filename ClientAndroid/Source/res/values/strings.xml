@@ -128,5 +128,7 @@
     <string name="label_select_all">Select all</string>
     <string name="title_activity_statistic_details">Expense summary</string>
     <string name="action_settings">Settings</string>
-
+    <string name="label_overflow">Go to</string>
+    <string name="expense_export">Export Dropbox</string>
+    <string name="income">Income</string>
 </resources>

@@ -22,9 +22,11 @@ import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -36,9 +38,11 @@ import android.widget.GridView;
  * Usage:
  * {
  *     // create instance
- *     ExpenseItemsLogic l = new ExpenseItemsLogic(activity);
+ *     ExpenseItemsLogic l = new ExpenseItemsLogic();
  * 
+ *     l.attach(...);
  *     // activity uses view
+ *     l.detach();
  * 
  *     // destroy view
  *     l.release();
@@ -56,57 +60,79 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
     public static final String TAG_MENU_DIALOG  = "fragment_menu_dialog";
     public static final String TAG_ALERT_DIALOG = "fragment_alert_dialog";
 
-    public ExpenseItemsLogic(FragmentActivity a) throws Exception
+    public ExpenseItemsLogic()
     {
-        LOG.T("ExpenseItemsLogic::ExpenseItemsLogic");
+        LOG.T("ExpenseItemsLogic::ExpenseItemsLogic()");
+    }
 
-        activity_ = a;
-        gridView_ = (GridView) activity_.findViewById(R.id.gridExpenseItems);
-        if (gridView_ == null)
-            throw new Exception("findViewById failed, id = "
-                    + R.id.gridExpenseItems);
+    public void detach()
+    {
+    }
 
-        cis_ = new CostItemsService(activity_);
-        viewbuilder_ = new CostItemAdapterMainView(activity_,
-                cis_.getCostItemRecordsCount());
-        adapter_ = new CostItemAdapter(activity_, viewbuilder_);
-        gridView_.setAdapter(adapter_);
-        gridView_.setOnItemClickListener(new OnItemClickListener()
+    public void saveInstanceState(Bundle outState)
+    {
+    }
+
+    public View attach(Fragment f, LayoutInflater inflater,
+            ViewGroup container, Bundle savedInstanceState)
+    {
+        fragment_ = f;
+        View view = inflater.inflate(R.layout.expense_fragment, container,
+                false);
+        try
         {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int pos, long id)
-            {
-                Intent intent = new Intent(activity_, PriceListActivity.class);
-                intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
-                activity_.startActivity(intent);
-            }
-        });
-        gridView_
-                .setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-                {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> av, View v,
-                            int pos, long id)
-                    {
-                        if (id > 0)
-                        {
-                            categoryMenuRequest(pos);
-                            return true;
-                        }
-                        else
-                            return false;
-                    }
-                });
+            gridView_ = (GridView) view.findViewById(R.id.grid_expense_items);
+            cis_ = new CostItemsService(fragment_.getActivity());
+            viewbuilder_ = new CostItemAdapterMainView(fragment_.getActivity(),
+                    cis_.getCostItemRecordsCount());
+            adapter_ = new CostItemAdapter(fragment_.getActivity(),
+                    viewbuilder_);
 
-        // support screen rotation when dialog is visible
-        rebindListenersForActiveFragments();
+            gridView_.setAdapter(adapter_);
+            gridView_.setOnItemClickListener(new OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> av, View v, int pos,
+                        long id)
+                {
+                    Intent intent = new Intent(fragment_.getActivity(),
+                            PriceListActivity.class);
+                    intent.putExtra(PriceListActivity.COST_ITEM_ID, id);
+                    fragment_.getActivity().startActivity(intent);
+                }
+            });
+            gridView_
+                    .setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+                    {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> av,
+                                View v, int pos, long id)
+                        {
+                            if (id > 0)
+                            {
+                                categoryMenuRequest(pos);
+                                return true;
+                            }
+                            else
+                                return false;
+                        }
+                    });
+
+            // support screen rotation when dialog is visible
+            rebindListenersForActiveFragments();
+        }
+        catch (Exception e)
+        {
+            ErrorHandler.handleException(e, fragment_.getActivity());
+        }
+        return view;
     }
 
     public void release()
     {
         LOG.T("ExpenseItemsLogic::release()");
 
-        activity_ = null;
+        fragment_ = null;
         gridView_ = null;
         if (adapter_ != null)
             adapter_.release();
@@ -123,7 +149,14 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         adapter_.reload();
     }
 
-    public EditTextDialog createEditTextDialog(boolean newcategory)
+    public void newCategoryRequest()
+    {
+        EditTextDialog etd = createEditTextDialog(true);
+        etd.show(fragment_.getActivity().getSupportFragmentManager(),
+                ExpenseItemsLogic.TAG_EDIT_DLG);
+    }
+
+    private EditTextDialog createEditTextDialog(boolean newcategory)
     {
         EditTextDialog etd = new EditTextDialog();
         etd.setDialogId(newcategory ? DIALOG_ID_NEW : DIALOG_ID_EDIT);
@@ -195,7 +228,7 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             md.setDialogId(DIALOG_ID_MENU_ACTION);
             md.setParam(pos);
             md.setHeader(ci.getName());
-            Resources r = activity_.getResources();
+            Resources r = fragment_.getActivity().getResources();
             String[] items = new String[] { r.getString(R.string.edit),
                     r.getString(R.string.move), r.getString(R.string.delete) };
             int[] icons = new int[] { R.drawable.ic_edit_2, R.drawable.ic_move,
@@ -203,7 +236,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             md.setItems(items);
             md.setIcons(icons);
             md.setItemClickedListener(this);
-            md.show(activity_.getSupportFragmentManager(), TAG_MENU_DIALOG);
+            md.show(fragment_.getActivity().getSupportFragmentManager(),
+                    TAG_MENU_DIALOG);
         }
     }
 
@@ -215,7 +249,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             etd.setParam(pos);
             CostItem ci = adapter_.getCostItem(pos);
             etd.setText(ci.getName());
-            etd.show(activity_.getSupportFragmentManager(), TAG_EDIT_DLG);
+            etd.show(fragment_.getActivity().getSupportFragmentManager(),
+                    TAG_EDIT_DLG);
         }
     }
 
@@ -224,8 +259,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         if (pos >= 0 && pos < adapter_.getCount())
         {
             CostItem ci = adapter_.getCostItem(pos);
-            final String rawWarn = activity_.getResources().getString(
-                    R.string.warning_del_category);
+            final String rawWarn = fragment_.getActivity().getResources()
+                    .getString(R.string.warning_del_category);
             final String formattedWarn = String.format(rawWarn, ci.getName());
 
             AlertDialog ad = new AlertDialog();
@@ -235,7 +270,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             ad.setParam(pos);
             ad.setIconId(R.drawable.ic_delete_large);
             ad.setConfirmListener(this);
-            ad.show(activity_.getSupportFragmentManager(), TAG_ALERT_DIALOG);
+            ad.show(fragment_.getActivity().getSupportFragmentManager(),
+                    TAG_ALERT_DIALOG);
         }
     }
 
@@ -246,8 +282,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             if (posFrom >= 0 && posFrom < adapter_.getCount())
             {
                 CostItem ci = adapter_.getCostItem(posFrom);
-                String s = activity_.getResources().getString(
-                        R.string.s_move_to);
+                String s = fragment_.getActivity().getResources()
+                        .getString(R.string.s_move_to);
 
                 MenuDialog md = new MenuDialog();
                 md.setDialogId(DIALOG_ID_MENU_SELITEM);
@@ -263,12 +299,13 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
                 md.setItems(items);
                 md.setIcons(icons);
                 md.setItemClickedListener(this);
-                md.show(activity_.getSupportFragmentManager(), TAG_MENU_DIALOG);
+                md.show(fragment_.getActivity().getSupportFragmentManager(),
+                        TAG_MENU_DIALOG);
             }
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, activity_);
+            ErrorHandler.handleException(e, fragment_.getActivity());
         }
     }
 
@@ -280,7 +317,7 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, activity_);
+            ErrorHandler.handleException(e, fragment_.getActivity());
         }
     }
 
@@ -291,8 +328,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         {
             CostItem ciFrom = adapter_.getCostItem(posFrom);
             CostItem ciTo = adapter_.getCostItem(posTo);
-            final String rawWarn = activity_.getResources().getString(
-                    R.string.warning_move_category);
+            final String rawWarn = fragment_.getActivity().getResources()
+                    .getString(R.string.warning_move_category);
             final String formattedWarn = String.format(rawWarn,
                     ciFrom.getName(), ciTo.getName());
 
@@ -303,7 +340,8 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
             ad.setIconId(R.drawable.ic_move_large);
             ad.setConfirmListener(this);
             ad.setParam(posFrom | (posTo << 16));
-            ad.show(activity_.getSupportFragmentManager(), TAG_ALERT_DIALOG);
+            ad.show(fragment_.getActivity().getSupportFragmentManager(),
+                    TAG_ALERT_DIALOG);
         }
     }
 
@@ -317,7 +355,7 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, activity_);
+            ErrorHandler.handleException(e, fragment_.getActivity());
         }
     }
 
@@ -329,7 +367,7 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, activity_);
+            ErrorHandler.handleException(e, fragment_.getActivity());
         }
     }
 
@@ -341,28 +379,28 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
         }
         catch (Exception e)
         {
-            ErrorHandler.handleException(e, activity_);
+            ErrorHandler.handleException(e, fragment_.getActivity());
         }
     }
 
     private void rebindListenersForActiveFragments()
     {
-        Fragment f = activity_.getSupportFragmentManager().findFragmentByTag(
-                TAG_EDIT_DLG);
+        Fragment f = fragment_.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(TAG_EDIT_DLG);
         if (f != null && f instanceof EditTextDialog)
         {
             EditTextDialog etd = (EditTextDialog) f;
             etd.setConfirmListener(this);
         }
-        f = activity_.getSupportFragmentManager().findFragmentByTag(
-                TAG_MENU_DIALOG);
+        f = fragment_.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(TAG_MENU_DIALOG);
         if (f != null && f instanceof MenuDialog)
         {
             MenuDialog md = (MenuDialog) f;
             md.setItemClickedListener(this);
         }
-        f = activity_.getSupportFragmentManager().findFragmentByTag(
-                TAG_ALERT_DIALOG);
+        f = fragment_.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(TAG_ALERT_DIALOG);
         if (f != null && f instanceof net.costcalculator.dialog.AlertDialog)
         {
             net.costcalculator.dialog.AlertDialog ad = (net.costcalculator.dialog.AlertDialog) f;
@@ -371,7 +409,7 @@ public class ExpenseItemsLogic implements DialogConfirmListener,
     }
 
     private GridView                gridView_;
-    private FragmentActivity        activity_;
+    private Fragment                fragment_;
     private CostItemAdapter         adapter_;
     private CostItemAdapterMainView viewbuilder_;
     private CostItemsService        cis_;

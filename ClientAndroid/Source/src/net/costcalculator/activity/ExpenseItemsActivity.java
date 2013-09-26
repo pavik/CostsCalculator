@@ -11,14 +11,12 @@ package net.costcalculator.activity;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import net.costcalculator.activity.R;
-import net.costcalculator.dialog.EditTextDialog;
 import net.costcalculator.util.ErrorHandler;
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.ImageButton;
 
 /**
  * Expense items screen.
@@ -41,28 +39,7 @@ public class ExpenseItemsActivity extends FragmentActivity implements
         setContentView(R.layout.activity_expense_items);
         try
         {
-            logic_ = new ExpenseItemsLogic(this);
-            final EditTextDialog etd = logic_.createEditTextDialog(true);
-
-            ImageButton newButton = (ImageButton) findViewById(R.id.new_expense_item);
-            newButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    etd.show(getSupportFragmentManager(),
-                            ExpenseItemsLogic.TAG_EDIT_DLG);
-                }
-            });
-
-            ImageButton reportButton = (ImageButton) findViewById(R.id.expense_statistic);
-            reportButton.setOnClickListener(this);
-
-            ImageButton backupButton = (ImageButton) findViewById(R.id.backup_expenses);
-            backupButton.setOnClickListener(this);
-
-            ImageButton quitButton = (ImageButton) findViewById(R.id.quit_application);
-            quitButton.setOnClickListener(this);
+            logic_ = new ExpenseItemsLogic();
         }
         catch (Exception e)
         {
