@@ -42,6 +42,7 @@ public class SQLiteDbUpdate
         {
             for (int i = from_; i < to_; ++i)
             {
+                LOG.D(String.format("Update database from %d to %d", i, i + 1));
                 final String updatescript = String.format("updatedb_%d_%d.sql",
                         i, i + 1);
                 final String sql = RawResources.getFileAsString(context_,

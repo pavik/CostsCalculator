@@ -23,7 +23,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SQLiteDbProvider extends SQLiteOpenHelper
 {
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public SQLiteDbProvider(Context context)
     {
