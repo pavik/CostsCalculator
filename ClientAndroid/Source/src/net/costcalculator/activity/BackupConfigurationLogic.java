@@ -8,15 +8,9 @@
 
 package net.costcalculator.activity;
 
-import net.costcalculator.service.BackupAlarmBroadcastReceiver;
 import net.costcalculator.service.PreferencesService;
-import net.costcalculator.util.LOG;
+import net.costcalculator.service.DropBoxService;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.SystemClock;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -71,48 +65,22 @@ public class BackupConfigurationLogic
 
     private void saveConfiguration()
     {
-        String shour = etHour_.getText().toString();
-        pref.set(PreferencesService.BACKUP_INTERVAL, shour);
+        String hourStr = etHour_.getText().toString();
+        int hour = hourStr.length() == 0 ? 0 : Integer.parseInt(hourStr);
 
-        int hour = 0;
-        if (shour.length() > 0)
-            hour = Integer.parseInt(shour);
-        if (hour > 0)
+        if (hour <= 0)
         {
-            deleteAlarm();
-            setupAlarm(hour);
+            pref.set(PreferencesService.BACKUP_INTERVAL, "0");
+            DropBoxService.deleteAlarm(activity_);
         }
         else
-            deleteAlarm();
+        {
+            pref.set(PreferencesService.BACKUP_INTERVAL, hourStr);
+            DropBoxService.deleteAlarm(activity_);
+            DropBoxService.setupAlarm(activity_);
+        }
+
         activity_.finish();
-    }
-
-    private void setupAlarm(int hours)
-    {
-        LOG.T("BackupConfigurationLogic::setupAlarm");
-        AlarmManager am = (AlarmManager) activity_
-                .getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(activity_,
-                BackupAlarmBroadcastReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(activity_, 0,
-                intent, 0);
-        long repeatingms = hours * 3600 * 1000;
-        LOG.D("repeatingms = " + repeatingms);
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + repeatingms, repeatingms,
-                pending);
-    }
-
-    private void deleteAlarm()
-    {
-        LOG.T("BackupConfigurationLogic::deleteAlarm");
-        AlarmManager am = (AlarmManager) activity_
-                .getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(activity_,
-                BackupAlarmBroadcastReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(activity_, 0,
-                intent, 0);
-        am.cancel(pending);
     }
 
     private Activity           activity_;

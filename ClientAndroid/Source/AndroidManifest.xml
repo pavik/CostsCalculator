@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.costcalculator.activity"
-    android:installLocation="preferExternal"
+    android:installLocation="auto"
     android:versionCode="8"
     android:versionName="1.8" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="20" />
+        android:targetSdkVersion="24" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -39,7 +40,7 @@
             android:label="@string/s_title_activity_backup" >
         </activity>
         <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
+            android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask" >
             <intent-filter>
@@ -61,6 +62,13 @@
         </activity>
 
         <receiver android:name="net.costcalculator.service.BackupAlarmBroadcastReceiver" >
+        </receiver>
+
+        <receiver android:name="net.costcalculator.service.BootCompletedBroadcastReceiver"
+                android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
         </receiver>
 
         <activity

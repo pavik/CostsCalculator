@@ -57,12 +57,11 @@ public class DownloadFileTask extends AsyncTask<Void, Long, Boolean> implements
     protected void onPreExecute()
     {
         pd_ = new ProgressDialog(context_);
-        pd_.setMax(100);
         pd_.setMessage(path_);
         pd_.setTitle(context_.getResources().getString(
                 R.string.s_msg_downloading));
-        pd_.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        pd_.setProgress(0);
+        pd_.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd_.setIndeterminate(true);
         pd_.setCancelable(false);
         pd_.show();
     }
@@ -107,7 +106,7 @@ public class DownloadFileTask extends AsyncTask<Void, Long, Boolean> implements
         }
         catch (Exception e)
         {
-            String problem = DropBoxService.instance().handleException(e);
+            String problem = DropBoxService.handleException(e);
             if (problem != null)
                 errors_.add(problem);
             else if (e.getLocalizedMessage() != null)

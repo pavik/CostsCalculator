@@ -58,6 +58,7 @@ public class GetFolderContentTask extends
                 R.string.s_msg_list_available_backups));
         pd_.setTitle("Dropbox");
         pd_.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd_.setIndeterminate(true);
         pd_.setCancelable(false);
         pd_.show();
     }
@@ -75,7 +76,7 @@ public class GetFolderContentTask extends
             }
             catch (Exception e)
             {
-                String problem = DropBoxService.instance().handleException(e);
+                String problem = DropBoxService.handleException(e);
                 if (problem != null)
                     errors_.add(problem);
                 else if (e.getLocalizedMessage() != null)

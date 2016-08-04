@@ -12,8 +12,6 @@ import net.costcalculator.util.LOG;
 
 import org.json.simple.JSONArray;
 
-import com.dropbox.client2.exception.DropboxIOException;
-
 import android.content.Context;
 
 public class BackupService
@@ -30,23 +28,30 @@ public class BackupService
     {
         LOG.T("BackupService::backupExpensesDropbox");
 
-        // check if we should do automatic backup
         PreferencesService s = new PreferencesService(context);
+        String accessToken = s.get(PreferencesService.ACCESS_TOKEN);
+        if (accessToken == null)
+        {
+            LOG.E("Dropbox account is not configured.");
+            return;
+        }
+
         String latestBackupStr = s
                 .get(PreferencesService.LATEST_DROPBOX_BACKUP_TIME);
         if (latestBackupStr != null)
         {
             long latestBackupTime = Long.parseLong(latestBackupStr);
+            
             CostItemsService cis = new CostItemsService(context);
             long latestModificationTime = cis.getLatestModificationTime();
             cis.release();
+            
             if (latestModificationTime == 0)
             {
                 LOG.D("Dropbox backup skipped - no expenses found");
                 return;
             }
-
-            if (latestBackupTime >= latestModificationTime)
+            else if (latestBackupTime >= latestModificationTime)
             {
                 LOG.D("Dropbox backup skipped - no modifications found since latest backup");
                 return;
@@ -77,21 +82,29 @@ public class BackupService
                             list.toJSONString(), null);
                     attempt = BACKUP_SUCCESS;
                 }
-                catch (DropboxIOException e)
+                catch (Exception e)
                 {
                     --attempt;
-                    Thread.sleep(10000); // wait 10 seconds
-                    LOG.D("Trying to upload backup, attempt " + attempt);
+                    LOG.E(e.getMessage());
+                    LOG.D("Trying to upload backup, attempts remain: " + attempt);
+                    Thread.sleep(1000); // wait 1 second
                 }
             }
+            
             if (attempt == BACKUP_SUCCESS)
                 s.set(PreferencesService.LATEST_DROPBOX_BACKUP_TIME,
                         Long.toString(currentTime));
+        }
+        catch (Exception ex)
+        {
+            LOG.E(ex.getMessage());
         }
         finally
         {
             if (release)
                 DropBoxService.release();
         }
+        
+        LOG.T("BackupService::backupExpensesDropbox return");
     }
 }

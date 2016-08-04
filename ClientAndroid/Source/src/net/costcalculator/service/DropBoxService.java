@@ -10,28 +10,25 @@ package net.costcalculator.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import com.dropbox.core.DbxException;
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.http.OkHttp3Requestor;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
+
 import net.costcalculator.util.LOG;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.ProgressListener;
-import com.dropbox.client2.DropboxAPI.Entry;
-import com.dropbox.client2.DropboxAPI.UploadRequest;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.exception.DropboxFileSizeException;
-import com.dropbox.client2.exception.DropboxIOException;
-import com.dropbox.client2.exception.DropboxParseException;
-import com.dropbox.client2.exception.DropboxPartialFileException;
-import com.dropbox.client2.exception.DropboxServerException;
-import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.Session.AccessType;
+import android.content.Intent;
+import android.os.SystemClock;
 
 /**
  * Service provides static methods for communicating with dropbox storage.
@@ -46,7 +43,7 @@ import com.dropbox.client2.session.Session.AccessType;
  *     }
  *     catch (Exception e)
  *     {
- *         String error = DropBoxService.instance().handleException(e);
+ *         String error = DropBoxService.handleException(e);
  *     }
  * 
  *     DropBoxService.release();
@@ -58,9 +55,12 @@ import com.dropbox.client2.session.Session.AccessType;
  */
 public class DropBoxService
 {
-    // singleton interface
+    // static interface
     public static void create(Context c)
     {
+        if (c == null)
+            throw new IllegalArgumentException("context");
+
         release();
         instance_ = new DropBoxService(c);
     }
@@ -79,50 +79,128 @@ public class DropBoxService
         return instance_;
     }
 
-    // service interface
-    public DropboxAPI<AndroidAuthSession> getDropboxAPI()
+    public static String appKey()
     {
-        return api_;
+        return APP_KEY;
     }
 
+    public static void saveAccessToken(Context context, String accessToken)
+    {
+        if (context == null)
+            throw new IllegalArgumentException("context");
+        if (accessToken == null || accessToken.length() == 0)
+            throw new IllegalArgumentException("accessToken");
+
+        PreferencesService pref = new PreferencesService(context);
+        pref.set(PreferencesService.ACCESS_TOKEN, accessToken);
+    }
+
+    public static void clearAccessToken(Context context)
+    {
+        if (context == null)
+            throw new IllegalArgumentException("context");
+
+        PreferencesService pref = new PreferencesService(context);
+        pref.remove(PreferencesService.ACCESS_TOKEN);
+    }
+
+    public static boolean hasAccessToken(Context context)
+    {
+        if (context == null)
+            throw new IllegalArgumentException("context");
+
+        PreferencesService pref = new PreferencesService(context);
+        return null != pref.get(PreferencesService.ACCESS_TOKEN);
+    }
+
+    public static void setupAlarm(Context context)
+    {
+        LOG.T("BackupConfigurationLogic::setupAlarm");
+        if (context == null)
+            throw new IllegalArgumentException("context");
+
+        PreferencesService pref = new PreferencesService(context);
+        String hourStr = pref.get(PreferencesService.BACKUP_INTERVAL);
+        int hour = hourStr == null ? 0 : Integer.valueOf(hourStr);
+
+        if (hour <= 0)
+            LOG.D("Backup interval is not configured");
+        else
+        {
+            LOG.D("Setting up alarm");
+
+            AlarmManager am = (AlarmManager) context
+                    .getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(context,
+                    BackupAlarmBroadcastReceiver.class);
+            PendingIntent pending = PendingIntent.getBroadcast(context, 0,
+                    intent, 0);
+            long repeatingms = hour * 3600 * 1000;
+            LOG.D("repeatingms = " + repeatingms);
+            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime() + repeatingms, repeatingms,
+                    pending);
+        }
+    }
+
+    public static void deleteAlarm(Context context)
+    {
+        LOG.T("BackupConfigurationLogic::deleteAlarm");
+        if (context == null)
+            throw new IllegalArgumentException("context");
+
+        AlarmManager am = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, BackupAlarmBroadcastReceiver.class);
+        PendingIntent pending = PendingIntent.getBroadcast(context, 0, intent,
+                0);
+        am.cancel(pending);
+    }
+
+    public static String handleException(Exception ex)
+    {
+        String msg = ex.getLocalizedMessage();
+        if (msg == null || msg.length() == 0)
+            return ex.getMessage();
+        else
+            return msg;
+    }
+
+    // service interface
     public ArrayList<DropboxEntry> getFolderContent(String folder)
-            throws DropboxException
+            throws DbxException
     {
         LOG.T("DropBoxService::getFolderContent");
 
+        ListFolderResult r = api_.files().listFolder(folder);
         ArrayList<DropboxEntry> files = new ArrayList<DropboxEntry>();
-
-        Entry dir = api_.metadata(folder.length() == 0 ? "/" : folder, 0, null,
-                true, null);
-        for (Entry e : dir.contents)
+        for (Metadata md : r.getEntries())
         {
-            if (!e.isDir && !e.isDeleted)
+            if (md instanceof FileMetadata)
             {
+                FileMetadata fmd = (FileMetadata) md;
                 DropboxEntry file = new DropboxEntry();
-                file.name = e.fileName();
-                file.clientTime = e.clientMtime;
-                file.size = e.bytes;
+                file.name = fmd.getName();
+                file.clientTime = fmd.getClientModified().toString();
+                file.size = fmd.getSize();
                 files.add(file);
             }
         }
 
+        LOG.T("DropBoxService::getFolderContent -> return");
         return files;
     }
 
     public boolean uploadFile(String path, String file,
-            final ProgressCallback pc) throws Exception
+            final ProgressCallback pc) throws DbxException, IOException
     {
         LOG.T("DropBoxService::uploadFile");
+
         if (path.length() == 0)
-            throw new Exception("invalid argument: path");
+            throw new IllegalArgumentException("path");
         if (file.length() == 0)
-            throw new Exception("invalid argument: file");
-        if (!api_.getSession().isLinked())
-        {
-            LOG.D("Dropbox is not linked, cancelling upload");
-            return false;
-        }
-        
+            throw new IllegalArgumentException("file");
+
         ByteArrayInputStream bis;
         try
         {
@@ -140,195 +218,57 @@ public class DropBoxService
             bis = new ByteArrayInputStream(file.getBytes());
         }
 
-        // By creating a request, we get a handle to the putFile operation,
-        // so we can cancel it later if we want
-        UploadRequest request = api_.putFileRequest(path, bis, bis.available(),
-                null, new ProgressListener()
-                {
-                    @Override
-                    public long progressInterval()
-                    {
-                        // Update the progress bar every half-second or so
-                        return 500;
-                    }
+        api_.files().upload(path).uploadAndFinish(bis);
 
-                    @Override
-                    public void onProgress(long bytes, long total)
-                    {
-                        if (pc != null)
-                            pc.publishProgress(bytes, total);
-                    }
-                });
-
-        if (request != null)
-            request.upload();
-        else
-        {
-            LOG.D("UploadRequest is null");
-            return false;
-        }
-
-        LOG.T("DropBoxService::uploadFile -> finished");
+        LOG.T("DropBoxService::uploadFile -> return");
         return true;
     }
 
     public ByteArrayOutputStream downloadFile(String path,
-            final ProgressCallback pc) throws Exception
+            final ProgressCallback pc) throws DbxException, IOException
     {
         LOG.T("DropBoxService::downloadFile");
+
         if (path.length() == 0)
-            throw new Exception("invalid argument: path");
+            throw new IllegalArgumentException("path");
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream(8192);
-        api_.getFile(path, null, bos, new ProgressListener()
-        {
-            @Override
-            public long progressInterval()
-            {
-                // Update the progress bar every half-second or so
-                return 500;
-            }
+        FileMetadata fmd = (FileMetadata) api_.files().getMetadata(path);
+        api_.files().download(fmd.getPathLower(), fmd.getRev()).download(bos);
 
-            @Override
-            public void onProgress(long bytes, long total)
-            {
-                if (pc != null)
-                    pc.publishProgress(bytes, total);
-            }
-        });
-
+        LOG.T("DropBoxService::downloadFile -> return");
         return bos;
     }
 
-    public void storeKeys(String key, String secret)
-    {
-        PreferencesService pref = new PreferencesService(context_);
-        pref.set(PreferencesService.ACCESS_KEY_NAME, key);
-        pref.set(PreferencesService.ACCESS_SECRET_NAME, secret);
-    }
-
-    public void clearKeys()
-    {
-        PreferencesService pref = new PreferencesService(context_);
-        pref.remove(PreferencesService.ACCESS_KEY_NAME);
-        pref.remove(PreferencesService.ACCESS_SECRET_NAME);
-    }
-
+    // private section
     private DropBoxService(Context c)
     {
-        context_ = c.getApplicationContext();
         // We create a new AuthSession so that we can use the Dropbox API.
-        AndroidAuthSession session = buildSession();
-        api_ = new DropboxAPI<AndroidAuthSession>(session);
+        DbxRequestConfig requestConfig = DbxRequestConfig
+                .newBuilder("expenses")
+                .withHttpRequestor(OkHttp3Requestor.INSTANCE).build();
+
+        PreferencesService pref = new PreferencesService(c);
+        String accessToken = pref.get(PreferencesService.ACCESS_TOKEN);
+
+        if (accessToken == null)
+            throw new IllegalStateException(
+                    "DropBoxService: access token is not found");
+        else
+            api_ = new DbxClientV2(requestConfig, accessToken);
     }
 
     private void destroy()
     {
         api_ = null;
-        context_ = null;
     }
 
-    private AndroidAuthSession buildSession()
-    {
-        AppKeyPair appKeyPair = new AppKeyPair(APP_KEY, APP_SECRET);
-        AndroidAuthSession session;
+    // members
+    private DbxClientV2           api_;
 
-        PreferencesService pref = new PreferencesService(context_);
-        String key = pref.get(PreferencesService.ACCESS_KEY_NAME);
-        String sec = pref.get(PreferencesService.ACCESS_SECRET_NAME);
+    // instance
+    private static DropBoxService instance_;
 
-        if (key != null && sec != null)
-        {
-            AccessTokenPair accessToken = new AccessTokenPair(key, sec);
-            session = new AndroidAuthSession(appKeyPair, ACCESS_TYPE,
-                    accessToken);
-        }
-        else
-        {
-            session = new AndroidAuthSession(appKeyPair, ACCESS_TYPE);
-        }
-
-        return session;
-    }
-
-    public String handleException(Exception ex)
-    {
-        String error = null;
-        if (ex instanceof DropboxUnlinkedException)
-        {
-            // This session wasn't authenticated properly or user unlinked
-            error = "This app wasn't authenticated properly.";
-        }
-        else if (ex instanceof DropboxFileSizeException)
-        {
-            // File size too big to upload via the API
-            error = "This file is too big to upload";
-        }
-        else if (ex instanceof DropboxPartialFileException)
-        {
-            // We canceled the operation
-            error = "Upload canceled";
-        }
-        else if (ex instanceof DropboxServerException)
-        {
-            DropboxServerException e = (DropboxServerException) ex;
-            // Server-side exception. These are examples of what could happen,
-            // but we don't do anything special with them here.
-            if (e.error == DropboxServerException._401_UNAUTHORIZED)
-            {
-                // Unauthorized, so we should unlink them. You may want to
-                // automatically log the user out in this case.
-            }
-            else if (e.error == DropboxServerException._403_FORBIDDEN)
-            {
-                // Not allowed to access this
-            }
-            else if (e.error == DropboxServerException._404_NOT_FOUND)
-            {
-                // path not found (or if it was the thumbnail, can't be
-                // thumbnailed)
-            }
-            else if (e.error == DropboxServerException._507_INSUFFICIENT_STORAGE)
-            {
-                // user is over quota
-            }
-            else
-            {
-                // Something else
-            }
-            // This gets the Dropbox error, translated into the user's language
-            error = e.body.userError;
-            if (error == null)
-            {
-                error = e.body.error;
-            }
-        }
-        else if (ex instanceof DropboxIOException)
-        {
-            // Happens all the time, probably want to retry automatically.
-            error = "Network error.  Try again.";
-        }
-        else if (ex instanceof DropboxParseException)
-        {
-            // Probably due to Dropbox server restarting, should retry
-            error = "Dropbox error.  Try again.";
-        }
-        else if (ex instanceof DropboxException)
-        {
-            // Unknown error
-            error = "Unknown error.  Try again.";
-        }
-        else
-            return null; // can't handle this type of exception
-
-        return error;
-    }
-
-    private Context                        context_;
-    private DropboxAPI<AndroidAuthSession> api_;
-    private static DropBoxService          instance_;
-    // dropbox keys
-    final static private String            APP_KEY     = "ahtmcea8sy7m8bo";
-    final static private String            APP_SECRET  = "x2jwbg8j0f0w7nw";
-    final static private AccessType        ACCESS_TYPE = AccessType.APP_FOLDER;
+    // constant
+    final static private String   APP_KEY = "ahtmcea8sy7m8bo";
 }

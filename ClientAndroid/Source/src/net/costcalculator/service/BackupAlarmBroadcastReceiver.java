@@ -35,7 +35,6 @@ public class BackupAlarmBroadcastReceiver extends BroadcastReceiver
         catch (Exception e)
         {
             LOG.E(e.getMessage());
-            // TODO ErrorHandler.handleException(e, context);
         }
     }
 

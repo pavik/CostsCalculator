@@ -11,6 +11,8 @@ package net.costcalculator.activity;
 import java.util.ArrayList;
 import org.json.simple.JSONArray;
 
+import com.dropbox.core.android.Auth;
+
 import net.costcalculator.service.DataFormatService;
 import net.costcalculator.service.DropBoxService;
 import net.costcalculator.service.DropboxEntry;
@@ -18,10 +20,6 @@ import net.costcalculator.service.ImportService;
 import net.costcalculator.service.ImportStatistic;
 import net.costcalculator.service.JSONSerializerService;
 import net.costcalculator.util.ErrorHandler;
-import net.costcalculator.util.LOG;
-
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.session.TokenPair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -130,11 +128,9 @@ public class BackupLogic
             }
         });
 
-        DropBoxService.create(context_);
-        boolean isLinked = DropBoxService.instance().getDropboxAPI()
-                .getSession().isLinked();
-        if (isLinked)
+        if (DropBoxService.hasAccessToken(context_))
         {
+            DropBoxService.create(context_);
             updateView(true);
             readDirRequest();
         }
@@ -147,30 +143,18 @@ public class BackupLogic
 
     public void onActivityResume()
     {
-        AndroidAuthSession session = DropBoxService.instance().getDropboxAPI()
-                .getSession();
-
-        // The next part must be inserted in the onResume() method of the
-        // activity from which session.startAuthentication() was called, so
-        // that Dropbox authentication completes properly.
-        if (session.authenticationSuccessful())
+        if (!DropBoxService.hasAccessToken(context_))
         {
-            try
+            String accessToken = Auth.getOAuth2Token();
+            if (accessToken != null)
             {
-                // Mandatory call to complete the auth
-                session.finishAuthentication();
-
-                // Store it locally in our app for later use
-                TokenPair tokens = session.getAccessTokenPair();
-                DropBoxService.instance().storeKeys(tokens.key, tokens.secret);
-            }
-            catch (IllegalStateException e)
-            {
-                showToast(e.getLocalizedMessage());
-                LOG.E("Error authenticating: " + e.getLocalizedMessage());
+                DropBoxService.saveAccessToken(context_, accessToken);
+                DropBoxService.create(context_);
+                DropBoxService.setupAlarm(context_);
             }
         }
-        updateView(session.isLinked());
+
+        updateView(DropBoxService.hasAccessToken(context_));
     }
 
     public void selectEntryRequest(long id)
@@ -202,28 +186,16 @@ public class BackupLogic
 
     private void linkRequest()
     {
-        if (DropBoxService.instance().getDropboxAPI().getSession().isLinked())
-        {
-            DropBoxService.instance().getDropboxAPI().getSession().unlink();
-
-            // Clear our stored keys
-            DropBoxService.instance().clearKeys();
-        }
+        // Clear our stored keys
+        DropBoxService.clearAccessToken(context_);
 
         // Start the remote authentication
-        DropBoxService.instance().getDropboxAPI().getSession()
-                .startAuthentication(context_);
+        Auth.startOAuth2Authentication(context_, DropBoxService.appKey());
     }
 
     private void unlinkRequest()
     {
-        if (DropBoxService.instance().getDropboxAPI().getSession().isLinked())
-        {
-            DropBoxService.instance().getDropboxAPI().getSession().unlink();
-
-            // Clear our stored keys
-            DropBoxService.instance().clearKeys();
-        }
+        DropBoxService.clearAccessToken(context_);
         updateView(false);
     }
 
@@ -397,7 +369,7 @@ public class BackupLogic
                             readDirRequestComplete(task);
                         }
                     });
-            task.execute("/");
+            task.execute("");
         }
         catch (Exception e)
         {
