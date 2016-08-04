@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.costcalculator.activity"
     android:installLocation="auto"
-    android:versionCode="8"
-    android:versionName="1.8" >
+    android:versionCode="9"
+    android:versionName="1.9" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -46,7 +46,7 @@
             <intent-filter>
 
                 <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-ahtmcea8sy7m8bo" />
+                <data android:scheme="db-zwnjthizxmis656" />
 
                 <action android:name="android.intent.action.VIEW" />
 

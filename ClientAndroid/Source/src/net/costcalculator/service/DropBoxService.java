@@ -270,5 +270,5 @@ public class DropBoxService
     private static DropBoxService instance_;
 
     // constant
-    final static private String   APP_KEY = "ahtmcea8sy7m8bo";
+    final static private String   APP_KEY = "zwnjthizxmis656";
 }
