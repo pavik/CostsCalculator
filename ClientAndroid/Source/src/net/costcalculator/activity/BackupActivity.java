@@ -8,7 +8,8 @@
 
 package net.costcalculator.activity;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.costcalculator.util.LOG;
 import android.os.Bundle;
@@ -39,6 +40,12 @@ public class BackupActivity extends Activity
         super.onResume();
         LOG.T("BackupActivity::onResume");
 
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("BackupActivity::onResume");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
+
         logic_.onActivityResume();
     }
 
@@ -60,14 +67,22 @@ public class BackupActivity extends Activity
     public void onStart()
     {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("BackupActivity::onStart");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("BackupActivity::onStop");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
 
     private BackupLogic logic_;

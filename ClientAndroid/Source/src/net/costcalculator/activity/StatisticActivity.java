@@ -4,7 +4,8 @@ package net.costcalculator.activity;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.costcalculator.service.CostItem;
 import net.costcalculator.service.CostItemsService;
@@ -120,14 +121,33 @@ public class StatisticActivity extends SliderActivity
     public void onStart()
     {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("StatisticActivity::onStart");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("StatisticActivity::onResume");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("StatisticActivity::onStop");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
 
     private ArrayList<Date>     expensesdates_;

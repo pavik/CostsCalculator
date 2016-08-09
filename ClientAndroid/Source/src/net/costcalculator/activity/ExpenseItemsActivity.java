@@ -8,7 +8,8 @@
 
 package net.costcalculator.activity;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.costcalculator.activity.R;
 import net.costcalculator.dialog.EditTextDialog;
@@ -99,13 +100,10 @@ public class ExpenseItemsActivity extends FragmentActivity implements
     {
         LOG.T("ExpenseItemsActivity::onClick");
 
-        switch (v.getId())
-        {
-        case R.id.quit_application:
+        if (v.getId() == R.id.quit_application)
             finish();
-            break;
-
-        case R.id.expense_statistic:
+        else if (v.getId() == R.id.expense_statistic)
+        {
             Intent intent = new Intent(this, StatisticActivity.class);
             String[] fragments = {
                     SliderFragmentFactory
@@ -134,27 +132,42 @@ public class ExpenseItemsActivity extends FragmentActivity implements
                             .getTagPath(SliderFragmentFactory.PATH_STAT_CUSTOM) };
             intent.putExtra(SliderActivity.EXTRA_FRAGMENTS, fragments);
             startActivity(intent);
-            break;
-
-        case R.id.backup_expenses:
-            startActivity(new Intent(this, BackupActivity.class));
-            break;
         }
+        else if (v.getId() == R.id.backup_expenses)
+            startActivity(new Intent(this, BackupActivity.class));
     }
 
     @Override
     public void onStart()
     {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("ExpenseItemsActivity::onStart");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("ExpenseItemsActivity::onResume");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
+        AndroidApplication application = (AndroidApplication) getApplication();
+        Tracker tracker = application.getDefaultTracker();
+        tracker.setScreenName("ExpenseItemsActivity::onStop");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(null);
     }
-
     private ExpenseItemsLogic logic_;
 }
