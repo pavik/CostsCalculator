@@ -96,19 +96,23 @@ public class DataFormatService
         return fileName + ".JSON";
     }
 
-    public static String eraseAllCommasAndSpaces(String s)
+    public static String eraseAllCommasAndSpaces(String str)
     {
-        if (s != null)
+        if (str != null)
         {
+            String s = str.replace(',', '.');
             StringBuilder sb = new StringBuilder(s.length());
             for (int i = 0; i < s.length(); ++i)
-                if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')
+            {
+                if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.' || s.charAt(i) == '-')
                     sb.append(s.charAt(i));
+                else; // skip char
+            }
 
             return sb.toString();
         }
-
-        return s;
+        else
+            return str;
     }
 
     @SuppressLint("SimpleDateFormat")

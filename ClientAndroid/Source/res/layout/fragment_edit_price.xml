@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:hint="@string/price_hint"
             android:imeOptions="actionNext"
-            android:inputType="numberDecimal" />
+            android:inputType="numberSigned|numberDecimal" />
 
         <AutoCompleteTextView
             android:id="@+id/et_currency"
