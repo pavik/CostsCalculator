@@ -246,7 +246,7 @@ public class DropBoxService
         // We create a new AuthSession so that we can use the Dropbox API.
         DbxRequestConfig requestConfig = DbxRequestConfig
                 .newBuilder("expenses")
-                .withHttpRequestor(OkHttp3Requestor.INSTANCE).build();
+                .withHttpRequestor(new OkHttp3Requestor(OkHttp3Requestor.defaultOkHttpClient())).build();
 
         PreferencesService pref = new PreferencesService(c);
         String accessToken = pref.get(PreferencesService.ACCESS_TOKEN);
